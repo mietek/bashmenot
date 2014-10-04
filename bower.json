@@ -1,0 +1,8 @@
+{
+  "name": "bashmenot",
+  "description": "Safer shell scripting with GNU bash",
+  "authors": [
+    "Miëtek Bak <hello@mietek.io>"
+  ],
+  "license": "MIT X11"
+}
