@@ -7,11 +7,7 @@ Minimal dependencies.  Reasonably cross-platform.
 
 Used in [Halcyon](https://github.com/mietek/halcyon/) and [Haskell on Heroku](https://github.com/mietek/haskell-on-heroku/).
 
-
-Features
---------
-
-Contains functions for:
+Contains functions to help with:
 
 - [Logging](http://halcyon.sh/docs/bashmenot/#logging)
 - [Expecting preconditions](http://halcyon.sh/docs/bashmenot/#expecting-preconditions)
@@ -25,8 +21,6 @@ Contains functions for:
 - [HTTP transfers](http://halcyon.sh/docs/bashmenot/#http-transfers)
 - [Amazon S3 transfers](http://halcyon.sh/docs/bashmenot/#amazon-s3-transfers)
 
-Examples are included in the [function reference](http://halcyon.sh/docs/bashmenot/).
-
 
 Usage
 -----
@@ -37,7 +31,9 @@ Sourcing the top-level script safely brings all functions into scope, without ca
 source bashmenot/bashmenot.sh
 ```
 
-You can also source individual files, as long as you also source their dependencies, which are listed in the [function reference](http://halcyon.sh/docs/bashmenot/).
+You can also source individual modules, as long as you source their dependencies as well.
+
+Examples are included in the [function reference](http://halcyon.sh/docs/bashmenot/).
 
 
 ### Installation
