@@ -1,11 +1,11 @@
 bashmenot
 =========
 
-Library for safer shell scripting with [GNU bash](http://gnu.org/software/bash/).
+Library of functions for safer shell scripting.
 
 Minimal dependencies.  Reasonably cross-platform.
 
-Used in [Halcyon](https://github.com/mietek/halcyon/) and [Haskell on Heroku](https://github.com/mietek/haskell-on-heroku/).
+Used in [Halcyon](http://halcyon.sh/) and [Haskell on Heroku](http://haskellonheroku.com/).
 
 
 Usage

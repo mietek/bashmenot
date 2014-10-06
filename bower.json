@@ -1,6 +1,6 @@
 {
   "name": "bashmenot",
-  "description": "Library for safer shell scripting with GNU bash",
+  "description": "Library of functions for safer shell scripting",
   "authors": [
     "Miëtek Bak <hello@mietek.io>"
   ],
