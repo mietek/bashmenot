@@ -9,17 +9,17 @@ Used in [Halcyon](https://github.com/mietek/halcyon/) and [Haskell on Heroku](ht
 
 Contains functions to help with:
 
-- [Logging](http://halcyon.sh/docs/bashmenot-reference/#logging)
-- [Expecting preconditions](http://halcyon.sh/docs/bashmenot-reference/#expecting-preconditions)
-- [OS detection](http://halcyon.sh/docs/bashmenot-reference/#os-detection)
-- [Quoting](http://halcyon.sh/docs/bashmenot-reference/#quoting)
-- [Line processing](http://halcyon.sh/docs/bashmenot-reference/#line-processing)
-- [Sorting](http://halcyon.sh/docs/bashmenot-reference/#sorting)
-- [File operations](http://halcyon.sh/docs/bashmenot-reference/#file-operations)
-- [Archiving](http://halcyon.sh/docs/bashmenot-reference/#archiving)
-- [Date formatting](http://halcyon.sh/docs/bashmenot-reference/#date-formatting)
-- [HTTP transfers](http://halcyon.sh/docs/bashmenot-reference/#http-transfers)
-- [Amazon S3 transfers](http://halcyon.sh/docs/bashmenot-reference/#amazon-s3-transfers)
+- [Logging](http://halcyon.sh/docs/library-reference/#logging)
+- [Expecting preconditions](http://halcyon.sh/docs/library-reference/#expecting-preconditions)
+- [OS detection](http://halcyon.sh/docs/library-reference/#os-detection)
+- [Quoting](http://halcyon.sh/docs/library-reference/#quoting)
+- [Line processing](http://halcyon.sh/docs/library-reference/#line-processing)
+- [Sorting](http://halcyon.sh/docs/library-reference/#sorting)
+- [File operations](http://halcyon.sh/docs/library-reference/#file-operations)
+- [Archiving](http://halcyon.sh/docs/library-reference/#archiving)
+- [Date formatting](http://halcyon.sh/docs/library-reference/#date-formatting)
+- [HTTP transfers](http://halcyon.sh/docs/library-reference/#http-transfers)
+- [Amazon S3 transfers](http://halcyon.sh/docs/library-reference/#amazon-s3-transfers)
 
 
 Usage
@@ -33,7 +33,7 @@ source bashmenot/bashmenot.sh
 
 You can also source individual modules, as long as you source their dependencies as well.
 
-Examples are included in the [documentation](http://halcyon.sh/docs/bashmenot-reference/).
+Examples are included in the [documentation](http://halcyon.sh/docs/library-reference/).
 
 
 ### Installation
