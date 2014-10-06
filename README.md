@@ -7,33 +7,19 @@ Minimal dependencies.  Reasonably cross-platform.
 
 Used in [Halcyon](https://github.com/mietek/halcyon/) and [Haskell on Heroku](https://github.com/mietek/haskell-on-heroku/).
 
-Contains functions to help with:
-
-- [Logging](http://halcyon.sh/docs/library-reference/#logging)
-- [Expecting preconditions](http://halcyon.sh/docs/library-reference/#expecting-preconditions)
-- [OS detection](http://halcyon.sh/docs/library-reference/#os-detection)
-- [Quoting](http://halcyon.sh/docs/library-reference/#quoting)
-- [Line processing](http://halcyon.sh/docs/library-reference/#line-processing)
-- [Sorting](http://halcyon.sh/docs/library-reference/#sorting)
-- [File operations](http://halcyon.sh/docs/library-reference/#file-operations)
-- [Archiving](http://halcyon.sh/docs/library-reference/#archiving)
-- [Date formatting](http://halcyon.sh/docs/library-reference/#date-formatting)
-- [HTTP transfers](http://halcyon.sh/docs/library-reference/#http-transfers)
-- [Amazon S3 transfers](http://halcyon.sh/docs/library-reference/#amazon-s3-transfers)
-
 
 Usage
 -----
 
-Sourcing the top-level script safely brings all functions into scope, without causing any side effects.
+Sourcing the top-level script brings all functions into scope, without any side effects.
 
 ```sh
 source bashmenot/bashmenot.sh
 ```
 
-You can also source individual modules, as long as you source their dependencies as well.
+Individual modules can also be sourced separately, as long as their dependencies are sourced as well.
 
-Examples are included in the [documentation](http://halcyon.sh/docs/library-reference/).
+Refer to the [documentation](http://halcyon.sh/docs/library-reference/) for details and examples.
 
 
 ### Installation
