@@ -3,7 +3,7 @@ bashmenot
 
 Library of functions for safer shell scripting.
 
-Used in [Halcyon](http://halcyon.sh/).
+Used in [Halcyon](http://halcyon.sh/) and [Haskell on Heroku](https://github.com/mietek/haskell-on-heroku/).
 
 
 Usage
