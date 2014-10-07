@@ -3,31 +3,35 @@ bashmenot
 
 Library of functions for safer shell scripting.
 
-Minimal dependencies.  Reasonably cross-platform.
-
-Used in [Halcyon](http://halcyon.sh/) and [Haskell on Heroku](http://haskellonheroku.com/).
+Used in [Halcyon](http://halcyon.sh/).
 
 
 Usage
 -----
 
-Sourcing the top-level script brings all functions into scope, without any side effects.
+Sourcing the top-level script brings all functions into scope.
 
-```sh
-source bashmenot/bashmenot.sh
+```
+$ source bashmenot/bashmenot.sh
 ```
 
-Individual modules can also be sourced separately, as long as their dependencies are sourced as well.
+Individual modules can be sourced separately, as long as their dependencies are sourced as well.
 
-Refer to the [documentation](http://halcyon.sh/docs/library-reference/) for details and examples.
+Please refer to the [documentation](http://halcyon.sh/documentation/library-reference/) for more information, including module dependencies and usage examples.
 
 
 ### Installation
 
-Available as a [Bower](http://bower.io/) package.
+Cloning the repository is sufficient.
 
-```sh
-bower install bashmenot
+```
+$ git clone https://github.com/mietek/bashmenot.git
+```
+
+Also available as a [Bower](http://bower.io/) package.
+
+```
+$ bower install bashmenot
 ```
 
 
@@ -35,7 +39,7 @@ bower install bashmenot
 
 Requires [GNU bash](http://gnu.org/software/bash/) 4 or newer.  Some functions require [GNU date](https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html) and [GNU sort](https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html), available as part of [GNU coreutils](https://www.gnu.org/software/coreutils/).
 
-HTTP transfers require [curl](http://curl.haxx.se/).  Amazon S3 transfers also require [OpenSSL](https://www.openssl.org/).
+HTTP transfer functions require [curl](http://curl.haxx.se/).  Amazon S3 transfer functions also require [OpenSSL](https://www.openssl.org/).
 
 
 License
