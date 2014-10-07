@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 function echo_s3_host () {
 	echo "s3.amazonaws.com"
 }

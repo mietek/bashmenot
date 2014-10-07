@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 function filter_last () {
 	tail -n 1
 }

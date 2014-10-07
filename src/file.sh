@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 function find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"

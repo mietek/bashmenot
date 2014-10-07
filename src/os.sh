@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 function echo_os_description () {
 	local os
 	expect_args os -- "$@"

@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 case "$( detect_os )" in
 'linux-'*)
 	function sort_naturally () {

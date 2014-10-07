@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 function echo_tar_format_flag () {
 	local archive_name
 	expect_args archive_name -- "$@"

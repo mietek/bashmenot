@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 declare bashmenot_src_dir
 bashmenot_src_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )
 

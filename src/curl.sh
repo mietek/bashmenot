@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 function curl_do () {
 	local url
 	expect_args url -- "$@"

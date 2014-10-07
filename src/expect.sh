@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 function expect_args () {
 	local specs status
 	specs=()

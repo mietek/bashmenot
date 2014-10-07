@@ -1,6 +1,3 @@
-#!/usr/bin/env bash
-
-
 function prefix_log () {
 	local prefix
 	prefix="$1"
