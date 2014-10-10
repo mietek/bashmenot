@@ -9,15 +9,7 @@ Used in [Halcyon](http://halcyon.sh/) and [Haskell on Heroku](http://haskellonhe
 Usage
 -----
 
-Sourcing the top-level script brings all functions into scope.
-
-```
-$ source bashmenot/bashmenot.sh
-```
-
-Individual modules can also be sourced separately, as long as their dependencies are sourced as well.
-
-Please refer to the [programmer reference](http://bashmenot.mietek.io/reference/) for more information, including examples and module dependencies.
+Please see the [programmer’s reference](http://bashmenot.mietek.io/reference/) for a complete description of each function, including usage examples.
 
 
 ### Installation
