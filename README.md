@@ -1,9 +1,9 @@
-bashmenot
-=========
+_bashmenot_
+===========
 
-Library of functions for safer shell scripting.
+[_bashmenot_](http://bashmenot.mietek.io/).  Functions for safer shell scripting.
 
-Used in [Halcyon](http://halcyon.sh/) and [Haskell on Heroku](https://github.com/mietek/haskell-on-heroku/).
+Used in [Halcyon](http://halcyon.sh/) and [Haskell on Heroku](http://haskellonheroku.com/).
 
 
 Usage
@@ -15,9 +15,9 @@ Sourcing the top-level script brings all functions into scope.
 $ source bashmenot/bashmenot.sh
 ```
 
-Individual modules can be sourced separately, as long as their dependencies are sourced as well.
+Individual modules can also be sourced separately, as long as their dependencies are sourced as well.
 
-Please refer to the [documentation](http://halcyon.sh/documentation/library-reference/) for more information, including module dependencies and usage examples.
+Please refer to the [programmer reference](http://bashmenot.mietek.io/reference/) for more information, including examples and module dependencies.
 
 
 ### Installation
@@ -37,12 +37,24 @@ $ bower install bashmenot
 
 ### Dependencies
 
-Requires [GNU bash](http://gnu.org/software/bash/) 4 or newer.  Some functions require [GNU date](https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html) and [GNU sort](https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html), available as part of [GNU coreutils](https://www.gnu.org/software/coreutils/).
+Requires [GNU _bash_](http://gnu.org/software/bash/) 4 or newer.
 
-HTTP transfer functions require [curl](http://curl.haxx.se/).  Amazon S3 transfer functions also require [OpenSSL](https://www.openssl.org/).
+Some functions require [GNU _date_](https://www.gnu.org/software/coreutils/manual/html_node/date-invocation.html) and [GNU _sort_](https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html), available as part of [GNU _coreutils_](https://www.gnu.org/software/coreutils/).
+
+HTTP transfer functions require [_curl_](http://curl.haxx.se/).  Amazon S3 transfer functions also require [OpenSSL](https://www.openssl.org/).
+
+
+Support
+-------
+
+Please report any problems with _bashmenot_ on the [issue tracker](https://github.com/mietek/bashmenot/issues/).  There is a [separate issue tracker](https://github.com/mietek/bashmenot-website/issues/) for problems with the documentation.
+
+Commercial support for _bashmenot_ is offered by [Least Fixed](http://leastfixed.com/), a functional software consultancy.
+
+Need help?  Say [hello](http://leastfixed.com/).
 
 
 License
 -------
 
-[MIT X11](https://github.com/mietek/license/blob/master/LICENSE.md) © [Miëtek Bak](http://mietek.io/)
+Made by [Miëtek Bak](http://mietek.io/).  Published under the [MIT X11 license](http://bashmenot.mietek.io/license/).
