@@ -9,7 +9,7 @@ Used in [Halcyon](http://halcyon.sh/) and [Haskell on Heroku](http://haskellonhe
 Usage
 -----
 
-Please see the [programmer’s reference](http://bashmenot.mietek.io/reference/) for a complete description of each function, including usage examples.
+Please see the [programmer’s reference](http://bashmenot.mietek.io/reference/) for a detailed description of each available function, complete with usage examples.
 
 
 ### Installation
