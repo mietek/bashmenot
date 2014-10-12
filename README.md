@@ -21,7 +21,7 @@ _bashmenot_ is a library of functions for safer shell scripting in [GNU _bash_](
 - [HTTP transfer module](http://bashmenot.mietek.io/reference/#http-transfer-module)
 - [Amazon S3 storage module](http://bashmenot.mietek.io/reference/#amazon-s3-storage-module)
 
-Please see the [programmer’s reference](http://bashmenot.mietek.io/reference/) for a detailed description of each available function, complete with usage examples.
+See the [programmer’s reference](http://bashmenot.mietek.io/reference/) for a detailed description of each available function, complete with usage examples.
 
 
 ### Installation
