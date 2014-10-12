@@ -12,5 +12,5 @@ esac
 
 
 function sort0_naturally () {
-	sort_naturally -z
+	sort_naturally -z "$@"
 }
