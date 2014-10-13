@@ -42,7 +42,7 @@ function s3_do () {
 		sed "s/S3_DATE/${date}/" |
 		strip_trailing_newline |
 		openssl sha1 -hmac "${HALCYON_AWS_SECRET_ACCESS_KEY}" -binary |
-		base64
+		openssl base64
 	) || die
 
 	local auth
@@ -156,7 +156,7 @@ function s3_upload () {
 	local src_digest
 	src_digest=$(
 		openssl md5 -binary <"${src_file}" |
-		base64
+		openssl base64
 	) || die
 
 	local dst_url
