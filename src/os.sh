@@ -41,11 +41,19 @@ function detect_os () {
 
 	case "${os}" in
 	'Linux')
-		local release
-		if release=$( lsb_release -rs 2>'/dev/null' | tr '.' '-' ); then
-			echo "linux-ubuntu-${release}-${arch}"
+		if ! [ -f '/etc/lsb-release' ]; then
+			echo "linux-unknown-${arch}"
 		else
-			echo "linux-${arch}"
+			local distrib release
+			distrib=$(
+				awk -F= '/DISTRIB_ID/ { print $2 }' <'/etc/lsb-release' |
+				tr '[:upper:]' '[:lower:]'
+			) || die
+			release=$(
+				awk -F= '/DISTRIB_RELEASE/ { print $2 }' <'/etc/lsb-release' |
+				tr '.' '-'
+			) || die
+			echo "linux-${distrib}-${release}-${arch}"
 		fi
 		;;
 	'Darwin')
