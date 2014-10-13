@@ -30,12 +30,6 @@ See the [programmer’s reference](http://bashmenot.mietek.io/reference/) for a 
 $ git clone https://github.com/mietek/bashmenot.git
 ```
 
-Also available as a [Bower](http://bower.io/) package.
-
-```
-$ bower install bashmenot
-```
-
 
 ### Dependencies
 
