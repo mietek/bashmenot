@@ -59,6 +59,6 @@ function detect_os () {
 	'Darwin')
 		echo "darwin-${arch}";;
 	*)
-		echo "unexpected-${arch}"
+		echo "unknown-${arch}"
 	esac
 }
