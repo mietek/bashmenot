@@ -51,6 +51,12 @@ Commercial support for _bashmenot_ is offered by [Least Fixed](http://leastfixed
 Need help?  Say [hello](http://leastfixed.com/).
 
 
+Acknowledgments
+---------------
+
+Thanks to [Kenneth Reitz](http://www.kennethreitz.org/) for building [_httpbin_](http://httpbin.org/).
+
+
 License
 -------
 
