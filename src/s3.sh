@@ -96,9 +96,9 @@ function s3_list () {
 	local src_url
 	src_url=$( echo_s3_url "${src_resource}" ) || die
 
-	local status response
+	local status listing
 	status=0
-	if ! response=$(
+	if ! listing=$(
 		s3_do "${src_url}"                        \
 			--output >( read_s3_listing_xml ) \
 			<<-EOF
@@ -111,7 +111,7 @@ EOF
 	); then
 		status=1
 	else
-		echo "${response}"
+		echo "${listing}"
 	fi
 
 	return "${status}"
