@@ -3,11 +3,11 @@ function echo_os_description () {
 	expect_args os -- "$@"
 
 	case "${os}" in
-	'linux-ubuntu-14-04-x64')
+	'linux-ubuntu-14-04-x86_64')
 		echo 'Ubuntu 14.04 LTS (64-bit)';;
-	'linux-ubuntu-12-04-x64')
+	'linux-ubuntu-12-04-x86_64')
 		echo 'Ubuntu 12.04 LTS (64-bit)';;
-	'linux-ubuntu-10-04-x64')
+	'linux-ubuntu-10-04-x86_64')
 		echo 'Ubuntu 10.04 LTS (64-bit)';;
 	*)
 		die "Unexpected OS: ${os}"
@@ -20,14 +20,11 @@ function detect_arch () {
 	arch=$( uname -m | tr '[:upper:]' '[:lower:]' ) || die
 
 	case "${arch}" in
-	'amd64')
-		echo 'x64';;
-	'x64')
-		echo 'x64';;
-	'x86-64')
-		echo 'x64';;
+	'amd64');&
+	'x64');&
+	'x86-64');&
 	'x86_64')
-		echo 'x64';;
+		echo 'x86_64';;
 	*)
 		die "Unexpected architecture: ${arch}"
 	esac
