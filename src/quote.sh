@@ -4,7 +4,7 @@ case "$( detect_os )" in
 		sed -u "$@"
 	}
 	;;
-'darwin-'*)
+'os-x-'*)
 	function sed_unbuffered () {
 		sed -l "$@"
 	}
