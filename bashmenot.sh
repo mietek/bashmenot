@@ -1,4 +1,4 @@
-declare BASHMENOT_TOP_DIR
+export BASHMENOT_TOP_DIR
 BASHMENOT_TOP_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )
 
 source "${BASHMENOT_TOP_DIR}/src/log.sh"
