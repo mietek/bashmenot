@@ -1,3 +1,19 @@
+function echo_tmp_file () {
+	local base
+	expect_args base -- "$@"
+
+	mktemp -u "/tmp/${base}.XXXXXXXXXX"
+}
+
+
+function echo_tmp_dir () {
+	local base
+	expect_args base -- "$@"
+
+	mktemp -du "/tmp/${base}.XXXXXXXXXX"
+}
+
+
 function find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
