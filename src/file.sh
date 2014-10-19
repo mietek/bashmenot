@@ -14,6 +14,25 @@ function echo_tmp_dir () {
 }
 
 
+case "$( detect_os )" in
+'linux-'*)
+	function echo_file_modification_time () {
+		local file
+		expect_args file -- "$@"
+
+		stat -c "%Y" "${file}" || die
+	}
+	;;
+*)
+	function echo_file_modification_time () {
+		local file
+		expect_args file -- "$@"
+
+		stat -f "%m" "${file}" || die
+	}
+esac
+
+
 function find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
