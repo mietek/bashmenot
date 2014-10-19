@@ -56,6 +56,11 @@ function log_error () {
 }
 
 
+function log_delimiter () {
+	echo '-----------------------------------------------------------------------------' >&2
+}
+
+
 function die () {
 	if [ -n "${*:+_}" ]; then
 		log_error "$@"
