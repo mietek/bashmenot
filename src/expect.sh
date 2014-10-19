@@ -13,7 +13,7 @@ function expect_args () {
 		shift
 	done
 
-	if (( ${status} )); then
+	if (( status )); then
 		die "${FUNCNAME[1]:--}: Expected specs, guard, and args:" 'arg1 .. argN -- "$@"'
 	fi
 

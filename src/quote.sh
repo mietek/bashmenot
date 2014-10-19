@@ -25,7 +25,7 @@ function quote_quietly () {
 	expect_args quiet cmd -- "$@"
 	shift 2
 
-	if (( ${quiet} )); then
+	if (( quiet )); then
 		local tmp_log
 		tmp_log=$( mktemp -u "/tmp/${cmd}.log.XXXXXXXXXX" ) || die
 
