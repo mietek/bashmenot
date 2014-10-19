@@ -125,7 +125,46 @@ function find_spaceless_recursively () {
 	expect_args dir -- "$@"
 	shift
 
-	find "${dir}" "$@" -type f -and \( -path '* *' -prune -or -print \) | sed "s:^${dir}/::"
+	local files
+	if ! files=$( find "${dir}" "$@" -type f -and \( -path '* *' -prune -or -print \) 2>'/dev/null' ); then
+		return 0
+	fi
+
+	sed "s:^${dir}/::" <<<"${files}"
+}
+
+
+function do_hash () {
+	local input
+	input=$( cat ) || die
+	if [ -z "${input}" ]; then
+		return 0
+	fi
+
+	openssl sha1 <<<"${input}" |
+		sed 's/^.* //' || die
+}
+
+
+function hash_spaceless_recursively () {
+	local dir
+	expect_args dir -- "$@"
+	shift
+
+	local files
+	files=$( find_spaceless_recursively "${dir}" "$@" | sort_naturally ) || die
+	if [ -z "${files}" ]; then
+		return 0
+	fi
+
+	(
+		do_hash <<<"${files}" || die
+
+		local file
+		for file in ${files}; do
+			do_hash <"${dir}/${file}"
+		done
+	) | do_hash
 }
 
 
