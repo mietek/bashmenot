@@ -38,7 +38,7 @@ function find_added () {
 	expect_args old_dir new_dir -- "$@"
 
 	local new_file
-	find "${new_dir}" -type f -print0 |
+	find "${new_dir}" -type f -print0 2>'/dev/null' |
 		sort0_naturally |
 		while read -rd $'\0' new_file; do
 			local path old_file
@@ -56,7 +56,7 @@ function find_changed () {
 	expect_args old_dir new_dir -- "$@"
 
 	local new_file
-	find "${new_dir}" -type f -print0 |
+	find "${new_dir}" -type f -print0 2>'/dev/null' |
 		sort0_naturally |
 		while read -rd $'\0' new_file; do
 			local path old_file
@@ -74,7 +74,7 @@ function find_not_changed () {
 	expect_args old_dir new_dir -- "$@"
 
 	local new_file
-	find "${new_dir}" -type f -print0 |
+	find "${new_dir}" -type f -print0 2>'/dev/null' |
 		sort0_naturally |
 		while read -rd $'\0' new_file; do
 			local path old_file
@@ -92,7 +92,7 @@ function find_removed () {
 	expect_args old_dir new_dir -- "$@"
 
 	local old_file
-	find "${old_dir}" -type f -print0 |
+	find "${old_dir}" -type f -print0 2>'/dev/null' |
 		sort0_naturally |
 		while read -rd $'\0' old_file; do
 			local path new_file
