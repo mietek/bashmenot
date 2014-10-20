@@ -33,6 +33,29 @@ case "$( detect_os )" in
 esac
 
 
+function echo_dir_path () {
+	local dir
+	expect_args dir -- "$@"
+
+	local path
+	path=$( cd "${dir}" && pwd -P ) || die
+
+	echo "${path}"
+}
+
+
+function echo_dir_name () {
+	local dir
+	expect_args dir -- "$@"
+
+	local path name
+	path=$( echo_dir_path "${dir}" ) || die
+	name=$( basename "${path}" ) || die
+
+	echo "${name}"
+}
+
+
 function find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
