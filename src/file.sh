@@ -149,7 +149,9 @@ function find_spaceless_recursively () {
 	shift
 
 	local files
-	if ! files=$( find "${dir}" "$@" -type f -and \( -path '* *' -prune -or -print \) 2>'/dev/null' ); then
+	if ! files=$(
+		find "${dir}" "$@" -type f -and \( -path '* *' -prune -or -print \) 2>'/dev/null'
+	) || [ -z "${files}" ]; then
 		return 0
 	fi
 
