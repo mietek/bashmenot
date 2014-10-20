@@ -100,7 +100,7 @@ function curl_check () {
 
 	log_indent_begin "Checking ${src_url}..."
 
-	curl_do "${src_url}"         \
+	curl_do "${src_url}"    \
 		--output '/dev/null' \
 		--head
 }

@@ -2,7 +2,7 @@ function echo_tmp_file () {
 	local base
 	expect_args base -- "$@"
 
-	mktemp -u "/tmp/${base}.XXXXXXXXXX"
+	mktemp -u "/tmp/${base}.XXXXXXXXXX" || die
 }
 
 
@@ -10,7 +10,7 @@ function echo_tmp_dir () {
 	local base
 	expect_args base -- "$@"
 
-	mktemp -du "/tmp/${base}.XXXXXXXXXX"
+	mktemp -du "/tmp/${base}.XXXXXXXXXX" || die
 }
 
 
@@ -37,10 +37,7 @@ function echo_dir_path () {
 	local dir
 	expect_args dir -- "$@"
 
-	local path
-	path=$( cd "${dir}" && pwd -P ) || die
-
-	echo "${path}"
+	( cd "${dir}" && pwd -P ) || die
 }
 
 
@@ -48,11 +45,10 @@ function echo_dir_name () {
 	local dir
 	expect_args dir -- "$@"
 
-	local path name
+	local path
 	path=$( echo_dir_path "${dir}" ) || die
-	name=$( basename "${path}" ) || die
 
-	echo "${name}"
+	basename "${path}" || die
 }
 
 
@@ -70,7 +66,7 @@ function find_added () {
 			if ! [ -f "${old_file}" ]; then
 				echo "${path}"
 			fi
-		done
+		done || true
 }
 
 
@@ -88,7 +84,7 @@ function find_changed () {
 			if [ -f "${old_file}" ] && ! cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done
+		done || true
 }
 
 
@@ -106,7 +102,7 @@ function find_not_changed () {
 			if [ -f "${old_file}" ] && cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done
+		done || true
 }
 
 
@@ -124,7 +120,7 @@ function find_removed () {
 			if ! [ -f "${new_file}" ]; then
 				echo "${path}"
 			fi
-		done
+		done || true
 }
 
 
@@ -139,7 +135,7 @@ function compare_recursively () {
 		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
 	) |
 		sort_naturally |
-		awk '{ print $2 " " $1 }'
+		awk '{ print $2 " " $1 }' || true
 }
 
 
@@ -155,7 +151,7 @@ function find_spaceless_recursively () {
 		return 0
 	fi
 
-	sed "s:^${dir}/::" <<<"${files}"
+	sed "s:^${dir}/::" <<<"${files}" || true
 }
 
 
@@ -187,9 +183,9 @@ function hash_spaceless_recursively () {
 
 		local file
 		for file in ${files}; do
-			do_hash <"${dir}/${file}"
+			do_hash <"${dir}/${file}" || die
 		done
-	) | do_hash
+	) | do_hash || die
 }
 
 
@@ -197,7 +193,7 @@ function measure_recursively () {
 	local dir
 	expect_args dir -- "$@"
 
-	du -sh "${dir}" | awk '{ print $1 }'
+	du -sh "${dir}" | awk '{ print $1 }' || die
 }
 
 
@@ -224,6 +220,6 @@ function copy_dotless_contents () {
 function strip0 () {
 	local file
 	while read -rd $'\0' file; do
-		strip "$@" "${file}"
-	done
+		strip "$@" "${file}" || die
+	done || die
 }
