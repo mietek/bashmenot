@@ -6,14 +6,10 @@ function map_extension_to_tar_flag () {
 	archive_format="${archive_name##*.}"
 
 	case "${archive_format}" in
-	'gz')
-		echo '-z';;
-	'bz2')
-		echo '-j';;
-	'xz')
-		echo '-J';;
-	*)
-		die "Unexpected archive format: ${archive_name}"
+	'gz')	echo '-z';;
+	'bz2')	echo '-j';;
+	'xz')	echo '-J';;
+	*)	die "Unexpected archive format: ${archive_name}"
 	esac
 }
 
