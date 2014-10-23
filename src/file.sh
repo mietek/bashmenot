@@ -1,4 +1,4 @@
-function echo_tmp_file () {
+function get_tmp_file () {
 	local base
 	expect_args base -- "$@"
 
@@ -6,7 +6,7 @@ function echo_tmp_file () {
 }
 
 
-function echo_tmp_dir () {
+function get_tmp_dir () {
 	local base
 	expect_args base -- "$@"
 
@@ -16,7 +16,7 @@ function echo_tmp_dir () {
 
 case "$( detect_os )" in
 'linux-'*)
-	function echo_file_modification_time () {
+	function get_file_modification_time () {
 		local file
 		expect_args file -- "$@"
 
@@ -24,7 +24,7 @@ case "$( detect_os )" in
 	}
 	;;
 *)
-	function echo_file_modification_time () {
+	function get_file_modification_time () {
 		local file
 		expect_args file -- "$@"
 
@@ -33,7 +33,7 @@ case "$( detect_os )" in
 esac
 
 
-function echo_dir_path () {
+function get_dir_path () {
 	local dir
 	expect_args dir -- "$@"
 
@@ -41,12 +41,12 @@ function echo_dir_path () {
 }
 
 
-function echo_dir_name () {
+function get_dir_name () {
 	local dir
 	expect_args dir -- "$@"
 
 	local path
-	path=$( echo_dir_path "${dir}" ) || die
+	path=$( get_dir_path "${dir}" ) || die
 
 	basename "${path}" || die
 }

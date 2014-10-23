@@ -1,4 +1,4 @@
-function echo_http_code_description () {
+function format_http_code_description () {
 	local code
 	expect_args code -- "$@"
 
@@ -71,7 +71,7 @@ function curl_do () {
 	fi
 
 	local code_description
-	code_description=$( echo_http_code_description "${code}" ) || die
+	code_description=$( format_http_code_description "${code}" ) || die
 	log_end "${code_description}"
 
 	return "${status}"

@@ -1,4 +1,4 @@
-function echo_tar_format_flag () {
+function map_extension_to_tar_flag () {
 	local archive_name
 	expect_args archive_name -- "$@"
 
@@ -27,7 +27,7 @@ function tar_archive () {
 
 	local archive_name format_flag dst_dir
 	archive_name=$( basename "${archive_file}" ) || die
-	format_flag=$( echo_tar_format_flag "${archive_name}" ) || die
+	format_flag=$( map_extension_to_tar_flag "${archive_name}" ) || die
 	dst_dir=$( dirname "${archive_file}" ) || die
 
 	log_indent_begin "Archiving ${archive_name}..."
@@ -53,7 +53,7 @@ function tar_extract () {
 
 	local archive_name format_flag
 	archive_name=$( basename "${archive_file}" ) || die
-	format_flag=$( echo_tar_format_flag "${archive_name}" ) || die
+	format_flag=$( map_extension_to_tar_flag "${archive_name}" ) || die
 
 	log_indent "Extracting ${archive_name}"
 

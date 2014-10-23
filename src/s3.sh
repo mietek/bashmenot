@@ -1,14 +1,14 @@
-function echo_s3_host () {
+function get_s3_host () {
 	echo "s3.amazonaws.com"
 }
 
 
-function echo_s3_url () {
+function format_s3_url () {
 	local resource
 	expect_args resource -- "$@"
 
 	local host
-	host=$( echo_s3_host ) || die
+	host=$( get_s3_host ) || die
 
 	echo "https://${host}${resource}"
 }
@@ -34,8 +34,8 @@ function s3_do () {
 	shift
 
 	local host date
-	host=$( echo_s3_host ) || die
-	date=$( echo_http_date ) || die
+	host=$( get_s3_host ) || die
+	date=$( format_http_date ) || die
 
 	local signature
 	signature=$(
@@ -67,7 +67,7 @@ function s3_download () {
 	log_indent_begin "Downloading s3:/${src_resource}..."
 
 	local src_url dst_dir
-	src_url=$( echo_s3_url "${src_resource}" ) || die
+	src_url=$( format_s3_url "${src_resource}" ) || die
 	dst_dir=$( dirname "${dst_file}" ) || die
 	mkdir -p "${dst_dir}" || die
 
@@ -94,7 +94,7 @@ function s3_list () {
 	log_indent_begin "Listing s3:/${src_resource}..."
 
 	local src_url
-	src_url=$( echo_s3_url "${src_resource}" ) || die
+	src_url=$( format_s3_url "${src_resource}" ) || die
 
 	local status listing
 	status=0
@@ -128,7 +128,7 @@ function s3_check () {
 	log_indent_begin "Checking s3:/${src_resource}..."
 
 	local src_url
-	src_url=$( echo_s3_url "${src_resource}" ) || die
+	src_url=$( format_s3_url "${src_resource}" ) || die
 
 	s3_do "${src_url}"           \
 		--output '/dev/null' \
@@ -160,7 +160,7 @@ function s3_upload () {
 	) || die
 
 	local dst_url
-	dst_url=$( echo_s3_url "${dst_resource}" ) || die
+	dst_url=$( format_s3_url "${dst_resource}" ) || die
 
 	s3_do "${dst_url}"                            \
 		--output '/dev/null'                  \
@@ -188,7 +188,7 @@ function s3_create () {
 	log_indent_begin "Creating s3:/${dst_resource}..."
 
 	local dst_url
-	dst_url=$( echo_s3_url "${dst_resource}" ) || die
+	dst_url=$( format_s3_url "${dst_resource}" ) || die
 
 	s3_do "${dst_url}"                       \
 		--output '/dev/null'             \
@@ -216,7 +216,7 @@ function s3_copy () {
 	log_indent_begin "Copying s3:/${src_resource} to s3:/${src_resource}..."
 
 	local dst_url
-	dst_url=$( echo_s3_url "${dst_resource}" ) || die
+	dst_url=$( format_s3_url "${dst_resource}" ) || die
 
 	s3_do "${dst_url}"                                    \
 		--output '/dev/null'                          \
@@ -245,7 +245,7 @@ function s3_delete () {
 	log_indent_begin "Deleting s3:/${dst_resource}..."
 
 	local dst_url
-	dst_url=$( echo_s3_url "${dst_resource}" ) || die
+	dst_url=$( format_s3_url "${dst_resource}" ) || die
 
 	s3_do "${dst_url}"           \
 		--output '/dev/null' \

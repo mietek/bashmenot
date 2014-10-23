@@ -1,4 +1,4 @@
-function echo_os_description () {
+function format_os_description () {
 	local os
 	expect_args os -- "$@"
 
