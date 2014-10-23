@@ -30,7 +30,7 @@ function match_at_most_one () {
 
 
 function match_at_least_one () {
-	grep ^ || false
+	grep . || false
 }
 
 
