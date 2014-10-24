@@ -66,7 +66,7 @@ function find_added () {
 			if ! [ -f "${old_file}" ]; then
 				echo "${path}"
 			fi
-		done || true
+		done || return 0
 }
 
 
@@ -84,7 +84,7 @@ function find_changed () {
 			if [ -f "${old_file}" ] && ! cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done || true
+		done || return 0
 }
 
 
@@ -102,7 +102,7 @@ function find_not_changed () {
 			if [ -f "${old_file}" ] && cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done || true
+		done || return 0
 }
 
 
@@ -120,7 +120,7 @@ function find_removed () {
 			if ! [ -f "${new_file}" ]; then
 				echo "${path}"
 			fi
-		done || true
+		done || return 0
 }
 
 
@@ -135,7 +135,7 @@ function compare_recursively () {
 		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
 	) |
 		sort_naturally |
-		awk '{ print $2 " " $1 }' || true
+		awk '{ print $2 " " $1 }' || return 0
 }
 
 
@@ -151,7 +151,7 @@ function find_spaceless_recursively () {
 		return 0
 	fi
 
-	sed "s:^${dir}/::" <<<"${files}" || true
+	sed "s:^${dir}/::" <<<"${files}" || return 0
 }
 
 

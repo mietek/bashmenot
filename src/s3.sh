@@ -22,7 +22,7 @@ function read_s3_listing_xml () {
 		if [ "${element}" = 'Key' ]; then
 			echo "${contents}"
 		fi
-	done || true
+	done || return 0
 }
 
 
@@ -52,7 +52,7 @@ function s3_do () {
 		--header "Host: ${host}"          \
 		--header "Date: ${date}"          \
 		--header "Authorization: ${auth}" \
-		"$@" || false
+		"$@" || return 1
 }
 
 
