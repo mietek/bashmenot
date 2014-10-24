@@ -51,11 +51,13 @@ function tar_extract () {
 	archive_name=$( basename "${archive_file}" ) || die
 	format_flag=$( map_extension_to_tar_flag "${archive_name}" ) || die
 
-	log_indent "Extracting ${archive_name}"
+	log_indent_begin "Extracting ${archive_name}..."
 
 	mkdir -p "${dst_dir}" || die
 	if ! tar -x "${format_flag}" -f "${archive_file}" -C "${dst_dir}" "$@" &> '/dev/null'; then
 		rm -rf "${dst_dir}" || die
 		return 1
 	fi
+
+	log_end 'done'
 }
