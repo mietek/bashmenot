@@ -190,26 +190,6 @@ function measure_recursively () {
 }
 
 
-function copy_entire_contents () {
-	local src_dir dst_dir
-	expect_args src_dir dst_dir -- "$@"
-	expect_existing "${src_dir}"
-
-	mkdir -p "${dst_dir}" || die
-	cp -Rp "${src_dir}/." "${dst_dir}" || die
-}
-
-
-function copy_dotless_contents () {
-	local src_dir dst_dir
-	expect_args src_dir dst_dir -- "$@"
-	expect_existing "${src_dir}"
-
-	mkdir -p "${dst_dir}" || die
-	cp -Rp "${src_dir}/"* "${dst_dir}" || die
-}
-
-
 function strip0 () {
 	local file
 	while read -rd $'\0' file; do
