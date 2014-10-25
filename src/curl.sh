@@ -105,9 +105,9 @@ function curl_check () {
 
 	log_indent_begin "Checking ${src_url}..."
 
-	curl_do "${src_url}"    \
+	curl_do "${src_url}"         \
 		--output '/dev/null' \
-		--head
+		--head || return 1
 }
 
 
@@ -120,7 +120,7 @@ function curl_upload () {
 
 	curl_do "${dst_file_url}"    \
 		--output '/dev/null' \
-		--upload-file "${src_file}"
+		--upload-file "${src_file}" || return 1
 }
 
 
@@ -132,5 +132,5 @@ function curl_delete () {
 
 	curl_do "${dst_url}"         \
 		--output '/dev/null' \
-		--request DELETE
+		--request DELETE || return 1
 }

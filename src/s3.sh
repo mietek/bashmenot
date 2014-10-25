@@ -1,5 +1,5 @@
 function get_s3_host () {
-	echo "s3.amazonaws.com"
+	echo 's3.amazonaws.com'
 }
 
 
@@ -129,16 +129,18 @@ function s3_check () {
 	local src_url
 	src_url=$( format_s3_url "${src_resource}" ) || die
 
-	s3_do "${src_url}"           \
-		--output '/dev/null' \
-		--head               \
-		<<-EOF
-			HEAD
+	(
+		s3_do "${src_url}"           \
+			--output '/dev/null' \
+			--head               \
+			<<-EOF
+				HEAD
 
 
-			S3_DATE
-			${src_resource}
+				S3_DATE
+				${src_resource}
 EOF
+	) || return 1
 }
 
 
@@ -161,19 +163,21 @@ function s3_upload () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" ) || die
 
-	s3_do "${dst_url}"                            \
-		--output '/dev/null'                  \
-		--header "Content-MD5: ${src_digest}" \
-		--header "x-amz-acl: ${dst_acl}"      \
-		--upload-file "${src_file}"           \
-		<<-EOF
-			PUT
-			${src_digest}
+	(
+		s3_do "${dst_url}"                            \
+			--output '/dev/null'                  \
+			--header "Content-MD5: ${src_digest}" \
+			--header "x-amz-acl: ${dst_acl}"      \
+			--upload-file "${src_file}"           \
+			<<-EOF
+				PUT
+				${src_digest}
 
-			S3_DATE
-			x-amz-acl:${dst_acl}
-			${dst_resource}
+				S3_DATE
+				x-amz-acl:${dst_acl}
+				${dst_resource}
 EOF
+	) || return 1
 }
 
 
@@ -189,18 +193,20 @@ function s3_create () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" ) || die
 
-	s3_do "${dst_url}"                       \
-		--output '/dev/null'             \
-		--header "x-amz-acl: ${dst_acl}" \
-		--request PUT                    \
-		<<-EOF
-			PUT
+	(
+		s3_do "${dst_url}"                       \
+			--output '/dev/null'             \
+			--header "x-amz-acl: ${dst_acl}" \
+			--request PUT                    \
+			<<-EOF
+				PUT
 
 
-			S3_DATE
-			x-amz-acl:${dst_acl}
-			${dst_resource}
+				S3_DATE
+				x-amz-acl:${dst_acl}
+				${dst_resource}
 EOF
+	) || return 1
 }
 
 
@@ -217,20 +223,22 @@ function s3_copy () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" ) || die
 
-	s3_do "${dst_url}"                                    \
-		--output '/dev/null'                          \
-		--header "x-amz-acl: ${dst_acl}"              \
-		--header "x-amz-copy-source: ${src_resource}" \
-		--request PUT                                 \
-		<<-EOF
-			PUT
+	(
+		s3_do "${dst_url}"                                    \
+			--output '/dev/null'                          \
+			--header "x-amz-acl: ${dst_acl}"              \
+			--header "x-amz-copy-source: ${src_resource}" \
+			--request PUT                                 \
+			<<-EOF
+				PUT
 
 
-			S3_DATE
-			x-amz-acl:${dst_acl}
-			x-amz-copy-source:${src_resource}
-			${dst_resource}
+				S3_DATE
+				x-amz-acl:${dst_acl}
+				x-amz-copy-source:${src_resource}
+				${dst_resource}
 EOF
+	) || return 1
 }
 
 
