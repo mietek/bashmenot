@@ -56,13 +56,3 @@ function expect_no_existing () {
 		shift
 	done
 }
-
-
-function has_vars () {
-	while (( $# )); do
-		if [ -z "${!1:+_}" ]; then
-			return 1
-		fi
-		shift
-	done
-}
