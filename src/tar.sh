@@ -30,8 +30,9 @@ function tar_archive () {
 	rm -f "${file}" || die
 	mkdir -p "${dst_dir}" || die
 
-	if ! tar -c "${flag}" -f "${file}" -C "${src_dir}" '.' "$@" &> '/dev/null'; then
+	if ! tar -c "${flag}" -f "${file}" -C "${src_dir}" "$@" '.' 2>'/dev/null'; then
 		rm -f "${file}" || die
+		log_end 'error'
 		return 1
 	fi
 
@@ -56,10 +57,28 @@ function tar_extract () {
 	rm -rf "${dir}" || die
 	mkdir -p "${dir}" || die
 
-	if ! tar -x "${flag}" -f "${file}" -C "${dir}" "$@" &> '/dev/null'; then
+	if ! tar -x "${flag}" -f "${file}" -C "${dir}" "$@" 2>'/dev/null'; then
 		rm -rf "${dir}" || die
+		log_end 'error'
 		return 1
 	fi
 
 	log_end 'done'
+}
+
+
+function tar_copy () {
+	local src_dir dst_dir
+	expect_args src_dir dst_dir -- "$@"
+	shift 2
+	[ -d "${src_dir}" ] || return 1
+
+	rm -rf "${dst_dir}" || die
+	mkdir -p "${dst_dir}" || die
+
+	if ! tar -c -f - -C "${src_dir}" "$@" '.' 2>'/dev/null' |
+		tar -x -f - -C "${dst_dir}" 2>'/dev/null'
+	then
+		return 1
+	fi
 }
