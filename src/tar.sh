@@ -18,10 +18,7 @@ function tar_archive () {
 	local src_dir file
 	expect_args src_dir file -- "$@"
 	shift 2
-
-	if ! [ -d "${src_dir}" ]; then
-		return 1
-	fi
+	[ -d "${src_dir}" ] || return 1
 
 	local name flag dst_dir
 	name=$( basename "${file}" ) || die
@@ -48,10 +45,7 @@ function tar_extract () {
 	local file dir
 	expect_args file dir -- "$@"
 	shift 2
-
-	if ! [ -f "${file}" ]; then
-		return 1
-	fi
+	[ -f "${file}" ] || return 1
 
 	local name flag
 	name=$( basename "${file}" ) || die
