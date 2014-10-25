@@ -1,63 +1,69 @@
 function map_extension_to_tar_flag () {
-	local archive_name
-	expect_args archive_name -- "$@"
+	local name
+	expect_args name -- "$@"
 
-	local archive_format
-	archive_format="${archive_name##*.}"
+	local format
+	format="${name##*.}"
 
-	case "${archive_format}" in
+	case "${format}" in
 	'gz')	echo '-z';;
 	'bz2')	echo '-j';;
 	'xz')	echo '-J';;
-	*)	die "Unexpected archive format: ${archive_name}"
+	*)	die "Unexpected archive format: ${name}"
 	esac
 }
 
 
 function tar_archive () {
-	local src_dir archive_file
-	expect_args src_dir archive_file -- "$@"
+	local src_dir file
+	expect_args src_dir file -- "$@"
 	shift 2
-	expect_existing "${src_dir}"
 
-	local archive_name format_flag dst_dir
-	archive_name=$( basename "${archive_file}" ) || die
-	format_flag=$( map_extension_to_tar_flag "${archive_name}" ) || die
-	dst_dir=$( dirname "${archive_file}" ) || die
-
-	log_indent_begin "Archiving ${archive_name}..."
-
-	rm -f "${archive_file}" || die
-	mkdir -p "${dst_dir}" || die
-
-	if ! tar -c "${format_flag}" -f "${archive_file}" -C "${src_dir}" '.' "$@" &> '/dev/null'; then
-		rm -f "${archive_file}" || die
+	if ! [ -d "${src_dir}" ]; then
 		return 1
 	fi
 
-	local archive_size
-	archive_size=$( measure_recursively "${archive_file}" ) || die
-	log_end "${archive_size}"
+	local name flag dst_dir
+	name=$( basename "${file}" ) || die
+	flag=$( map_extension_to_tar_flag "${name}" ) || die
+	dst_dir=$( dirname "${file}" ) || die
+
+	log_indent_begin "Archiving ${name}..."
+
+	rm -f "${file}" || die
+	mkdir -p "${dst_dir}" || die
+
+	if ! tar -c "${flag}" -f "${file}" -C "${src_dir}" '.' "$@" &> '/dev/null'; then
+		rm -f "${file}" || die
+		return 1
+	fi
+
+	local size
+	size=$( measure_recursively "${file}" ) || die
+	log_end "${size}"
 }
 
 
 function tar_extract () {
-	local archive_file dst_dir
-	expect_args archive_file dst_dir -- "$@"
+	local file dir
+	expect_args file dir -- "$@"
 	shift 2
-	expect_existing "${archive_file}"
 
-	local archive_name format_flag
-	archive_name=$( basename "${archive_file}" ) || die
-	format_flag=$( map_extension_to_tar_flag "${archive_name}" ) || die
+	if ! [ -f "${file}" ]; then
+		return 1
+	fi
 
-	log_indent_begin "Extracting ${archive_name}..."
+	local name flag
+	name=$( basename "${file}" ) || die
+	flag=$( map_extension_to_tar_flag "${name}" ) || die
 
-	rm -rf "${dst_dir}" || die
-	mkdir -p "${dst_dir}" || die
+	log_indent_begin "Extracting ${name}..."
 
-	if ! tar -x "${format_flag}" -f "${archive_file}" -C "${dst_dir}" "$@" &> '/dev/null'; then
-		rm -rf "${dst_dir}" || die
+	rm -rf "${dir}" || die
+	mkdir -p "${dir}" || die
+
+	if ! tar -x "${flag}" -f "${file}" -C "${dir}" "$@" &> '/dev/null'; then
+		rm -rf "${dir}" || die
 		return 1
 	fi
 
