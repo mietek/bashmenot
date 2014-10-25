@@ -19,7 +19,6 @@ function tar_archive () {
 	expect_args src_dir archive_file -- "$@"
 	shift 2
 	expect_existing "${src_dir}"
-	expect_no_existing "${archive_file}"
 
 	local archive_name format_flag dst_dir
 	archive_name=$( basename "${archive_file}" ) || die
@@ -28,7 +27,9 @@ function tar_archive () {
 
 	log_indent_begin "Archiving ${archive_name}..."
 
+	rm -f "${archive_file}" || die
 	mkdir -p "${dst_dir}" || die
+
 	if ! tar -c "${format_flag}" -f "${archive_file}" -C "${src_dir}" '.' "$@" &> '/dev/null'; then
 		rm -f "${archive_file}" || die
 		return 1
@@ -45,7 +46,6 @@ function tar_extract () {
 	expect_args archive_file dst_dir -- "$@"
 	shift 2
 	expect_existing "${archive_file}"
-	expect_no_existing "${dst_dir}"
 
 	local archive_name format_flag
 	archive_name=$( basename "${archive_file}" ) || die
@@ -53,7 +53,9 @@ function tar_extract () {
 
 	log_indent_begin "Extracting ${archive_name}..."
 
+	rm -rf "${dst_dir}" || die
 	mkdir -p "${dst_dir}" || die
+
 	if ! tar -x "${format_flag}" -f "${archive_file}" -C "${dst_dir}" "$@" &> '/dev/null'; then
 		rm -rf "${dst_dir}" || die
 		return 1

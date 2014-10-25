@@ -81,16 +81,21 @@ function curl_do () {
 function curl_download () {
 	local src_file_url dst_file
 	expect_args src_file_url dst_file -- "$@"
-	expect_no_existing "${dst_file}"
 
 	log_indent_begin "Downloading ${src_file_url}..."
 
 	local dst_dir
 	dst_dir=$( dirname "${dst_file}" ) || die
+
+	rm -f "${dst_file}" || die
 	mkdir -p "${dst_dir}" || die
 
-	curl_do "${src_file_url}" \
+	if ! curl_do "${src_file_url}" \
 		--output "${dst_file}"
+	then
+		rm -f "${dst_file}" || die
+		return 1
+	fi
 }
 
 

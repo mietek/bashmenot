@@ -59,7 +59,6 @@ function s3_do () {
 function s3_download () {
 	local src_bucket src_object dst_file
 	expect_args src_bucket src_object dst_file -- "$@"
-	expect_no_existing "${dst_file}"
 
 	local src_resource
 	src_resource="/${src_bucket}/${src_object}"
