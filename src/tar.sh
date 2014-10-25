@@ -37,7 +37,7 @@ function tar_archive () {
 
 	local size
 	size=$( measure_recursively "${file}" ) || die
-	log_end "${size}"
+	log_end "done (${size})"
 }
 
 
