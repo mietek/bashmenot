@@ -69,51 +69,19 @@ function s3_download () {
 	src_url=$( format_s3_url "${src_resource}" ) || die
 	dst_dir=$( dirname "${dst_file}" ) || die
 	mkdir -p "${dst_dir}" || die
+	rm -f "${dst_file}" || die
 
-	s3_do "${src_url}"             \
-		--output "${dst_file}" \
-		<<-EOF
-			GET
-
-
-			S3_DATE
-			${src_resource}
-EOF
-}
-
-
-function s3_list () {
-	local src_bucket src_prefix
-	expect_args src_bucket src_prefix -- "$@"
-
-	local bucket_resource src_resource
-	bucket_resource="/${src_bucket}/"
-	src_resource="${bucket_resource}${src_prefix:+?prefix=${src_prefix}}"
-
-	log_indent_begin "Listing s3:/${src_resource}..."
-
-	local src_url
-	src_url=$( format_s3_url "${src_resource}" ) || die
-
-	local status listing
-	status=0
-	if ! listing=$(
-		s3_do "${src_url}"                        \
-			--output >( read_s3_listing_xml ) \
+	(
+		s3_do "${src_url}"             \
+			--output "${dst_file}" \
 			<<-EOF
 				GET
 
 
 				S3_DATE
-				${bucket_resource}
+				${src_resource}
 EOF
-	); then
-		status=1
-	else
-		echo "${listing}"
-	fi
-
-	return "${status}"
+	) || return 1
 }
 
 
@@ -254,14 +222,62 @@ function s3_delete () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" ) || die
 
-	s3_do "${dst_url}"           \
-		--output '/dev/null' \
-		--request DELETE     \
-		<<-EOF
-			DELETE
+	(
+		s3_do "${dst_url}"           \
+			--output '/dev/null' \
+			--request DELETE     \
+			<<-EOF
+				DELETE
 
 
-			S3_DATE
-			${dst_resource}
+				S3_DATE
+				${dst_resource}
 EOF
+	) || return 1
+}
+
+
+function s3_list () {
+	local src_bucket src_prefix
+	expect_args src_bucket src_prefix -- "$@"
+
+	local bucket_resource src_resource
+	bucket_resource="/${src_bucket}/"
+	src_resource="${bucket_resource}${src_prefix:+?prefix=${src_prefix}}"
+
+	log_indent_begin "Listing s3:/${src_resource}..."
+
+	local src_url
+	src_url=$( format_s3_url "${src_resource}" ) || die
+
+	local listing
+	listing=$(
+		s3_do "${src_url}"                        \
+			--output >( read_s3_listing_xml ) \
+			<<-EOF
+				GET
+
+
+				S3_DATE
+				${bucket_resource}
+EOF
+	) || return 1
+
+	echo "${listing}"
+}
+
+
+function curl_list_s3 () {
+	local url
+	expect_args url -- "$@"
+
+	log_indent_begin "Listing ${url}..."
+
+	local listing
+	listing=$(
+		curl_do "${url}" \
+			--output >( read_s3_listing_xml )
+	) || return 1
+
+	echo "${listing}"
 }
