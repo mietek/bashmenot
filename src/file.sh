@@ -140,22 +140,8 @@ function hash_tree () {
 	shift
 	[ -d "${dir}" ] || return 0
 
-	local list_hash content_hash
-	list_hash=$(
-		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
-		sort0_naturally |
-		awk 'BEGIN { RS="\0" } sub("'"${dir}/"'", "")' |
-		do_hash
-	) || return 0
-	content_hash=$(
-		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
-		sort0_naturally |
-		awk 'BEGIN { RS="\0"; ORS="\0" } sub("'"${dir}/"'", "")' |
-		COPYFILE_DISABLE=1 tar -c --null -T - -f - -C "${dir}" |
-		do_hash
-	) || return 0
-
-	echo -e "${list_hash}\t${content_hash}" |
+	( cd "${dir}" && find . "$@" -type f -exec openssl sha1 '{}' ';' ) |
+		sort_naturally |
 		do_hash || die
 }
 
