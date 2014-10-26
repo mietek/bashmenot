@@ -124,34 +124,6 @@ function find_removed () {
 }
 
 
-function compare_recursively () {
-	local old_dir new_dir
-	expect_args old_dir new_dir -- "$@"
-
-	(
-		find_added "${old_dir}" "${new_dir}" | sed 's/$/ +/'
-		find_changed "${old_dir}" "${new_dir}" | sed 's/$/ */'
-		find_not_changed "${old_dir}" "${new_dir}" | sed 's/$/ =/'
-		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
-	) |
-		sort_naturally |
-		awk '{ print $2 " " $1 }' || return 0
-}
-
-
-function find_spaceless_recursively () {
-	local dir
-	expect_args dir -- "$@"
-	shift
-
-	local files
-	files=$( find "${dir}" "$@" -type f -and \( -path '* *' -prune -or -print \) 2>'/dev/null' ) || return 0
-	[ -n "${files}" ] || return 0
-
-	sed "s:^${dir}/::" <<<"${files}" || return 0
-}
-
-
 function do_hash () {
 	local input
 	input=$( cat ) || die
@@ -185,6 +157,21 @@ function hash_tree () {
 
 	echo -e "${list_hash}\t${content_hash}" |
 		do_hash || die
+}
+
+
+function compare_tree () {
+	local old_dir new_dir
+	expect_args old_dir new_dir -- "$@"
+
+	(
+		find_added "${old_dir}" "${new_dir}" | sed 's/$/ +/'
+		find_changed "${old_dir}" "${new_dir}" | sed 's/$/ */'
+		find_not_changed "${old_dir}" "${new_dir}" | sed 's/$/ =/'
+		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
+	) |
+		sort_naturally |
+		awk '{ print $2 " " $1 }' || return 0
 }
 
 
