@@ -18,7 +18,7 @@ function read_s3_listing_xml () {
 	IFS='>'
 
 	local element contents
-	while read -r -d '<' element contents; do
+	while read -rd '<' element contents; do
 		if [ "${element}" = 'Key' ]; then
 			echo "${contents}"
 		fi
