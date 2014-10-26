@@ -162,27 +162,33 @@ function do_hash () {
 }
 
 
-function hash_spaceless_recursively () {
+function hash_tree () {
 	local dir
 	expect_args dir -- "$@"
 	shift
+	[ -d "${dir}" ] || return 0
 
-	local files
-	files=$( find_spaceless_recursively "${dir}" "$@" | sort_naturally ) || die
-	[ -n "${files}" ] || return 0
+	local list_hash content_hash
+	list_hash=$(
+		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
+		sort0_naturally |
+		awk 'BEGIN { RS="\0" } sub("'"${dir}/"'", "")' |
+		do_hash
+	) || return 0
+	content_hash=$(
+		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
+		sort0_naturally |
+		awk 'BEGIN { RS="\0"; ORS="\0" } sub("'"${dir}/"'", "")' |
+		COPYFILE_DISABLE=1 tar -c --null -T - -f - -C "${dir}" |
+		do_hash
+	) || return 0
 
-	(
-		do_hash <<<"${files}" || die
-
-		local file
-		for file in ${files}; do
-			do_hash <"${dir}/${file}" || die
-		done
-	) | do_hash || die
+	echo -e "${list_hash}\t${content_hash}" |
+		do_hash || die
 }
 
 
-function measure_recursively () {
+function size_tree () {
 	local dir
 	expect_args dir -- "$@"
 
@@ -190,9 +196,36 @@ function measure_recursively () {
 }
 
 
-function strip0 () {
-	local file
-	while read -rd $'\0' file; do
-		strip "$@" "${file}" || die
-	done || die
-}
+case "$( detect_os )" in
+'linux-'*)
+	function strip_tree () {
+		local dir
+		expect_args dir -- "$@"
+
+		local file
+		find "${dir}" -type f -print0 2>'/dev/null' |
+			sort0_naturally |
+			while read -rd $'\0' file; do
+				strip --strip-unneeded "${file}" 2>'/dev/null' || true
+			done || return 0
+	}
+	;;
+'os-x'*)
+	function strip_tree () {
+		local dir
+		expect_args dir -- "$@"
+
+		local file
+		find "${dir}" -type f -print0 2>'/dev/null' |
+			sort0_naturally |
+			while read -rd $'\0' file; do
+				strip -u -r "${file}"
+			done || return 0
+	}
+	;;
+*)
+	function strip_tree () {
+		log_warning 'Stripping is unsupported on this OS'
+		return 0
+	}
+esac
