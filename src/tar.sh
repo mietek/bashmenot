@@ -14,7 +14,7 @@ function map_extension_to_tar_flag () {
 }
 
 
-function tar_archive () {
+function tar_create () {
 	local src_dir file
 	expect_args src_dir file -- "$@"
 	shift 2
@@ -25,7 +25,7 @@ function tar_archive () {
 	flag=$( map_extension_to_tar_flag "${name}" ) || die
 	dst_dir=$( dirname "${file}" ) || die
 
-	log_indent_begin "Archiving ${name}..."
+	log_indent_begin "Creating ${name}..."
 
 	rm -f "${file}" || die
 	mkdir -p "${dst_dir}" || die
@@ -54,11 +54,9 @@ function tar_extract () {
 
 	log_indent_begin "Extracting ${name}..."
 
-	rm -rf "${dir}" || die
 	mkdir -p "${dir}" || die
 
 	if ! COPYFILE_DISABLE=1 tar -x "${flag}" -f "${file}" -C "${dir}" "$@" 2>'/dev/null'; then
-		rm -rf "${dir}" || die
 		log_end 'error'
 		return 1
 	fi
@@ -73,7 +71,6 @@ function tar_copy () {
 	shift 2
 	[ -d "${src_dir}" ] || return 1
 
-	rm -rf "${dst_dir}" || die
 	mkdir -p "${dst_dir}" || die
 
 	if ! COPYFILE_DISABLE=1 tar -c -f - -C "${src_dir}" "$@" '.' 2>'/dev/null' |
