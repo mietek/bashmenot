@@ -186,7 +186,7 @@ function s3_copy () {
 	src_resource="/${src_bucket}/${src_object}"
 	dst_resource="/${dst_bucket}/${dst_object}"
 
-	log_indent_begin "Copying s3:/${src_resource} to s3:/${src_resource}..."
+	log_indent_begin "Copying s3:/${src_resource} to s3:/${dst_resource}..."
 
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" ) || die
