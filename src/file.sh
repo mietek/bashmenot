@@ -124,6 +124,16 @@ function find_removed () {
 }
 
 
+function find_tree () {
+	local dir
+	expect_args dir -- "$@"
+	shift
+	[ -d "${dir}" ] || return 0
+
+	( cd "${dir}" && find . "$@" ) || die
+}
+
+
 function do_hash () {
 	local input
 	input=$( cat ) || die
