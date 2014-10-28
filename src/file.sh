@@ -16,19 +16,19 @@ function get_tmp_dir () {
 
 case "$( detect_os )" in
 'linux-'*)
-	function get_file_modification_time () {
-		local file
-		expect_args file -- "$@"
+	function get_modification_time () {
+		local thing
+		expect_args thing -- "$@"
 
-		stat -c "%Y" "${file}" || die
+		stat -c "%Y" "${thing}" || die
 	}
 	;;
 *)
-	function get_file_modification_time () {
-		local file
-		expect_args file -- "$@"
+	function get_modification_time () {
+		local thing
+		expect_args thing -- "$@"
 
-		stat -f "%m" "${file}" || die
+		stat -f "%m" "${thing}" || die
 	}
 esac
 
@@ -172,10 +172,10 @@ function compare_tree () {
 
 
 function size_tree () {
-	local dir
-	expect_args dir -- "$@"
+	local thing
+	expect_args thing -- "$@"
 
-	du -sh "${dir}" |
+	du -sh "${thing}" |
 		awk '{ print $1 }' |
 		sed 's/K$/KB/;s/M$/MB/;s/G$/GB/' || die
 }
