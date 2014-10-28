@@ -61,6 +61,24 @@ function log_delimiter () {
 }
 
 
+function log_pad () {
+	local thing
+	thing="$1$( printf ' %.0s' {0..41} )"
+	shift
+
+	log "${thing:0:41}" "$@"
+}
+
+
+function log_indent_pad () {
+	local thing
+	thing="$1$( printf ' %.0s' {0..41} )"
+	shift
+
+	log_indent "${thing:0:41}" "$@"
+}
+
+
 function die () {
 	if [ -n "${*:+_}" ]; then
 		log_error "$@"
