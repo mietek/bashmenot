@@ -38,7 +38,7 @@ function tar_create () {
 
 	local size
 	size=$( size_tree "${file}" ) || die
-	log_end "done (${size})"
+	log_end "done, ${size}"
 }
 
 
@@ -61,7 +61,9 @@ function tar_extract () {
 		return 1
 	fi
 
-	log_end 'done'
+	local size
+	size=$( size_tree "${dir}" ) || die
+	log_end "done, ${size}"
 }
 
 

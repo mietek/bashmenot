@@ -175,7 +175,9 @@ function size_tree () {
 	local dir
 	expect_args dir -- "$@"
 
-	du -sh "${dir}" | awk '{ print $1 }' || die
+	du -sh "${dir}" |
+		awk '{ print $1 }' |
+		sed 's/K$/KB/;s/M$/MB/;s/G$/GB/' || die
 }
 
 
