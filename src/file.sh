@@ -128,7 +128,10 @@ function find_tree () {
 	local dir
 	expect_args dir -- "$@"
 	shift
-	[ -d "${dir}" ] || return 0
+
+	if ! [ -d "${dir}" ]; then
+		return 0
+	fi
 
 	( cd "${dir}" && find . "$@" ) || die
 }
@@ -137,7 +140,10 @@ function find_tree () {
 function do_hash () {
 	local input
 	input=$( cat ) || die
-	[ -n "${input}" ] || return 0
+
+	if [ -z "${input}" ]; then
+		return 0
+	fi
 
 	openssl sha1 <<<"${input}" |
 		sed 's/^.* //' || die
@@ -148,7 +154,10 @@ function hash_tree () {
 	local dir
 	expect_args dir -- "$@"
 	shift
-	[ -d "${dir}" ] || return 0
+
+	if ! [ -d "${dir}" ]; then
+		return 0
+	fi
 
 	( cd "${dir}" && find . "$@" -type f -exec openssl sha1 '{}' ';' ) |
 		sort_naturally |

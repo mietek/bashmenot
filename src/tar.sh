@@ -18,7 +18,10 @@ function tar_create () {
 	local src_dir file
 	expect_args src_dir file -- "$@"
 	shift 2
-	[ -d "${src_dir}" ] || return 1
+
+	if ! [ -d "${src_dir}" ]; then
+		return 1
+	fi
 
 	local name flag dst_dir
 	name=$( basename "${file}" ) || die
@@ -46,7 +49,10 @@ function tar_extract () {
 	local file dir
 	expect_args file dir -- "$@"
 	shift 2
-	[ -f "${file}" ] || return 1
+
+	if ! [ -f "${file}" ]; then
+		return 1
+	fi
 
 	local name flag
 	name=$( basename "${file}" ) || die
@@ -71,7 +77,10 @@ function tar_copy () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
 	shift 2
-	[ -d "${src_dir}" ] || return 1
+
+	if ! [ -d "${src_dir}" ]; then
+		return 1
+	fi
 
 	mkdir -p "${dst_dir}" || die
 
