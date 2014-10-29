@@ -1,16 +1,16 @@
 case "$( detect_os )" in
 'linux-'*)
-	function sort_naturally () {
+	function sort_natural () {
 		sort -V "$@" || return 0
 	}
 	;;
 *)
-	function sort_naturally () {
+	function sort_natural () {
 		gsort -V "$@" || return 0
 	}
 esac
 
 
-function sort0_naturally () {
-	sort_naturally -z "$@" || return 0
+function sort0_natural () {
+	sort_natural -z "$@" || return 0
 }

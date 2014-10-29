@@ -58,7 +58,7 @@ function find_added () {
 
 	local new_file
 	find "${new_dir}" -type f -print0 2>'/dev/null' |
-		sort0_naturally |
+		sort0_natural |
 		while read -rd $'\0' new_file; do
 			local path old_file
 			path="${new_file##${new_dir}/}"
@@ -76,7 +76,7 @@ function find_changed () {
 
 	local new_file
 	find "${new_dir}" -type f -print0 2>'/dev/null' |
-		sort0_naturally |
+		sort0_natural |
 		while read -rd $'\0' new_file; do
 			local path old_file
 			path="${new_file##${new_dir}/}"
@@ -94,7 +94,7 @@ function find_not_changed () {
 
 	local new_file
 	find "${new_dir}" -type f -print0 2>'/dev/null' |
-		sort0_naturally |
+		sort0_natural |
 		while read -rd $'\0' new_file; do
 			local path old_file
 			path="${new_file##${new_dir}/}"
@@ -112,7 +112,7 @@ function find_removed () {
 
 	local old_file
 	find "${old_dir}" -type f -print0 2>'/dev/null' |
-		sort0_naturally |
+		sort0_natural |
 		while read -rd $'\0' old_file; do
 			local path new_file
 			path="${old_file##${old_dir}/}"
@@ -160,7 +160,7 @@ function hash_tree () {
 	fi
 
 	( cd "${dir}" && find . "$@" -type f -exec openssl sha1 '{}' ';' ) |
-		sort_naturally |
+		sort_natural |
 		do_hash || die
 }
 
@@ -175,7 +175,7 @@ function compare_tree () {
 		find_not_changed "${old_dir}" "${new_dir}" | sed 's/$/ =/'
 		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
 	) |
-		sort_naturally |
+		sort_natural |
 		awk '{ print $2 " " $1 }' || return 0
 }
 
@@ -198,7 +198,7 @@ case "$( detect_os )" in
 
 		local file
 		find "${dir}" -type f -print0 2>'/dev/null' |
-			sort0_naturally |
+			sort0_natural |
 			while read -rd $'\0' file; do
 				strip --strip-unneeded "${file}" 2>'/dev/null' || true
 			done || return 0
@@ -211,7 +211,7 @@ case "$( detect_os )" in
 
 		local file
 		find "${dir}" -type f -print0 2>'/dev/null' |
-			sort0_naturally |
+			sort0_natural |
 			while read -rd $'\0' file; do
 				strip -u -r "${file}"
 			done || return 0
