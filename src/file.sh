@@ -133,7 +133,7 @@ function find_tree () {
 		return 0
 	fi
 
-	( cd "${dir}" && find . "$@" ) || die
+	( cd "${dir}" && find . "$@" 2>'/dev/null' ) || return 0
 }
 
 
@@ -159,9 +159,9 @@ function hash_tree () {
 		return 0
 	fi
 
-	( cd "${dir}" && find . "$@" -type f -exec openssl sha1 '{}' ';' ) |
+	( cd "${dir}" && find . "$@" -type f -exec openssl sha1 '{}' ';' 2>'/dev/null' ) |
 		sort_natural |
-		do_hash || die
+		do_hash || return 0
 }
 
 
