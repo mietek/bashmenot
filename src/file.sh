@@ -52,6 +52,20 @@ function get_dir_name () {
 }
 
 
+function copy_file () {
+	local src_file dst_file
+	expect_args src_file dst_file -- "$@"
+	expect_existing "${src_file}"
+
+	local dst_dir
+	dst_dir=$( dirname "${dst_file}" ) || die
+
+	rm -f "{dst_file}" || die
+	mkdir -p "${dst_dir}" || die
+	cp -p "${src_file}" "${dst_file}" || die
+}
+
+
 function find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
