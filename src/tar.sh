@@ -15,8 +15,8 @@ function map_extension_to_tar_flag () {
 
 
 function tar_create () {
-	local src_dir file
-	expect_args src_dir file -- "$@"
+	local src_dir dst_file
+	expect_args src_dir dst_file -- "$@"
 	shift 2
 
 	if ! [ -d "${src_dir}" ]; then
@@ -24,51 +24,51 @@ function tar_create () {
 	fi
 
 	local name flag dst_dir
-	name=$( basename "${file}" ) || die
+	name=$( basename "${dst_file}" ) || die
 	flag=$( map_extension_to_tar_flag "${name}" ) || die
-	dst_dir=$( dirname "${file}" ) || die
+	dst_dir=$( dirname "${dst_file}" ) || die
 
 	log_indent_begin "Creating ${name}..."
 
-	rm -f "${file}" || die
+	rm -f "${dst_file}" || die
 	mkdir -p "${dst_dir}" || die
 
-	if ! COPYFILE_DISABLE=1 tar -c "${flag}" -f "${file}" -C "${src_dir}" "$@" '.' 2>'/dev/null'; then
-		rm -f "${file}" || die
+	if ! COPYFILE_DISABLE=1 tar -c "${flag}" -f "${dst_file}" -C "${src_dir}" "$@" '.' 2>'/dev/null'; then
+		rm -f "${dst_file}" || die
 		log_end 'error'
 		return 1
 	fi
 
 	local size
-	size=$( size_tree "${file}" ) || die
+	size=$( size_tree "${dst_file}" ) || die
 	log_end "done, ${size}"
 }
 
 
 function tar_extract () {
-	local file dir
-	expect_args file dir -- "$@"
+	local src_file dst_dir
+	expect_args src_file dst_dir -- "$@"
 	shift 2
 
-	if ! [ -f "${file}" ]; then
+	if ! [ -f "${src_file}" ]; then
 		return 1
 	fi
 
 	local name flag
-	name=$( basename "${file}" ) || die
+	name=$( basename "${src_file}" ) || die
 	flag=$( map_extension_to_tar_flag "${name}" ) || die
 
 	log_indent_begin "Extracting ${name}..."
 
-	mkdir -p "${dir}" || die
+	mkdir -p "${dst_dir}" || die
 
-	if ! COPYFILE_DISABLE=1 tar -x "${flag}" -f "${file}" -C "${dir}" "$@" 2>'/dev/null'; then
+	if ! COPYFILE_DISABLE=1 tar -x "${flag}" -f "${src_file}" -C "${dst_dir}" "$@" 2>'/dev/null'; then
 		log_end 'error'
 		return 1
 	fi
 
 	local size
-	size=$( size_tree "${dir}" ) || die
+	size=$( size_tree "${dst_dir}" ) || die
 	log_end "done, ${size}"
 }
 

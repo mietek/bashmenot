@@ -68,8 +68,9 @@ function s3_download () {
 	local src_url dst_dir
 	src_url=$( format_s3_url "${src_resource}" ) || die
 	dst_dir=$( dirname "${dst_file}" ) || die
-	mkdir -p "${dst_dir}" || die
+
 	rm -f "${dst_file}" || die
+	mkdir -p "${dst_dir}" || die
 
 	(
 		s3_do "${src_url}"             \
