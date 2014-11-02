@@ -1,4 +1,4 @@
-function format_os_description () {
+format_os_description () {
 	local os
 	expect_args os -- "$@"
 
@@ -11,7 +11,7 @@ function format_os_description () {
 }
 
 
-function detect_arch () {
+detect_arch () {
 	local arch
 	arch=$( uname -m | tr '[:upper:]' '[:lower:]' ) || die
 
@@ -25,7 +25,7 @@ function detect_arch () {
 }
 
 
-function detect_os () {
+detect_os () {
 	local raw_name arch
 	raw_name=$( uname -s ) || die
 	arch=$( detect_arch ) || die
@@ -38,10 +38,10 @@ function detect_os () {
 	'Linux')
 		name='linux'
 		raw_dist='unknown'
-		if [ -f '/etc/os-release' ]; then
+		if [[ -f '/etc/os-release' ]]; then
 			raw_dist=$( awk -F= '/^ID=/ { print $2 }' <'/etc/os-release' ) || die
 			raw_version=$( awk -F= '/^VERSION_ID=/ { print $2 }' <'/etc/os-release' ) || die
-		elif [ -f '/etc/lsb-release' ]; then
+		elif [[ -f '/etc/lsb-release' ]]; then
 			raw_dist=$( awk -F= '/^DISTRIB_ID=/ { print $2 }' <'/etc/lsb-release' ) || die
 			raw_version=$( awk -F= '/^DISTRIB_RELEASE=/ { print $2 }' <'/etc/lsb-release' ) || die
 		fi

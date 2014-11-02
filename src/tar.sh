@@ -1,4 +1,4 @@
-function tar_create () {
+tar_create () {
 	local src_dir dst_file
 	expect_args src_dir dst_file -- "$@"
 	shift 2
@@ -36,7 +36,7 @@ function tar_create () {
 }
 
 
-function tar_extract () {
+tar_extract () {
 	local src_file dst_dir
 	expect_args src_file dst_dir -- "$@"
 	shift 2
@@ -73,7 +73,7 @@ function tar_extract () {
 }
 
 
-function tar_copy () {
+tar_copy () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
 	shift 2
@@ -85,7 +85,7 @@ function tar_copy () {
 }
 
 
-function create_archive () {
+create_archive () {
 	local src_dir dst_file
 	expect_args src_dir dst_file -- "$@"
 	shift 2
@@ -111,7 +111,7 @@ function create_archive () {
 }
 
 
-function extract_archive_into () {
+extract_archive_into () {
 	local src_file dst_dir
 	expect_args src_file dst_dir -- "$@"
 	shift 2
@@ -135,7 +135,7 @@ function extract_archive_into () {
 }
 
 
-function extract_archive_over () {
+extract_archive_over () {
 	local src_file dst_dir
 	expect_args src_file dst_dir -- "$@"
 	shift 2
@@ -160,7 +160,7 @@ function extract_archive_over () {
 }
 
 
-function copy_dir_into () {
+copy_dir_into () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
 	shift 2
@@ -170,7 +170,7 @@ function copy_dir_into () {
 }
 
 
-function copy_dir_over () {
+copy_dir_over () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
 	shift 2

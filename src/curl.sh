@@ -1,4 +1,4 @@
-function format_http_code_description () {
+format_http_code_description () {
 	local code
 	expect_args code -- "$@"
 
@@ -50,7 +50,7 @@ function format_http_code_description () {
 }
 
 
-function curl_do () {
+curl_do () {
 	local url
 	expect_args url -- "$@"
 	shift
@@ -78,7 +78,7 @@ function curl_do () {
 }
 
 
-function curl_download () {
+curl_download () {
 	local src_file_url dst_file
 	expect_args src_file_url dst_file -- "$@"
 
@@ -99,7 +99,7 @@ function curl_download () {
 }
 
 
-function curl_check () {
+curl_check () {
 	local src_url
 	expect_args src_url -- "$@"
 
@@ -111,7 +111,7 @@ function curl_check () {
 }
 
 
-function curl_upload () {
+curl_upload () {
 	local src_file dst_file_url
 	expect_args src_file dst_file_url -- "$@"
 	expect_existing "${src_file}"
@@ -124,7 +124,7 @@ function curl_upload () {
 }
 
 
-function curl_delete () {
+curl_delete () {
 	local dst_url
 	expect_args dst_url -- "$@"
 

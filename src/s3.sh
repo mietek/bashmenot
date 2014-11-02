@@ -1,9 +1,9 @@
-function get_s3_host () {
+get_s3_host () {
 	echo 's3.amazonaws.com'
 }
 
 
-function format_s3_url () {
+format_s3_url () {
 	local resource
 	expect_args resource -- "$@"
 
@@ -14,19 +14,19 @@ function format_s3_url () {
 }
 
 
-function read_s3_listing_xml () {
+read_s3_listing_xml () {
 	IFS='>'
 
 	local element contents
 	while read -rd '<' element contents; do
-		if [ "${element}" = 'Key' ]; then
+		if [[ "${element}" == 'Key' ]]; then
 			echo "${contents}"
 		fi
 	done || return 0
 }
 
 
-function s3_do () {
+s3_do () {
 	expect_vars HALCYON_AWS_ACCESS_KEY_ID HALCYON_AWS_SECRET_ACCESS_KEY
 
 	local url
@@ -56,7 +56,7 @@ function s3_do () {
 }
 
 
-function s3_download () {
+s3_download () {
 	local src_bucket src_object dst_file
 	expect_args src_bucket src_object dst_file -- "$@"
 
@@ -86,7 +86,7 @@ EOF
 }
 
 
-function s3_check () {
+s3_check () {
 	local src_bucket src_object
 	expect_args src_bucket src_object -- "$@"
 
@@ -113,7 +113,7 @@ EOF
 }
 
 
-function s3_upload () {
+s3_upload () {
 	local src_file dst_bucket dst_object dst_acl
 	expect_args src_file dst_bucket dst_object dst_acl -- "$@"
 	expect_existing "${src_file}"
@@ -150,7 +150,7 @@ EOF
 }
 
 
-function s3_create () {
+s3_create () {
 	local dst_bucket dst_acl
 	expect_args dst_bucket dst_acl -- "$@"
 
@@ -179,7 +179,7 @@ EOF
 }
 
 
-function s3_copy () {
+s3_copy () {
 	local src_bucket src_object dst_bucket dst_object dst_acl
 	expect_args src_bucket src_object dst_bucket dst_object dst_acl -- "$@"
 
@@ -211,7 +211,7 @@ EOF
 }
 
 
-function s3_delete () {
+s3_delete () {
 	local dst_bucket dst_object
 	expect_args dst_bucket dst_object -- "$@"
 
@@ -238,7 +238,7 @@ EOF
 }
 
 
-function s3_list () {
+s3_list () {
 	local src_bucket src_prefix
 	expect_args src_bucket src_prefix -- "$@"
 
@@ -268,7 +268,7 @@ EOF
 }
 
 
-function curl_list_s3 () {
+curl_list_s3 () {
 	local url
 	expect_args url -- "$@"
 

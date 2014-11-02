@@ -1,4 +1,4 @@
-function prefix_log () {
+prefix_log () {
 	local prefix
 	prefix="$1"
 	shift
@@ -7,7 +7,7 @@ function prefix_log () {
 }
 
 
-function prefix_log_begin () {
+prefix_log_begin () {
 	local prefix
 	prefix="$1"
 	shift
@@ -16,52 +16,52 @@ function prefix_log_begin () {
 }
 
 
-function log () {
+log () {
 	prefix_log '-----> ' "$@"
 }
 
 
-function log_begin () {
+log_begin () {
 	prefix_log_begin '-----> ' "$@"
 }
 
 
-function log_end () {
+log_end () {
 	prefix_log '' "$@"
 }
 
 
-function log_indent () {
+log_indent () {
 	prefix_log '       ' "$@"
 }
 
 
-function log_indent_begin () {
+log_indent_begin () {
 	prefix_log_begin '       ' "$@"
 }
 
 
-function log_debug () {
+log_debug () {
 	prefix_log '   *** DEBUG: ' "$@"
 }
 
 
-function log_warning () {
+log_warning () {
 	prefix_log '   *** WARNING: ' "$@"
 }
 
 
-function log_error () {
+log_error () {
 	prefix_log '   *** ERROR: ' "$@"
 }
 
 
-function log_delimiter () {
+log_delimiter () {
 	echo '-----------------------------------------------------------------------------' >&2
 }
 
 
-function log_pad () {
+log_pad () {
 	local thing
 	thing="$1$( printf ' %.0s' {0..41} )"
 	shift
@@ -70,7 +70,7 @@ function log_pad () {
 }
 
 
-function log_indent_pad () {
+log_indent_pad () {
 	local thing
 	thing="$1$( printf ' %.0s' {0..41} )"
 	shift
@@ -79,8 +79,8 @@ function log_indent_pad () {
 }
 
 
-function die () {
-	if [ -n "${*:+_}" ]; then
+die () {
+	if [[ -n "${*:+_}" ]]; then
 		log_error "$@"
 	fi
 	exit 1

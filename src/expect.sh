@@ -1,10 +1,10 @@
-function expect_args () {
+expect_args () {
 	local specs status
 	specs=()
 	status=1
 
 	while (( $# )); do
-		if [ "$1" = -- ]; then
+		if [[ "$1" == -- ]]; then
 			status=0
 			shift
 			break
@@ -28,9 +28,9 @@ function expect_args () {
 }
 
 
-function expect_vars () {
+expect_vars () {
 	while (( $# )); do
-		if [ -z "${!1:+_}" ]; then
+		if [[ -z "${!1:+_}" ]]; then
 			die "${FUNCNAME[1]:--}: Expected var: $1"
 		fi
 		shift
@@ -38,9 +38,9 @@ function expect_vars () {
 }
 
 
-function expect_existing () {
+expect_existing () {
 	while (( $# )); do
-		if ! [ -e "$1" ]; then
+		if [[ ! -e "$1" ]]; then
 			die "${FUNCNAME[1]:--}: Expected existing $1"
 		fi
 		shift
@@ -48,9 +48,9 @@ function expect_existing () {
 }
 
 
-function expect_no_existing () {
+expect_no_existing () {
 	while (( $# )); do
-		if [ -e "$1" ]; then
+		if [[ -e "$1" ]]; then
 			die "${FUNCNAME[1]:--}: Unexpected existing $1"
 		fi
 		shift

@@ -1,4 +1,4 @@
-function get_tmp_file () {
+get_tmp_file () {
 	local base
 	expect_args base -- "$@"
 
@@ -6,7 +6,7 @@ function get_tmp_file () {
 }
 
 
-function get_tmp_dir () {
+get_tmp_dir () {
 	local base
 	expect_args base -- "$@"
 
@@ -14,9 +14,9 @@ function get_tmp_dir () {
 }
 
 
-case "$( detect_os )" in
+case $( detect_os ) in
 'linux-'*)
-	function get_modification_time () {
+	get_modification_time () {
 		local thing
 		expect_args thing -- "$@"
 
@@ -24,7 +24,7 @@ case "$( detect_os )" in
 	}
 	;;
 *)
-	function get_modification_time () {
+	get_modification_time () {
 		local thing
 		expect_args thing -- "$@"
 
@@ -33,7 +33,7 @@ case "$( detect_os )" in
 esac
 
 
-function get_dir_path () {
+get_dir_path () {
 	local dir
 	expect_args dir -- "$@"
 
@@ -41,7 +41,7 @@ function get_dir_path () {
 }
 
 
-function get_dir_name () {
+get_dir_name () {
 	local dir
 	expect_args dir -- "$@"
 
@@ -52,7 +52,7 @@ function get_dir_name () {
 }
 
 
-function copy_file () {
+copy_file () {
 	local src_file dst_file
 	expect_args src_file dst_file -- "$@"
 	expect_existing "${src_file}"
@@ -66,7 +66,7 @@ function copy_file () {
 }
 
 
-function find_added () {
+find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
 
@@ -77,14 +77,14 @@ function find_added () {
 			local path old_file
 			path="${new_file##${new_dir}/}"
 			old_file="${old_dir}/${path}"
-			if ! [ -f "${old_file}" ]; then
+			if [[ ! -f "${old_file}" ]]; then
 				echo "${path}"
 			fi
 		done || return 0
 }
 
 
-function find_changed () {
+find_changed () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
 
@@ -95,14 +95,14 @@ function find_changed () {
 			local path old_file
 			path="${new_file##${new_dir}/}"
 			old_file="${old_dir}/${path}"
-			if [ -f "${old_file}" ] && ! cmp -s "${old_file}" "${new_file}"; then
+			if [[ -f "${old_file}" ]] && ! cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
 		done || return 0
 }
 
 
-function find_not_changed () {
+find_not_changed () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
 
@@ -113,14 +113,14 @@ function find_not_changed () {
 			local path old_file
 			path="${new_file##${new_dir}/}"
 			old_file="${old_dir}/${path}"
-			if [ -f "${old_file}" ] && cmp -s "${old_file}" "${new_file}"; then
+			if [[ -f "${old_file}" ]] && cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
 		done || return 0
 }
 
 
-function find_removed () {
+find_removed () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
 
@@ -131,19 +131,19 @@ function find_removed () {
 			local path new_file
 			path="${old_file##${old_dir}/}"
 			new_file="${new_dir}/${path}"
-			if ! [ -f "${new_file}" ]; then
+			if [[ ! -f "${new_file}" ]]; then
 				echo "${path}"
 			fi
 		done || return 0
 }
 
 
-function find_tree () {
+find_tree () {
 	local dir
 	expect_args dir -- "$@"
 	shift
 
-	if ! [ -d "${dir}" ]; then
+	if [[ ! -d "${dir}" ]]; then
 		return 0
 	fi
 
@@ -151,11 +151,11 @@ function find_tree () {
 }
 
 
-function do_hash () {
+do_hash () {
 	local input
 	input=$( cat ) || die
 
-	if [ -z "${input}" ]; then
+	if [[ -z "${input}" ]]; then
 		return 0
 	fi
 
@@ -164,12 +164,12 @@ function do_hash () {
 }
 
 
-function hash_tree () {
+hash_tree () {
 	local dir
 	expect_args dir -- "$@"
 	shift
 
-	if ! [ -d "${dir}" ]; then
+	if [[ ! -d "${dir}" ]]; then
 		return 0
 	fi
 
@@ -179,7 +179,7 @@ function hash_tree () {
 }
 
 
-function compare_tree () {
+compare_tree () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
 
@@ -194,7 +194,7 @@ function compare_tree () {
 }
 
 
-function size_tree () {
+size_tree () {
 	local thing
 	expect_args thing -- "$@"
 
@@ -204,9 +204,9 @@ function size_tree () {
 }
 
 
-case "$( detect_os )" in
+case $( detect_os ) in
 'linux-'*)
-	function strip_tree () {
+	strip_tree () {
 		local dir
 		expect_args dir -- "$@"
 
@@ -219,7 +219,7 @@ case "$( detect_os )" in
 	}
 	;;
 'os-x'*)
-	function strip_tree () {
+	strip_tree () {
 		local dir
 		expect_args dir -- "$@"
 
@@ -232,7 +232,7 @@ case "$( detect_os )" in
 	}
 	;;
 *)
-	function strip_tree () {
+	strip_tree () {
 		log_warning 'Stripping is unsupported on this OS'
 		return 0
 	}
