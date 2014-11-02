@@ -37,7 +37,7 @@ bashmenot_autoupdate () {
 	must_update=0
 	git_url=$( cd "${BASHMENOT_TOP_DIR}" && git config --get 'remote.origin.url' ) || return 1
 	if [[ "${git_url}" != "${url}" ]]; then
-		( cd "${BASHMENOT_TOP_DIR}" && git remote set-url 'origin' "${url}" |& quote ) || return 1
+		( cd "${BASHMENOT_TOP_DIR}" && git remote set-url 'origin' "${url}" ) || return 1
 		must_update=1
 	fi
 
@@ -45,15 +45,21 @@ bashmenot_autoupdate () {
 		local mark_time current_time
 		mark_time=$( get_modification_time "${BASHMENOT_TOP_DIR}" ) || return 1
 		current_time=$( date +'%s' ) || return 1
-		if (( mark_time > current_time - 60 )); then
+		if (( mark_time > current_time - 42 )); then
 			return 0
 		fi
 	fi
 
-	log 'Auto-updating bashmenot'
+	log_begin 'Auto-updating bashmenot...'
 
-	( cd "${BASHMENOT_TOP_DIR}" && git fetch 'origin' |& quote ) || return 1
-	( cd "${BASHMENOT_TOP_DIR}" && git reset --hard "origin/${branch}" |& quote ) || return 1
+	local commit_hash
+	commit_hash=$(
+		cd "${BASHMENOT_TOP_DIR}" &&
+		git fetch -q 'origin' &&
+		git reset -q --hard "origin/${branch}" &&
+		git log -n 1 --pretty='format:%h'
+	) || return 1
+	log_end "done, ${commit_hash}"
 
 	BASHMENOT_NO_AUTOUPDATE=1 \
 		source "${BASHMENOT_TOP_DIR}/src.sh" || return 1
