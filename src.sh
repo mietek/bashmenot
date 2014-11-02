@@ -33,8 +33,6 @@ bashmenot_autoupdate () {
 		branch='master'
 	fi
 
-	log 'Auto-updating bashmenot'
-
 	local git_url must_update
 	must_update=0
 	git_url=$( cd "${BASHMENOT_TOP_DIR}" && git config --get 'remote.origin.url' ) || return 1
@@ -51,6 +49,8 @@ bashmenot_autoupdate () {
 			return 0
 		fi
 	fi
+
+	log 'Auto-updating bashmenot'
 
 	( cd "${BASHMENOT_TOP_DIR}" && git fetch 'origin' |& quote ) || return 1
 	( cd "${BASHMENOT_TOP_DIR}" && git reset --hard "origin/${branch}" |& quote ) || return 1
