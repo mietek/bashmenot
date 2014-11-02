@@ -37,9 +37,9 @@ bashmenot_autoupdate () {
 
 	local git_url must_update
 	must_update=0
-	git_url=$( git -C "${BASHMENOT_TOP_DIR}" ls-remote --get-url 'origin' ) || return 1
+	git_url=$( cd "${BASHMENOT_TOP_DIR}" && git config --get 'remote.origin.url' ) || return 1
 	if [[ "${git_url}" != "${url}" ]]; then
-		git -C "${BASHMENOT_TOP_DIR}" remote set-url 'origin' "${url}" |& quote || return 1
+		( cd "${BASHMENOT_TOP_DIR}" && git remote set-url 'origin' "${url}" |& quote ) || return 1
 		must_update=1
 	fi
 
@@ -52,8 +52,8 @@ bashmenot_autoupdate () {
 		fi
 	fi
 
-	git -C "${BASHMENOT_TOP_DIR}" fetch 'origin' |& quote || return 1
-	git -C "${BASHMENOT_TOP_DIR}" reset --hard "origin/${branch}" |& quote || return 1
+	( cd "${BASHMENOT_TOP_DIR}" && git fetch 'origin' |& quote ) || return 1
+	( cd "${BASHMENOT_TOP_DIR}" && git reset --hard "origin/${branch}" |& quote ) || return 1
 
 	BASHMENOT_NO_AUTOUPDATE=1 \
 		source "${BASHMENOT_TOP_DIR}/src.sh" || return 1
