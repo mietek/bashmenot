@@ -26,7 +26,7 @@ bashmenot_autoupdate () {
 	fi
 
 	local urloid url branch
-	urloid="${BASHMENOT_URL:-https://github.com/mietek/bashmenot.git}"
+	urloid="${BASHMENOT_URL:-https://github.com/mietek/bashmenot}"
 	url="${urloid%#*}"
 	branch="${urloid#*#}"
 	if [[ "${branch}" == "${url}" ]]; then
