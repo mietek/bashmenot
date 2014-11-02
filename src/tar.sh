@@ -1,32 +1,38 @@
-function map_extension_to_tar_flag () {
-	local name
-	expect_args name -- "$@"
-
-	local format
-	format="${name##*.}"
-
-	case "${format}" in
-	'gz')	echo '-z';;
-	'bz2')	echo '-j';;
-	'xz')	echo '-J';;
-	*)	die "Unexpected archive format: ${name}"
-	esac
-}
-
-
 function tar_create () {
 	local src_dir dst_file
 	expect_args src_dir dst_file -- "$@"
 	shift 2
 	expect_existing "${src_dir}"
 
-	local name flag dst_dir
+	local name format dst_dir
 	name=$( basename "${dst_file}" ) || die
-	flag=$( map_extension_to_tar_flag "${name}" ) || die
+	format="${name##*.}"
 	dst_dir=$( dirname "${dst_file}" ) || die
 
 	mkdir -p "${dst_dir}" || die
-	COPYFILE_DISABLE=1 tar -c "${flag}" -f "${dst_file}" -C "${src_dir}" "$@" '.' || return 1
+
+	case "${format}" in
+	'gz')	if which 'pigz' &>'/dev/null'; then
+			COPYFILE_DISABLE=1 tar -c -C "${src_dir}" "$@" '.' | pigz -7 >"${dst_file}" || return 1
+		else
+			COPYFILE_DISABLE=1 tar -c -z -f "${dst_file}" -C "${src_dir}" "$@" '.' || return 1
+		fi
+		;;
+	'bz2')	if which 'pbzip2' &>'/dev/null'; then
+			COPYFILE_DISABLE=1 tar -c -C "${src_dir}" "$@" '.' | pbzip2 -7 >"${dst_file}" || return 1
+		else
+			COPYFILE_DISABLE=1 tar -c -j -f "${dst_file}" -C "${src_dir}" "$@" '.' || return 1
+		fi
+		;;
+	'xz')	if which 'pxz' &>'/dev/null'; then
+			COPYFILE_DISABLE=1 tar -c -C "${src_dir}" "$@" '.' | pxz -7 >"${dst_file}" || return 1
+		else
+			COPYFILE_DISABLE=1 tar -c -J -f "${dst_file}" -C "${src_dir}" "$@" '.' || return 1
+		fi
+		;;
+	*)
+		die "Unexpected archive format: ${name}"
+	esac
 }
 
 
@@ -36,12 +42,34 @@ function tar_extract () {
 	shift 2
 	expect_existing "${src_file}"
 
-	local name flag
+	local name format
 	name=$( basename "${src_file}" ) || die
-	flag=$( map_extension_to_tar_flag "${name}" ) || die
+	format="${name##*.}"
 
 	mkdir -p "${dst_dir}" || die
-	COPYFILE_DISABLE=1 tar -x "${flag}" -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+
+	case "${format}" in
+	'gz')	if which 'pigz' &>'/dev/null'; then
+			COPYFILE_DISABLE=1 pigz -d <"${src_file}" | tar -x -C "${dst_dir}" "$@" || return 1
+		else
+			COPYFILE_DISABLE=1 tar -x -z -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+		fi
+		;;
+	'bz2')	if which 'pbzip2' &>'/dev/null'; then
+			COPYFILE_DISABLE=1 pbzip2 -d <"${src_file}" | tar -x -C "${dst_dir}" "$@" || return 1
+		else
+			COPYFILE_DISABLE=1 tar -x -j -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+		fi
+		;;
+	'xz')	if which 'pxz' &>'/dev/null'; then
+			COPYFILE_DISABLE=1 pxz -d <"${src_file}" | tar -x -C "${dst_dir}" "$@" || return 1
+		else
+			COPYFILE_DISABLE=1 tar -x -J -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+		fi
+		;;
+	*)
+		die "Unexpected archive format: ${name}"
+	esac
 }
 
 
