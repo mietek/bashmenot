@@ -44,8 +44,8 @@ bashmenot_autoupdate () {
 	local commit_hash
 	commit_hash=$(
 		cd "${BASHMENOT_TOP_DIR}" &&
-		git fetch -q 'origin' &&
-		git reset -q --hard "origin/${branch}" &&
+		git fetch -q 'origin' &>'/dev/null' &&
+		git reset -q --hard "origin/${branch}" &>'/dev/null' &&
 		git log -n 1 --pretty='format:%h'
 	) || return 1
 	log_end "done (${commit_hash})"
