@@ -6,6 +6,8 @@ format_os_description () {
 	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (64-bit)';;
 	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (64-bit)';;
 	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (64-bit)';;
+	'os-x-10.9-x86_64')		echo 'OS X 10.9 (64-bit)';;
+	'os-x-10.10-x86_64')		echo 'OS X 10.10 (64-bit)';;
 	*)				die "Unexpected OS: ${os}"
 	esac
 }
