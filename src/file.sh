@@ -214,7 +214,7 @@ case $( detect_os ) in
 		find "${dir}" -type f -print0 2>'/dev/null' |
 			sort0_natural |
 			while read -rd $'\0' file; do
-				strip --strip-unneeded "${file}" 2>'/dev/null' || true
+				strip --strip-unneeded "${file}" 2>'/dev/null' | quote || true
 			done || return 0
 	}
 	;;
@@ -227,7 +227,7 @@ case $( detect_os ) in
 		find "${dir}" -type f -print0 2>'/dev/null' |
 			sort0_natural |
 			while read -rd $'\0' file; do
-				strip -u -r "${file}"
+				strip -u -r "${file}" 2>'/dev/null' | quote || true
 			done || return 0
 	}
 	;;
