@@ -4,7 +4,7 @@ case $( detect_os ) in
 		sed -u "$@" || return 0
 	}
 	;;
-'os-x-'*)
+'osx-'*)
 	sed_unbuffered () {
 		sed -l "$@" || return 0
 	}

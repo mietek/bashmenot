@@ -218,7 +218,7 @@ case $( detect_os ) in
 			done || return 0
 	}
 	;;
-'os-x'*)
+'osx-'*)
 	strip_tree () {
 		local dir
 		expect_args dir -- "$@"
