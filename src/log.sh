@@ -41,6 +41,24 @@ log_indent_begin () {
 }
 
 
+log_label () {
+	local label
+	label="$1$( printf ' %.0s' {0..41} )"
+	shift
+
+	log "${label:0:41}" "$@"
+}
+
+
+log_indent_label () {
+	local label
+	label="$1$( printf ' %.0s' {0..41} )"
+	shift
+
+	log_indent "${label:0:41}" "$@"
+}
+
+
 log_debug () {
 	prefix_log '   *** DEBUG: ' "$@"
 }
@@ -53,29 +71,6 @@ log_warning () {
 
 log_error () {
 	prefix_log '   *** ERROR: ' "$@"
-}
-
-
-log_delimiter () {
-	echo '-----------------------------------------------------------------------------' >&2
-}
-
-
-log_pad () {
-	local thing
-	thing="$1$( printf ' %.0s' {0..41} )"
-	shift
-
-	log "${thing:0:41}" "$@"
-}
-
-
-log_indent_pad () {
-	local thing
-	thing="$1$( printf ' %.0s' {0..41} )"
-	shift
-
-	log_indent "${thing:0:41}" "$@"
 }
 
 

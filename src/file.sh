@@ -14,6 +14,16 @@ get_tmp_dir () {
 }
 
 
+get_size () {
+	local thing
+	expect_args thing -- "$@"
+
+	du -sh "${thing}" |
+		awk '{ print $1 }' |
+		sed 's/K$/KB/;s/M$/MB/;s/G$/GB/' || die
+}
+
+
 case $( detect_os ) in
 'linux-'*)
 	get_modification_time () {
@@ -52,20 +62,6 @@ get_dir_name () {
 }
 
 
-copy_file () {
-	local src_file dst_file
-	expect_args src_file dst_file -- "$@"
-	expect_existing "${src_file}"
-
-	local dst_dir
-	dst_dir=$( dirname "${dst_file}" ) || die
-
-	rm -f "{dst_file}" || die
-	mkdir -p "${dst_dir}" || die
-	cp -p "${src_file}" "${dst_file}" || die
-}
-
-
 find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
@@ -77,6 +73,7 @@ find_added () {
 			local path old_file
 			path="${new_file##${new_dir}/}"
 			old_file="${old_dir}/${path}"
+
 			if [[ ! -f "${old_file}" ]]; then
 				echo "${path}"
 			fi
@@ -95,6 +92,7 @@ find_changed () {
 			local path old_file
 			path="${new_file##${new_dir}/}"
 			old_file="${old_dir}/${path}"
+
 			if [[ -f "${old_file}" ]] && ! cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
@@ -113,6 +111,7 @@ find_not_changed () {
 			local path old_file
 			path="${new_file##${new_dir}/}"
 			old_file="${old_dir}/${path}"
+
 			if [[ -f "${old_file}" ]] && cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
@@ -131,10 +130,26 @@ find_removed () {
 			local path new_file
 			path="${old_file##${old_dir}/}"
 			new_file="${new_dir}/${path}"
+
 			if [[ ! -f "${new_file}" ]]; then
 				echo "${path}"
 			fi
 		done || return 0
+}
+
+
+compare_tree () {
+	local old_dir new_dir
+	expect_args old_dir new_dir -- "$@"
+
+	(
+		find_added "${old_dir}" "${new_dir}" | sed 's/$/ +/'
+		find_changed "${old_dir}" "${new_dir}" | sed 's/$/ */'
+		find_not_changed "${old_dir}" "${new_dir}" | sed 's/$/ =/'
+		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
+	) |
+		sort_natural |
+		awk '{ print $2 " " $1 }' || return 0
 }
 
 
@@ -147,7 +162,8 @@ find_tree () {
 		return 0
 	fi
 
-	( cd "${dir}" && find . "$@" 2>'/dev/null' ) || return 0
+	( cd "${dir}" && find '.' "$@" 2>'/dev/null' ) |
+		sed 's:^\./::' || return 0
 }
 
 
@@ -173,34 +189,9 @@ hash_tree () {
 		return 0
 	fi
 
-	( cd "${dir}" && find . "$@" -type f -exec openssl sha1 '{}' ';' 2>'/dev/null' ) |
+	( cd "${dir}" && find '.' "$@" -type f -exec openssl sha1 '{}' ';' 2>'/dev/null' ) |
 		sort_natural |
 		do_hash || return 0
-}
-
-
-compare_tree () {
-	local old_dir new_dir
-	expect_args old_dir new_dir -- "$@"
-
-	(
-		find_added "${old_dir}" "${new_dir}" | sed 's/$/ +/'
-		find_changed "${old_dir}" "${new_dir}" | sed 's/$/ */'
-		find_not_changed "${old_dir}" "${new_dir}" | sed 's/$/ =/'
-		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
-	) |
-		sort_natural |
-		awk '{ print $2 " " $1 }' || return 0
-}
-
-
-size_tree () {
-	local thing
-	expect_args thing -- "$@"
-
-	du -sh "${thing}" |
-		awk '{ print $1 }' |
-		sed 's/K$/KB/;s/M$/MB/;s/G$/GB/' || die
 }
 
 
@@ -211,7 +202,7 @@ case $( detect_os ) in
 		expect_args dir -- "$@"
 
 		local file
-		find "${dir}" -type f -print0 2>'/dev/null' |
+		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
 			sort0_natural |
 			while read -rd $'\0' file; do
 				strip --strip-unneeded "${file}" 2>'/dev/null' | quote || true
@@ -224,7 +215,7 @@ case $( detect_os ) in
 		expect_args dir -- "$@"
 
 		local file
-		find "${dir}" -type f -print0 2>'/dev/null' |
+		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
 			sort0_natural |
 			while read -rd $'\0' file; do
 				strip -u -r "${file}" 2>'/dev/null' | quote || true
@@ -237,3 +228,17 @@ case $( detect_os ) in
 		return 0
 	}
 esac
+
+
+copy_file () {
+	local src_file dst_file
+	expect_args src_file dst_file -- "$@"
+	expect_existing "${src_file}"
+
+	local dst_dir
+	dst_dir=$( dirname "${dst_file}" ) || die
+
+	rm -f "{dst_file}" || die
+	mkdir -p "${dst_dir}" || die
+	cp -p "${src_file}" "${dst_file}" || die
+}

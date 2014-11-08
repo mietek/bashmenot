@@ -106,7 +106,7 @@ create_archive () {
 	fi
 
 	local size
-	size=$( size_tree "${dst_file}" ) || die
+	size=$( get_size "${dst_file}" ) || die
 	log_end "done, ${size}"
 }
 
@@ -130,7 +130,7 @@ extract_archive_into () {
 	fi
 
 	local size
-	size=$( size_tree "${dst_dir}" ) || die
+	size=$( get_size "${dst_dir}" ) || die
 	log_end "done, ${size}"
 }
 
@@ -155,7 +155,7 @@ extract_archive_over () {
 	fi
 
 	local size
-	size=$( size_tree "${dst_dir}" ) || die
+	size=$( get_size "${dst_dir}" ) || die
 	log_end "done, ${size}"
 }
 

@@ -1,3 +1,8 @@
+filter_first () {
+	head -n 1 || return 0
+}
+
+
 filter_last () {
 	tail -n 1 || return 0
 }
@@ -30,7 +35,7 @@ match_at_most_one () {
 
 
 match_at_least_one () {
-	grep . || return 1
+	grep '.' || return 1
 }
 
 
