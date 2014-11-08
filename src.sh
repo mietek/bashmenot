@@ -12,6 +12,7 @@ source "${BASHMENOT_TOP_DIR}/src/sort.sh"
 source "${BASHMENOT_TOP_DIR}/src/date.sh"
 source "${BASHMENOT_TOP_DIR}/src/file.sh"
 source "${BASHMENOT_TOP_DIR}/src/tar.sh"
+source "${BASHMENOT_TOP_DIR}/src/git.sh"
 source "${BASHMENOT_TOP_DIR}/src/curl.sh"
 source "${BASHMENOT_TOP_DIR}/src/s3.sh"
 
@@ -25,29 +26,13 @@ bashmenot_autoupdate () {
 		return 1
 	fi
 
-	local urloid url branch
+	local urloid
 	urloid="${BASHMENOT_URL:-https://github.com/mietek/bashmenot}"
-	url="${urloid%#*}"
-	branch="${urloid#*#}"
-	if [[ "${branch}" == "${url}" ]]; then
-		branch='master'
-	fi
-
-	local git_url
-	git_url=$( cd "${BASHMENOT_TOP_DIR}" && git config --get 'remote.origin.url' ) || return 1
-	if [[ "${git_url}" != "${url}" ]]; then
-		( cd "${BASHMENOT_TOP_DIR}" && git remote set-url 'origin' "${url}" ) || return 1
-	fi
 
 	log_begin 'Auto-updating bashmenot...'
 
 	local commit_hash
-	commit_hash=$(
-		cd "${BASHMENOT_TOP_DIR}" &&
-		git fetch -q 'origin' &>'/dev/null' &&
-		git reset -q --hard "origin/${branch}" &>'/dev/null' &&
-		git log -n 1 --pretty='format:%h'
-	) || return 1
+	commit_hash=$( git_update_into "${urloid}" "${BASHMENOT_TOP_DIR}" ) || return 1
 	log_end "done, ${commit_hash}"
 
 	BASHMENOT_NO_AUTOUPDATE=1 \
