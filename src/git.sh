@@ -7,7 +7,7 @@ hash_last_git_commit () {
 }
 
 
-git_quiet () {
+quiet_git_do () {
 	local cmd
 	expect_args cmd -- "$@"
 	shift
@@ -30,11 +30,11 @@ git_clone_over () {
 		branch='master';
 	fi
 
-	git_quiet clone "${bare_url}" "${dir}" || return 1
+	quiet_git_do clone "${bare_url}" "${dir}" || return 1
 	(
 		cd "${dir}" &&
-		git_quiet checkout "${branch}" &&
-		git_quiet submodule update --init --recursive
+		quiet_git_do checkout "${branch}" &&
+		quiet_git_do submodule update --init --recursive
 	) || return 1
 
 	hash_last_git_commit "${dir}"
@@ -61,10 +61,10 @@ git_update_into () {
 
 	(
 		cd "${dir}" &&
-		git_quiet fetch 'origin' &&
-		git_quiet fetch --tags 'origin' &&
-		git_quiet reset --hard "origin/${branch}" &&
-		git_quiet submodule update --init --recursive
+		quiet_git_do fetch 'origin' &&
+		quiet_git_do fetch --tags 'origin' &&
+		quiet_git_do reset --hard "origin/${branch}" &&
+		quiet_git_do submodule update --init --recursive
 	) || return 1
 
 	hash_last_git_commit "${dir}"
