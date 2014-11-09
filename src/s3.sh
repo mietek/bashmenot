@@ -22,7 +22,7 @@ read_s3_listing_xml () {
 
 
 s3_do () {
-	expect_vars HALCYON_AWS_ACCESS_KEY_ID HALCYON_AWS_SECRET_ACCESS_KEY
+	expect_vars BASHMENOT_AWS_ACCESS_KEY_ID BASHMENOT_AWS_SECRET_ACCESS_KEY
 
 	local url
 	expect_args url -- "$@"
@@ -36,12 +36,12 @@ s3_do () {
 	signature=$(
 		sed "s/S3_DATE/${date}/" |
 		strip_trailing_newline |
-		openssl sha1 -hmac "${HALCYON_AWS_SECRET_ACCESS_KEY}" -binary |
+		openssl sha1 -hmac "${BASHMENOT_AWS_SECRET_ACCESS_KEY}" -binary |
 		openssl base64
 	) || return 1
 
 	local auth
-	auth="AWS ${HALCYON_AWS_ACCESS_KEY_ID}:${signature}"
+	auth="AWS ${BASHMENOT_AWS_ACCESS_KEY_ID}:${signature}"
 
 	curl_do "${url}"                          \
 		--header "Host: ${host}"          \
