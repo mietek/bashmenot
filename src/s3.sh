@@ -21,6 +21,22 @@ read_s3_listing_xml () {
 }
 
 
+curl_list_s3 () {
+	local url
+	expect_args url -- "$@"
+
+	log_indent_begin "Listing ${url}..."
+
+	local listing
+	listing=$(
+		curl_do "${url}" \
+			--output >( read_s3_listing_xml )
+	) || return 1
+
+	echo "${listing}"
+}
+
+
 s3_do () {
 	expect_vars BASHMENOT_AWS_ACCESS_KEY_ID BASHMENOT_AWS_SECRET_ACCESS_KEY
 
@@ -246,22 +262,6 @@ s3_list () {
 				S3_DATE
 				${bucket_resource}
 EOF
-	) || return 1
-
-	echo "${listing}"
-}
-
-
-curl_list_s3 () {
-	local url
-	expect_args url -- "$@"
-
-	log_indent_begin "Listing ${url}..."
-
-	local listing
-	listing=$(
-		curl_do "${url}" \
-			--output >( read_s3_listing_xml )
 	) || return 1
 
 	echo "${listing}"

@@ -62,6 +62,20 @@ get_dir_name () {
 }
 
 
+find_tree () {
+	local dir
+	expect_args dir -- "$@"
+	shift
+
+	if [[ ! -d "${dir}" ]]; then
+		return 0
+	fi
+
+	( cd "${dir}" && find '.' "$@" 2>'/dev/null' ) |
+		sed 's:^\./::' || true
+}
+
+
 find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
@@ -150,18 +164,4 @@ compare_tree () {
 	) |
 		sort_natural |
 		awk '{ print $2 " " $1 }' || true
-}
-
-
-find_tree () {
-	local dir
-	expect_args dir -- "$@"
-	shift
-
-	if [[ ! -d "${dir}" ]]; then
-		return 0
-	fi
-
-	( cd "${dir}" && find '.' "$@" 2>'/dev/null' ) |
-		sed 's:^\./::' || true
 }
