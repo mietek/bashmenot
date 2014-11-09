@@ -1,4 +1,4 @@
-hash_last_git_commit () {
+hash_newest_git_commit () {
 	local dir
 	expect_args dir -- "$@"
 	expect_existing "${dir}"
@@ -37,7 +37,7 @@ git_clone_over () {
 		quiet_git_do submodule update --init --recursive
 	) || return 1
 
-	hash_last_git_commit "${dir}"
+	hash_newest_git_commit "${dir}"
 }
 
 
@@ -67,5 +67,5 @@ git_update_into () {
 		quiet_git_do submodule update --init --recursive
 	) || return 1
 
-	hash_last_git_commit "${dir}"
+	hash_newest_git_commit "${dir}"
 }
