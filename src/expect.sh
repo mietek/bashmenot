@@ -1,8 +1,7 @@
 expect_args () {
-	local specs status
-	specs=()
+	local -a specs
+	local status
 	status=1
-
 	while (( $# )); do
 		if [[ "$1" == -- ]]; then
 			status=0
@@ -12,7 +11,6 @@ expect_args () {
 		specs+=( "$1" )
 		shift
 	done
-
 	if (( status )); then
 		die "${FUNCNAME[1]:--}: Expected specs, guard, and args:" 'arg1 .. argN -- "$@"'
 	fi

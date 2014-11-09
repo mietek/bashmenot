@@ -1,21 +1,16 @@
 case $( detect_os ) in
 'linux-'*)
-	sed_unbuffered () {
-		sed -u "$@" || return 0
+	quote () {
+		sed -u 's/^/       /' >&2 || true
 	}
 	;;
 'osx-'*)
-	sed_unbuffered () {
-		sed -l "$@" || return 0
+	quote () {
+		sed -l 's/^/       /' >&2 || true
 	}
 	;;
 *)
-	sed_unbuffered () {
-		sed "$@" || return 0
+	quote () {
+		sed 's/^/       /' >&2 || true
 	}
 esac
-
-
-quote () {
-	sed_unbuffered 's/^/       /' >&2 || return 0
-}

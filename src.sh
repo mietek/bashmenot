@@ -11,6 +11,7 @@ source "${BASHMENOT_TOP_DIR}/src/line.sh"
 source "${BASHMENOT_TOP_DIR}/src/sort.sh"
 source "${BASHMENOT_TOP_DIR}/src/date.sh"
 source "${BASHMENOT_TOP_DIR}/src/file.sh"
+source "${BASHMENOT_TOP_DIR}/src/hash.sh"
 source "${BASHMENOT_TOP_DIR}/src/tar.sh"
 source "${BASHMENOT_TOP_DIR}/src/git.sh"
 source "${BASHMENOT_TOP_DIR}/src/curl.sh"
@@ -26,17 +27,17 @@ bashmenot_autoupdate () {
 		return 1
 	fi
 
-	local urloid
-	urloid="${BASHMENOT_URL:-https://github.com/mietek/bashmenot}"
+	local url
+	url="${BASHMENOT_URL:-https://github.com/mietek/bashmenot}"
 
 	log_begin 'Auto-updating bashmenot...'
 
 	local commit_hash
-	commit_hash=$( git_update_into "${urloid}" "${BASHMENOT_TOP_DIR}" ) || return 1
-	log_end "done, ${commit_hash}"
+	commit_hash=$( git_update_into "${url}" "${BASHMENOT_TOP_DIR}" ) || return 1
+	log_end "done, ${commit_hash:0:7}"
 
 	BASHMENOT_NO_AUTOUPDATE=1 \
-		source "${BASHMENOT_TOP_DIR}/src.sh" || return 1
+		source "${BASHMENOT_TOP_DIR}/src.sh"
 }
 
 

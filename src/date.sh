@@ -1,24 +1,19 @@
 case $( detect_os ) in
 'linux-'*)
-	format_http_date () {
-		date --utc --rfc-2822 "$@" || die
+	get_http_date () {
+		date --utc --rfc-2822 "$@"
+	}
+
+	get_date () {
+		date --utc +'%Y-%m-%d' "$@"
 	}
 	;;
 *)
-	format_http_date () {
-		gdate --utc --rfc-2822 "$@" || die
+	get_http_date () {
+		gdate --utc --rfc-2822 "$@"
 	}
-esac
 
-
-case $( detect_os ) in
-'linux-'*)
-	format_date () {
-		date --utc +'%Y-%m-%d' "$@" || die
-	}
-	;;
-*)
-	format_date () {
-		gdate --utc +'%Y-%m-%d' "$@" || die
+	get_date () {
+		gdate --utc +'%Y-%m-%d' "$@"
 	}
 esac

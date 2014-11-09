@@ -71,7 +71,7 @@ curl_do () {
 	fi
 
 	local code_description
-	code_description=$( format_http_code_description "${code}" ) || die
+	code_description=$( format_http_code_description "${code}" )
 	log_end "${code_description}"
 
 	return "${status}"
@@ -85,17 +85,12 @@ curl_download () {
 	log_indent_begin "Downloading ${src_file_url}..."
 
 	local dst_dir
-	dst_dir=$( dirname "${dst_file}" ) || die
+	dst_dir=$( dirname "${dst_file}" ) || return 1
 
-	rm -f "${dst_file}" || die
-	mkdir -p "${dst_dir}" || die
+	mkdir -p "${dst_dir}" || return 1
 
-	if ! curl_do "${src_file_url}" \
+	curl_do "${src_file_url}" \
 		--output "${dst_file}"
-	then
-		rm -f "${dst_file}" || die
-		return 1
-	fi
 }
 
 
@@ -107,7 +102,7 @@ curl_check () {
 
 	curl_do "${src_url}"         \
 		--output '/dev/null' \
-		--head || return 1
+		--head
 }
 
 
@@ -120,7 +115,7 @@ curl_upload () {
 
 	curl_do "${dst_file_url}"    \
 		--output '/dev/null' \
-		--upload-file "${src_file}" || return 1
+		--upload-file "${src_file}"
 }
 
 
@@ -132,5 +127,5 @@ curl_delete () {
 
 	curl_do "${dst_url}"         \
 		--output '/dev/null' \
-		--request DELETE || return 1
+		--request DELETE
 }

@@ -1,14 +1,9 @@
-get_s3_host () {
-	echo 's3.amazonaws.com'
-}
-
-
 format_s3_url () {
 	local resource
 	expect_args resource -- "$@"
 
 	local host
-	host=$( get_s3_host ) || die
+	host="${BASHMENOT_S3_HOST:-s3.amazonaws.com}"
 
 	echo "https://${host}${resource}"
 }
@@ -22,7 +17,7 @@ read_s3_listing_xml () {
 		if [[ "${element}" == 'Key' ]]; then
 			echo "${contents}"
 		fi
-	done || return 0
+	done || true
 }
 
 
@@ -34,8 +29,8 @@ s3_do () {
 	shift
 
 	local host date
-	host=$( get_s3_host ) || die
-	date=$( format_http_date ) || die
+	host="${BASHMENOT_S3_HOST:-s3.amazonaws.com}"
+	date=$( get_http_date ) || return 1
 
 	local signature
 	signature=$(
@@ -43,7 +38,7 @@ s3_do () {
 		strip_trailing_newline |
 		openssl sha1 -hmac "${HALCYON_AWS_SECRET_ACCESS_KEY}" -binary |
 		openssl base64
-	) || die
+	) || return 1
 
 	local auth
 	auth="AWS ${HALCYON_AWS_ACCESS_KEY_ID}:${signature}"
@@ -52,7 +47,7 @@ s3_do () {
 		--header "Host: ${host}"          \
 		--header "Date: ${date}"          \
 		--header "Authorization: ${auth}" \
-		"$@" || return 1
+		"$@"
 }
 
 
@@ -66,23 +61,20 @@ s3_download () {
 	log_indent_begin "Downloading s3:/${src_resource}..."
 
 	local src_url dst_dir
-	src_url=$( format_s3_url "${src_resource}" ) || die
-	dst_dir=$( dirname "${dst_file}" ) || die
+	src_url=$( format_s3_url "${src_resource}" )
+	dst_dir=$( dirname "${dst_file}" ) || return 1
 
-	rm -f "${dst_file}" || die
-	mkdir -p "${dst_dir}" || die
+	mkdir -p "${dst_dir}" || return 1
 
-	(
-		s3_do "${src_url}"             \
-			--output "${dst_file}" \
-			<<-EOF
-				GET
+	s3_do "${src_url}"             \
+		--output "${dst_file}" \
+		<<-EOF
+			GET
 
 
-				S3_DATE
-				${src_resource}
+			S3_DATE
+			${src_resource}
 EOF
-	) || return 1
 }
 
 
@@ -96,20 +88,18 @@ s3_check () {
 	log_indent_begin "Checking s3:/${src_resource}..."
 
 	local src_url
-	src_url=$( format_s3_url "${src_resource}" ) || die
+	src_url=$( format_s3_url "${src_resource}" )
 
-	(
-		s3_do "${src_url}"           \
-			--output '/dev/null' \
-			--head               \
-			<<-EOF
-				HEAD
+	s3_do "${src_url}"           \
+		--output '/dev/null' \
+		--head               \
+		<<-EOF
+			HEAD
 
 
-				S3_DATE
-				${src_resource}
+			S3_DATE
+			${src_resource}
 EOF
-	) || return 1
 }
 
 
@@ -127,26 +117,24 @@ s3_upload () {
 	src_digest=$(
 		openssl md5 -binary <"${src_file}" |
 		openssl base64
-	) || die
+	) || return 1
 
 	local dst_url
-	dst_url=$( format_s3_url "${dst_resource}" ) || die
+	dst_url=$( format_s3_url "${dst_resource}" )
 
-	(
-		s3_do "${dst_url}"                            \
-			--output '/dev/null'                  \
-			--header "Content-MD5: ${src_digest}" \
-			--header "x-amz-acl: ${dst_acl}"      \
-			--upload-file "${src_file}"           \
-			<<-EOF
-				PUT
-				${src_digest}
+	s3_do "${dst_url}"                            \
+		--output '/dev/null'                  \
+		--header "Content-MD5: ${src_digest}" \
+		--header "x-amz-acl: ${dst_acl}"      \
+		--upload-file "${src_file}"           \
+		<<-EOF
+			PUT
+			${src_digest}
 
-				S3_DATE
-				x-amz-acl:${dst_acl}
-				${dst_resource}
+			S3_DATE
+			x-amz-acl:${dst_acl}
+			${dst_resource}
 EOF
-	) || return 1
 }
 
 
@@ -160,22 +148,20 @@ s3_create () {
 	log_indent_begin "Creating s3:/${dst_resource}..."
 
 	local dst_url
-	dst_url=$( format_s3_url "${dst_resource}" ) || die
+	dst_url=$( format_s3_url "${dst_resource}" )
 
-	(
-		s3_do "${dst_url}"                       \
-			--output '/dev/null'             \
-			--header "x-amz-acl: ${dst_acl}" \
-			--request PUT                    \
-			<<-EOF
-				PUT
+	s3_do "${dst_url}"                       \
+		--output '/dev/null'             \
+		--header "x-amz-acl: ${dst_acl}" \
+		--request PUT                    \
+		<<-EOF
+			PUT
 
 
-				S3_DATE
-				x-amz-acl:${dst_acl}
-				${dst_resource}
+			S3_DATE
+			x-amz-acl:${dst_acl}
+			${dst_resource}
 EOF
-	) || return 1
 }
 
 
@@ -190,7 +176,7 @@ s3_copy () {
 	log_indent_begin "Copying s3:/${src_resource} to s3:/${dst_resource}..."
 
 	local dst_url
-	dst_url=$( format_s3_url "${dst_resource}" ) || die
+	dst_url=$( format_s3_url "${dst_resource}" )
 
 	(
 		s3_do "${dst_url}"                                    \
@@ -207,7 +193,7 @@ s3_copy () {
 				x-amz-copy-source:${src_resource}
 				${dst_resource}
 EOF
-	) || return 1
+	) || fale
 }
 
 
@@ -221,20 +207,18 @@ s3_delete () {
 	log_indent_begin "Deleting s3:/${dst_resource}..."
 
 	local dst_url
-	dst_url=$( format_s3_url "${dst_resource}" ) || die
+	dst_url=$( format_s3_url "${dst_resource}" )
 
-	(
-		s3_do "${dst_url}"           \
-			--output '/dev/null' \
-			--request DELETE     \
-			<<-EOF
-				DELETE
+	s3_do "${dst_url}"           \
+		--output '/dev/null' \
+		--request DELETE     \
+		<<-EOF
+			DELETE
 
 
-				S3_DATE
-				${dst_resource}
+			S3_DATE
+			${dst_resource}
 EOF
-	) || return 1
 }
 
 
@@ -249,7 +233,7 @@ s3_list () {
 	log_indent_begin "Listing s3:/${src_resource}..."
 
 	local src_url
-	src_url=$( format_s3_url "${src_resource}" ) || die
+	src_url=$( format_s3_url "${src_resource}" )
 
 	local listing
 	listing=$(

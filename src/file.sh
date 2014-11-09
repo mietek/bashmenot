@@ -2,7 +2,7 @@ get_tmp_file () {
 	local base
 	expect_args base -- "$@"
 
-	mktemp -u "/tmp/${base}.XXXXXXXXXX" || die
+	mktemp -u "/tmp/${base}.XXXXXXXXXX" || false
 }
 
 
@@ -10,7 +10,7 @@ get_tmp_dir () {
 	local base
 	expect_args base -- "$@"
 
-	mktemp -du "/tmp/${base}.XXXXXXXXXX" || die
+	mktemp -du "/tmp/${base}.XXXXXXXXXX" || false
 }
 
 
@@ -20,7 +20,7 @@ get_size () {
 
 	du -sh "${thing}" |
 		awk '{ print $1 }' |
-		sed 's/K$/KB/;s/M$/MB/;s/G$/GB/' || die
+		sed 's/K$/KB/;s/M$/MB/;s/G$/GB/' || false
 }
 
 
@@ -30,7 +30,7 @@ case $( detect_os ) in
 		local thing
 		expect_args thing -- "$@"
 
-		stat -c "%Y" "${thing}" || die
+		stat -c "%Y" "${thing}" || false
 	}
 	;;
 *)
@@ -38,7 +38,7 @@ case $( detect_os ) in
 		local thing
 		expect_args thing -- "$@"
 
-		stat -f "%m" "${thing}" || die
+		stat -f "%m" "${thing}" || false
 	}
 esac
 
@@ -47,7 +47,7 @@ get_dir_path () {
 	local dir
 	expect_args dir -- "$@"
 
-	( cd "${dir}" && pwd -P ) || die
+	( cd "${dir}" && pwd -P ) || false
 }
 
 
@@ -56,9 +56,9 @@ get_dir_name () {
 	expect_args dir -- "$@"
 
 	local path
-	path=$( get_dir_path "${dir}" ) || die
+	path=$( get_dir_path "${dir}" ) || false
 
-	basename "${path}" || die
+	basename "${path}" || false
 }
 
 
@@ -77,7 +77,7 @@ find_added () {
 			if [[ ! -f "${old_file}" ]]; then
 				echo "${path}"
 			fi
-		done || return 0
+		done || true
 }
 
 
@@ -96,7 +96,7 @@ find_changed () {
 			if [[ -f "${old_file}" ]] && ! cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done || return 0
+		done || true
 }
 
 
@@ -115,7 +115,7 @@ find_not_changed () {
 			if [[ -f "${old_file}" ]] && cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done || return 0
+		done || true
 }
 
 
@@ -134,7 +134,7 @@ find_removed () {
 			if [[ ! -f "${new_file}" ]]; then
 				echo "${path}"
 			fi
-		done || return 0
+		done || true
 }
 
 
@@ -149,7 +149,7 @@ compare_tree () {
 		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
 	) |
 		sort_natural |
-		awk '{ print $2 " " $1 }' || return 0
+		awk '{ print $2 " " $1 }' || true
 }
 
 
@@ -163,82 +163,5 @@ find_tree () {
 	fi
 
 	( cd "${dir}" && find '.' "$@" 2>'/dev/null' ) |
-		sed 's:^\./::' || return 0
-}
-
-
-do_hash () {
-	local input
-	input=$( cat ) || die
-
-	if [[ -z "${input}" ]]; then
-		return 0
-	fi
-
-	openssl sha1 <<<"${input}" |
-		sed 's/^.* //' || die
-}
-
-
-hash_tree () {
-	local dir
-	expect_args dir -- "$@"
-	shift
-
-	if [[ ! -d "${dir}" ]]; then
-		return 0
-	fi
-
-	( cd "${dir}" && find '.' "$@" -type f -exec openssl sha1 '{}' ';' 2>'/dev/null' ) |
-		sort_natural |
-		do_hash || return 0
-}
-
-
-case $( detect_os ) in
-'linux-'*)
-	strip_tree () {
-		local dir
-		expect_args dir -- "$@"
-
-		local file
-		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
-			sort0_natural |
-			while read -rd $'\0' file; do
-				strip --strip-unneeded "${file}" 2>'/dev/null' | quote || true
-			done || return 0
-	}
-	;;
-'osx-'*)
-	strip_tree () {
-		local dir
-		expect_args dir -- "$@"
-
-		local file
-		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
-			sort0_natural |
-			while read -rd $'\0' file; do
-				strip -u -r "${file}" 2>'/dev/null' | quote || true
-			done || return 0
-	}
-	;;
-*)
-	strip_tree () {
-		log_warning 'Stripping is unsupported on this OS'
-		return 0
-	}
-esac
-
-
-copy_file () {
-	local src_file dst_file
-	expect_args src_file dst_file -- "$@"
-	expect_existing "${src_file}"
-
-	local dst_dir
-	dst_dir=$( dirname "${dst_file}" ) || die
-
-	rm -f "{dst_file}" || die
-	mkdir -p "${dst_dir}" || die
-	cp -p "${src_file}" "${dst_file}" || die
+		sed 's:^\./::' || true
 }
