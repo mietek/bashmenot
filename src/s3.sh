@@ -59,9 +59,9 @@ s3_do () {
 	local auth
 	auth="AWS ${BASHMENOT_AWS_ACCESS_KEY_ID}:${signature}"
 
-	curl_do "${url}"                          \
-		--header "Host: ${host}"          \
-		--header "Date: ${date}"          \
+	curl_do "${url}" \
+		--header "Host: ${host}" \
+		--header "Date: ${date}" \
 		--header "Authorization: ${auth}" \
 		"$@"
 }
@@ -82,7 +82,7 @@ s3_download () {
 
 	mkdir -p "${dst_dir}" || return 1
 
-	s3_do "${src_url}"             \
+	s3_do "${src_url}" \
 		--output "${dst_file}" \
 		<<-EOF
 			GET
@@ -106,9 +106,9 @@ s3_check () {
 	local src_url
 	src_url=$( format_s3_url "${src_resource}" )
 
-	s3_do "${src_url}"           \
+	s3_do "${src_url}" \
 		--output '/dev/null' \
-		--head               \
+		--head \
 		<<-EOF
 			HEAD
 
@@ -138,11 +138,11 @@ s3_upload () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" )
 
-	s3_do "${dst_url}"                            \
-		--output '/dev/null'                  \
+	s3_do "${dst_url}" \
+		--output '/dev/null' \
 		--header "Content-MD5: ${src_digest}" \
-		--header "x-amz-acl: ${dst_acl}"      \
-		--upload-file "${src_file}"           \
+		--header "x-amz-acl: ${dst_acl}" \
+		--upload-file "${src_file}" \
 		<<-EOF
 			PUT
 			${src_digest}
@@ -166,10 +166,10 @@ s3_create () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" )
 
-	s3_do "${dst_url}"                       \
-		--output '/dev/null'             \
+	s3_do "${dst_url}" \
+		--output '/dev/null' \
 		--header "x-amz-acl: ${dst_acl}" \
-		--request PUT                    \
+		--request PUT \
 		<<-EOF
 			PUT
 
@@ -195,11 +195,11 @@ s3_copy () {
 	dst_url=$( format_s3_url "${dst_resource}" )
 
 	(
-		s3_do "${dst_url}"                                    \
-			--output '/dev/null'                          \
-			--header "x-amz-acl: ${dst_acl}"              \
+		s3_do "${dst_url}" \
+			--output '/dev/null' \
+			--header "x-amz-acl: ${dst_acl}" \
 			--header "x-amz-copy-source: ${src_resource}" \
-			--request PUT                                 \
+			--request PUT \
 			<<-EOF
 				PUT
 
@@ -225,9 +225,9 @@ s3_delete () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" )
 
-	s3_do "${dst_url}"           \
+	s3_do "${dst_url}" \
 		--output '/dev/null' \
-		--request DELETE     \
+		--request DELETE \
 		<<-EOF
 			DELETE
 
@@ -253,7 +253,7 @@ s3_list () {
 
 	local listing
 	listing=$(
-		s3_do "${src_url}"                        \
+		s3_do "${src_url}" \
 			--output >( read_s3_listing_xml ) \
 			<<-EOF
 				GET

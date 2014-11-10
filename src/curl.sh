@@ -58,13 +58,13 @@ curl_do () {
 	local status code
 	status=0
 	if ! code=$(
-		curl "${url}"                      \
-			--fail                     \
-			--location                 \
-			--silent                   \
-			--show-error               \
+		curl "${url}" \
+			--fail \
+			--location \
+			--silent \
+			--show-error \
 			--write-out '%{http_code}' \
-			"$@"                       \
+			"$@" \
 			2>'/dev/null'
 	); then
 		status=1
@@ -100,7 +100,7 @@ curl_check () {
 
 	log_indent_begin "Checking ${src_url}..."
 
-	curl_do "${src_url}"         \
+	curl_do "${src_url}" \
 		--output '/dev/null' \
 		--head
 }
@@ -113,7 +113,7 @@ curl_upload () {
 
 	log_indent_begin "Uploading ${dst_file_url}..."
 
-	curl_do "${dst_file_url}"    \
+	curl_do "${dst_file_url}" \
 		--output '/dev/null' \
 		--upload-file "${src_file}"
 }
@@ -125,7 +125,7 @@ curl_delete () {
 
 	log_indent_begin "Deleting ${dst_url}..."
 
-	curl_do "${dst_url}"         \
+	curl_do "${dst_url}" \
 		--output '/dev/null' \
 		--request DELETE
 }
