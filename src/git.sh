@@ -7,6 +7,25 @@ hash_newest_git_commit () {
 }
 
 
+validate_git_url () {
+	local url
+	expect_args url -- "$@"
+
+	case "${url}" in
+	'https://'*);&
+	'ssh://'*);&
+	'git@'*);&
+	'file://'*);&
+	'http://'*);&
+	'git://'*)
+		return 0
+		;;
+	*)
+		return 1
+	esac
+}
+
+
 quiet_git_do () {
 	local cmd
 	expect_args cmd -- "$@"
