@@ -3,7 +3,16 @@ hash_newest_git_commit () {
 	expect_args dir -- "$@"
 	expect_existing "${dir}"
 
-	( cd "${dir}" && git log -n 1 --pretty='format:%H' )
+	local commit_hash
+	if ! commit_hash=$(
+		cd "${dir}" &&
+		git log -n 1 --pretty='format:%H' 2>'/dev/null'
+	); then
+		echo 'empty'
+		return 0
+	fi
+
+	echo "${commit_hash}"
 }
 
 
@@ -50,11 +59,17 @@ git_clone_over () {
 	fi
 
 	quiet_git_do clone "${bare_url}" "${dir}" || return 1
-	(
-		cd "${dir}" &&
-		quiet_git_do checkout "${branch}" &&
-		quiet_git_do submodule update --init --recursive
-	) || return 1
+
+	local commit_hash
+	commit_hash=$( hash_newest_git_commit "${dir}" ) || return 1
+
+	if [[ "${commit_hash}" != 'empty' ]]; then
+		(
+			cd "${dir}" &&
+			quiet_git_do checkout "${branch}" &&
+			quiet_git_do submodule update --init --recursive
+		) || return 1
+	fi
 
 	hash_newest_git_commit "${dir}"
 }
