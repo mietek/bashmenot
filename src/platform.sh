@@ -3,6 +3,7 @@ format_platform_description () {
 	expect_args platform -- "$@"
 
 	case "${platform}" in
+	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (64-bit)';;
 	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (64-bit)';;
 	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (64-bit)';;
 	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (64-bit)';;
