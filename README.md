@@ -8,7 +8,7 @@ Usage
 -----
 
 ```
-$ git clone -q --depth=1 https://github.com/mietek/bashmenot.git
+$ git clone https://github.com/mietek/bashmenot
 $ source bashmenot/src.sh
 -----> Auto-updating bashmenot... done, fa1afe1
 ```
