@@ -23,7 +23,7 @@ _bashmenot_ requires [GNU _bash_](https://gnu.org/software/bash/) 4 or newer, an
 - [GNU _date_](https://gnu.org/software/coreutils/manual/html_node/date-invocation.html) for date formatting.
 - [GNU _sort_](https://gnu.org/software/coreutils/manual/html_node/sort-invocation.html) for sorting.
 - [_curl_](http://curl.haxx.se/) for HTTP transfer.
-- [GNU _date_](https://gnu.org/software/coreutils/manual/html_node/date-invocation.html), [_curl_](http://curl.haxx.se/), and [OpenSSL](https://www.openssl.org/) for Amazon S3 storage.
+- [GNU _date_](https://gnu.org/software/coreutils/manual/html_node/date-invocation.html), [_curl_](http://curl.haxx.se/), and [OpenSSL](https://openssl.org/) for Amazon S3 storage.
 - [_git_](http://git-scm.com/) for automatic updates.
 
 
@@ -46,4 +46,4 @@ Like my work?  I am available for consulting on software projects.  Say [hello](
 
 ### Acknowledgments
 
-Thanks to [Kenneth Reitz](http://www.kennethreitz.org/) for building [_httpbin_](https://httpbin.org/).
+Thanks to [Kenneth Reitz](http://kennethreitz.org/) for building [_httpbin_](https://httpbin.org/).
