@@ -8,7 +8,6 @@ hash_newest_git_commit () {
 		cd "${dir}" &&
 		git log -n 1 --pretty='format:%H' 2>'/dev/null'
 	); then
-		echo 'empty'
 		return 0
 	fi
 
@@ -62,8 +61,7 @@ git_clone_over () {
 
 	local commit_hash
 	commit_hash=$( hash_newest_git_commit "${dir}" ) || return 1
-
-	if [[ "${commit_hash}" != 'empty' ]]; then
+	if [[ -n "${commit_hash}" ]]; then
 		(
 			cd "${dir}" &&
 			quiet_git_do checkout "${branch}" &&
