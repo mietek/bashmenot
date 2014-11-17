@@ -7,6 +7,9 @@ format_platform_description () {
 	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (64-bit)';;
 	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (64-bit)';;
 	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (64-bit)';;
+	'linux-centos-7-x86_64')        echo 'CentOS 7 (64-bit)';;
+	'linux-centos-6-x86_64')        echo 'CentOS 6 (64-bit)';;
+	'linux-centos-5-x86_64')        echo 'CentOS 5 (64-bit)';;
 	'osx-10.9-x86_64')		echo 'OS X 10.9 (64-bit)';;
 	'osx-10.10-x86_64')		echo 'OS X 10.10 (64-bit)';;
 	*)				echo 'unknown'
@@ -43,6 +46,15 @@ detect_linux_label () {
 		label=$( awk -F= '/^ID=/ { print $2 }' <'/etc/os-release' ) || true
 	elif [[ -f '/etc/lsb-release' ]]; then
 		label=$( awk -F= '/^DISTRIB_ID=/ { print $2 }' <'/etc/lsb-release' ) || true
+	elif [[ -f '/etc/centos-release' ]]; then
+		label='centos'
+	elif [[ -f '/etc/redhat-release' ]]; then
+		case $( <'/etc/redhat-release' ) in
+		'CentOS'*)
+			label='centos';;
+		*)
+			true
+		esac
 	fi
 
 	echo "${label}"
@@ -57,6 +69,22 @@ detect_linux_version () {
 		version=$( awk -F= '/^VERSION_ID=/ { print $2 }' <'/etc/os-release' ) || true
 	elif [[ -f '/etc/lsb-release' ]]; then
 		version=$( awk -F= '/^DISTRIB_RELEASE=/ { print $2 }' <'/etc/lsb-release' ) || true
+	elif [[ -f '/etc/centos-release' ]]; then
+		case $( <'/etc/centos-release' ) in
+		'CentOS Linux release 7'*)
+			version='7';;
+		'CentOS release 6'*)
+			version='6';;
+		*)
+			true
+		esac
+	elif [[ -f '/etc/redhat-release' ]]; then
+		case $( <'/etc/centos-release' ) in
+		'CentOS release 5'*)
+			version='5';;
+		*)
+			true
+		esac
 	fi
 
 	echo "${version}"
