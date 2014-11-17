@@ -1,4 +1,4 @@
-hash_do () {
+get_hash () {
 	local input
 	input=$( cat ) || true
 
@@ -22,5 +22,5 @@ hash_tree () {
 
 	( cd "${dir}" && find '.' "$@" -type f -exec openssl sha1 '{}' ';' 2>'/dev/null' ) |
 		sort_natural |
-		hash_do
+		get_hash
 }
