@@ -22,8 +22,6 @@ read_s3_listing_xml () {
 
 
 s3_do () {
-	expect_vars BASHMENOT_AWS_ACCESS_KEY_ID BASHMENOT_AWS_SECRET_ACCESS_KEY
-
 	local url
 	expect_args url -- "$@"
 	shift
@@ -31,6 +29,15 @@ s3_do () {
 	local host date
 	host="${BASHMENOT_S3_HOST:-s3.amazonaws.com}"
 	date=$( get_http_date ) || return 1
+
+	if (( ${BASHMENOT_NO_S3_AUTH:-0} )); then
+		curl_do "${url}" \
+			--header "Host: ${host}" \
+			--header "Date: ${date}" \
+			"$@" || return 1
+		return 0
+	fi
+	expect_vars BASHMENOT_AWS_ACCESS_KEY_ID BASHMENOT_AWS_SECRET_ACCESS_KEY
 
 	local signature
 	signature=$(
