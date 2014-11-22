@@ -2,10 +2,10 @@ format_s3_url () {
 	local resource
 	expect_args resource -- "$@"
 
-	local host
-	host="${BASHMENOT_S3_HOST:-s3.amazonaws.com}"
+	local endpoint
+	endpoint="${BASHMENOT_S3_ENDPOINT:-s3.amazonaws.com}"
 
-	echo "https://${host}${resource}"
+	echo "https://${endpoint}${resource}"
 }
 
 
@@ -26,13 +26,13 @@ s3_do () {
 	expect_args url -- "$@"
 	shift
 
-	local host date
-	host="${BASHMENOT_S3_HOST:-s3.amazonaws.com}"
+	local endpoint date
+	endpoint="${BASHMENOT_S3_ENDPOINT:-s3.amazonaws.com}"
 	date=$( get_http_date ) || return 1
 
 	if (( ${BASHMENOT_NO_S3_AUTH:-0} )); then
 		curl_do "${url}" \
-			--header "Host: ${host}" \
+			--header "Host: ${endpoint}" \
 			--header "Date: ${date}" \
 			"$@" || return 1
 		return 0
@@ -51,7 +51,7 @@ s3_do () {
 	auth="AWS ${BASHMENOT_AWS_ACCESS_KEY_ID}:${signature}"
 
 	curl_do "${url}" \
-		--header "Host: ${host}" \
+		--header "Host: ${endpoint}" \
 		--header "Date: ${date}" \
 		--header "Authorization: ${auth}" \
 		"$@"
