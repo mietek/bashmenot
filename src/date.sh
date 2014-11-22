@@ -4,7 +4,7 @@ case $( detect_os ) in
 		date --utc --rfc-2822 "$@"
 	}
 
-	get_date () {
+	get_iso_date () {
 		date --utc +'%Y-%m-%d' "$@"
 	}
 	;;
@@ -13,7 +13,7 @@ case $( detect_os ) in
 		gdate --utc --rfc-2822 "$@"
 	}
 
-	get_date () {
+	get_iso_date () {
 		gdate --utc +'%Y-%m-%d' "$@"
 	}
 esac
