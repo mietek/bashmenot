@@ -3,15 +3,15 @@ format_platform_description () {
 	expect_args platform -- "$@"
 
 	case "${platform}" in
-	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (64-bit)';;
-	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (64-bit)';;
-	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (64-bit)';;
-	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (64-bit)';;
-	'linux-centos-7-x86_64')        echo 'CentOS 7 (64-bit)';;
-	'linux-centos-6-x86_64')        echo 'CentOS 6 (64-bit)';;
-	'linux-centos-5-x86_64')        echo 'CentOS 5 (64-bit)';;
-	'osx-10.9-x86_64')		echo 'OS X 10.9 (64-bit)';;
-	'osx-10.10-x86_64')		echo 'OS X 10.10 (64-bit)';;
+	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (x86_64)';;
+	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (x86_64)';;
+	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (x86_64)';;
+	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (x86_64)';;
+	'linux-centos-7-x86_64')        echo 'CentOS 7 (x86_64)';;
+	'linux-centos-6-x86_64')        echo 'CentOS 6 (x86_64)';;
+	'linux-centos-5-x86_64')        echo 'CentOS 5 (x86_64)';;
+	'osx-10.9-x86_64')		echo 'OS X 10.9 (x86_64)';;
+	'osx-10.10-x86_64')		echo 'OS X 10.10 (x86_64)';;
 	*)				echo 'unknown'
 	esac
 }
