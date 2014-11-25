@@ -18,8 +18,8 @@ source "${BASHMENOT_TOP_DIR}/src/curl.sh"
 source "${BASHMENOT_TOP_DIR}/src/s3.sh"
 
 
-bashmenot_selfupdate () {
-	if (( ${BASHMENOT_NO_SELFUPDATE:-0} )); then
+bashmenot_self_update () {
+	if (( ${BASHMENOT_NO_SELF_UPDATE:-0} )); then
 		return 0
 	fi
 
@@ -39,11 +39,11 @@ bashmenot_selfupdate () {
 	fi
 	log_end "done, ${commit_hash:0:7}"
 
-	BASHMENOT_NO_SELFUPDATE=1 \
+	BASHMENOT_NO_SELF_UPDATE=1 \
 		source "${BASHMENOT_TOP_DIR}/src.sh"
 }
 
 
-if ! bashmenot_selfupdate; then
+if ! bashmenot_self_update; then
 	log_warning 'Cannot self-update bashmenot'
 fi
