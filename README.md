@@ -10,7 +10,6 @@ Usage
 ```
 $ git clone https://github.com/mietek/bashmenot
 $ source bashmenot/src.sh
------> Auto-updating bashmenot... done, fa1afe1
 ```
 
 For more information, please refer to the [_bashmenot_ website](https://bashmenot.mietek.io/).
