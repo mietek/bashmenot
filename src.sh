@@ -30,7 +30,7 @@ bashmenot_self_update () {
 	local url
 	url="${BASHMENOT_URL:-https://github.com/mietek/bashmenot}"
 
-	log_begin 'Auto-updating bashmenot...'
+	log_begin 'Self-updating bashmenot...'
 
 	local commit_hash
 	if ! commit_hash=$( git_update_into "${url}" "${BASHMENOT_TOP_DIR}" ); then
