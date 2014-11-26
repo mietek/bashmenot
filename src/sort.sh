@@ -1,5 +1,5 @@
 case $( detect_os ) in
-'linux-'*)
+'linux')
 	sort_natural () {
 		sort -V "$@" || true
 	}

@@ -1,5 +1,5 @@
 case $( detect_os ) in
-'linux-'*)
+'linux')
 	get_http_date () {
 		date --utc --rfc-2822 "$@"
 	}

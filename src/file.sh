@@ -25,7 +25,7 @@ get_size () {
 
 
 case $( detect_os ) in
-'linux-'*)
+'linux')
 	get_modification_time () {
 		local thing
 		expect_args thing -- "$@"

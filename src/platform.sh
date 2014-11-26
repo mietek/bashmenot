@@ -17,6 +17,17 @@ format_platform_description () {
 }
 
 
+detect_os () {
+	local raw_os
+	raw_os=$( uname -s ) || true
+	case "${raw_os}" in
+	'Linux')	echo 'linux';;
+	'Darwin')	echo 'osx';;
+	*)		echo 'unknown'
+	esac
+}
+
+
 detect_arch () {
 	local arch
 	arch=''
@@ -38,7 +49,7 @@ detect_arch () {
 }
 
 
-detect_linux_label () {
+bashmenot_internal_detect_linux_label () {
 	local label
 	label=''
 
@@ -61,7 +72,7 @@ detect_linux_label () {
 }
 
 
-detect_linux_version () {
+bashmenot_internal_detect_linux_version () {
 	local version
 	version=''
 
@@ -91,22 +102,20 @@ detect_linux_version () {
 }
 
 
-detect_os () {
-	local name
-	name='unknown'
+detect_platform () {
+	local os arch
+	os=$( detect_os )
+	arch=$( detect_arch )
 
-	local raw_name raw_label raw_version
-	raw_name=$( uname -s ) || true
+	local raw_label raw_version
 	raw_label=''
 	raw_version=''
-	case "${raw_name}" in
-	'Linux')
-		name='linux'
-		raw_label=$( detect_linux_label ) || true
-		raw_version=$( detect_linux_version ) || true
+	case "${os}" in
+	'linux')
+		raw_label=$( bashmenot_internal_detect_linux_label ) || true
+		raw_version=$( bashmenot_internal_detect_linux_version ) || true
 		;;
-	'Darwin')
-		name='osx'
+	'osx')
 		raw_version=$( sw_vers -productVersion ) || true
 		;;
 	*)
@@ -117,15 +126,5 @@ detect_os () {
 	label=$( tr -dc '[:alpha:]' <<<"${raw_label}" | tr '[:upper:]' '[:lower:]' ) || true
 	version=$( tr -dc '[:digit:]\.' <<<"${raw_version}" | sed 's/^\([0-9]*\.[0-9]*\).*$/\1/' ) || true
 
-	echo "${name}${label:+-${label}}${version:+-${version}}"
-}
-
-
-detect_platform () {
-	local os arch
-	os='unknown'
-	os=$( detect_os ) || true
-	arch=$( detect_arch ) || true
-
-	echo "${os}${arch:+-${arch}}"
+	echo "${os}${label:+-${label}}${version:+-${version}}${arch:+-${arch}}"
 }

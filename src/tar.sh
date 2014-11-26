@@ -198,7 +198,7 @@ extract_archive_over () {
 
 
 case $( detect_os ) in
-'linux-'*)
+'linux')
 	strip_tree () {
 		local dir
 		expect_args dir -- "$@"
@@ -211,7 +211,7 @@ case $( detect_os ) in
 			done || true
 	}
 	;;
-'osx-'*)
+'osx')
 	strip_tree () {
 		local dir
 		expect_args dir -- "$@"

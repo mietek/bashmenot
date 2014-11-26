@@ -1,10 +1,10 @@
 case $( detect_os ) in
-'linux-'*)
+'linux')
 	quote () {
 		sed -u 's/^/       /' >&2 || true
 	}
 	;;
-'osx-'*)
+'osx')
 	quote () {
 		sed -l 's/^/       /' >&2 || true
 	}
