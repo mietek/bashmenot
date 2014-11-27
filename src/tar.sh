@@ -152,12 +152,14 @@ create_archive () {
 	if ! bashnot_internal_tar_create "${src_dir}" "${dst_file}" "$@" 2>"${stderr}"; then
 		log_end 'error'
 		quote <"${stderr}"
+		rm -f "${stderr}" || return 1
 		return 1
 	fi
 
 	local size
 	size=$( get_size "${dst_file}" ) || return 1
 	log_end "done, ${size}"
+	rm -f "${stderr}" || return 1
 }
 
 
@@ -176,12 +178,14 @@ extract_archive_into () {
 	if ! bashnot_internal_tar_extract "${src_file}" "${dst_dir}" "$@" 2>"${stderr}"; then
 		log_end 'error'
 		quote <"${stderr}"
+		rm -f "${stderr}" || return 1
 		return 1
 	fi
 
 	local size
 	size=$( get_size "${dst_dir}" ) || return 1
 	log_end "done, ${size}"
+	rm -f "${stderr}" || return 1
 }
 
 
