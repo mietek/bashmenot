@@ -1,21 +1,21 @@
 set -o pipefail
 
-export BASHMENOT_TOP_DIR
-BASHMENOT_TOP_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )
+export BASHMENOT_INSTALL
+BASHMENOT_INSTALL=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )
 
-source "${BASHMENOT_TOP_DIR}/src/log.sh"
-source "${BASHMENOT_TOP_DIR}/src/expect.sh"
-source "${BASHMENOT_TOP_DIR}/src/platform.sh"
-source "${BASHMENOT_TOP_DIR}/src/quote.sh"
-source "${BASHMENOT_TOP_DIR}/src/line.sh"
-source "${BASHMENOT_TOP_DIR}/src/sort.sh"
-source "${BASHMENOT_TOP_DIR}/src/date.sh"
-source "${BASHMENOT_TOP_DIR}/src/file.sh"
-source "${BASHMENOT_TOP_DIR}/src/hash.sh"
-source "${BASHMENOT_TOP_DIR}/src/tar.sh"
-source "${BASHMENOT_TOP_DIR}/src/git.sh"
-source "${BASHMENOT_TOP_DIR}/src/curl.sh"
-source "${BASHMENOT_TOP_DIR}/src/s3.sh"
+source "${BASHMENOT_INSTALL}/src/log.sh"
+source "${BASHMENOT_INSTALL}/src/expect.sh"
+source "${BASHMENOT_INSTALL}/src/platform.sh"
+source "${BASHMENOT_INSTALL}/src/quote.sh"
+source "${BASHMENOT_INSTALL}/src/line.sh"
+source "${BASHMENOT_INSTALL}/src/sort.sh"
+source "${BASHMENOT_INSTALL}/src/date.sh"
+source "${BASHMENOT_INSTALL}/src/file.sh"
+source "${BASHMENOT_INSTALL}/src/hash.sh"
+source "${BASHMENOT_INSTALL}/src/tar.sh"
+source "${BASHMENOT_INSTALL}/src/git.sh"
+source "${BASHMENOT_INSTALL}/src/curl.sh"
+source "${BASHMENOT_INSTALL}/src/s3.sh"
 
 
 bashmenot_self_update () {
@@ -23,7 +23,7 @@ bashmenot_self_update () {
 		return 0
 	fi
 
-	if [[ ! -d "${BASHMENOT_TOP_DIR}/.git" ]]; then
+	if [[ ! -d "${BASHMENOT_INSTALL}/.git" ]]; then
 		return 1
 	fi
 
@@ -33,14 +33,14 @@ bashmenot_self_update () {
 	log_begin 'Self-updating bashmenot...'
 
 	local commit_hash
-	if ! commit_hash=$( git_update_into "${url}" "${BASHMENOT_TOP_DIR}" ); then
+	if ! commit_hash=$( git_update_into "${url}" "${BASHMENOT_INSTALL}" ); then
 		log_end 'error'
 		return 1
 	fi
 	log_end "done, ${commit_hash:0:7}"
 
 	BASHMENOT_NO_SELF_UPDATE=1 \
-		source "${BASHMENOT_TOP_DIR}/src.sh"
+		source "${BASHMENOT_INSTALL}/src.sh"
 }
 
 
