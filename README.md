@@ -1,7 +1,7 @@
 [_bashmenot_](https://bashmenot.mietek.io/)
 ===========================================
 
-_bashmenot_ is a library of shell functions for [GNU _bash_](https://gnu.org/software/bash/).
+_bashmenot_ is a library of shell functions, powering [Halcyon](https://halcyon.sh/) and [Haskell on Heroku](https://haskellonheroku.com/).
 
 
 Usage
