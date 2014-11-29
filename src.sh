@@ -3,13 +3,12 @@ set -o pipefail
 export BASHMENOT_INSTALL
 BASHMENOT_INSTALL=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P )
 
+source "${BASHMENOT_INSTALL}/src/date.sh"
+source "${BASHMENOT_INSTALL}/src/sort.sh"
 source "${BASHMENOT_INSTALL}/src/log.sh"
 source "${BASHMENOT_INSTALL}/src/expect.sh"
 source "${BASHMENOT_INSTALL}/src/platform.sh"
-source "${BASHMENOT_INSTALL}/src/quote.sh"
 source "${BASHMENOT_INSTALL}/src/line.sh"
-source "${BASHMENOT_INSTALL}/src/sort.sh"
-source "${BASHMENOT_INSTALL}/src/date.sh"
 source "${BASHMENOT_INSTALL}/src/file.sh"
 source "${BASHMENOT_INSTALL}/src/hash.sh"
 source "${BASHMENOT_INSTALL}/src/tar.sh"

@@ -72,7 +72,7 @@ curl_do () {
 
 	local code_description
 	code_description=$( format_http_code_description "${code}" )
-	log_end "${code_description}"
+	log_indent_end "${code_description}"
 
 	return "${status}"
 }

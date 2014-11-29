@@ -1,5 +1,5 @@
-case $( detect_os ) in
-'linux')
+case $( uname -s ) in
+'Linux')
 	sort_natural () {
 		sort -V "$@" || true
 	}

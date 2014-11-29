@@ -1,11 +1,11 @@
-case $( detect_os ) in
-'linux')
+case $( uname -s ) in
+'Linux')
 	get_http_date () {
 		date --utc --rfc-2822 "$@"
 	}
 
-	get_iso_date () {
-		date --utc +'%Y-%m-%d' "$@"
+	get_date () {
+		date --utc "$@"
 	}
 	;;
 *)
@@ -13,7 +13,7 @@ case $( detect_os ) in
 		gdate --utc --rfc-2822 "$@"
 	}
 
-	get_iso_date () {
-		gdate --utc +'%Y-%m-%d' "$@"
+	get_date () {
+		gdate --utc "$@"
 	}
 esac
