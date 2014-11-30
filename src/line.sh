@@ -3,6 +3,11 @@ filter_first () {
 }
 
 
+filter_not_first () {
+	sed '1d' || true
+}
+
+
 filter_last () {
 	tail -n 1 || true
 }
