@@ -50,14 +50,14 @@ git_clone_over () {
 	rm -rf "${dir}" || return 1
 	mkdir -p "${dir}" || return 1
 
-	local bare_url branch
-	bare_url="${url%#*}"
+	local base_url branch
+	base_url="${url%#*}"
 	branch="${url#*#}"
-	if [[ "${branch}" == "${bare_url}" ]]; then
+	if [[ "${branch}" == "${base_url}" ]]; then
 		branch='master';
 	fi
 
-	quiet_git_do clone "${bare_url}" "${dir}" || return 1
+	quiet_git_do clone "${base_url}" "${dir}" || return 1
 
 	local commit_hash
 	commit_hash=$( hash_newest_git_commit "${dir}" ) || return 1
@@ -78,17 +78,17 @@ git_update_into () {
 	expect_args url dir -- "$@"
 	expect_existing "${dir}"
 
-	local bare_url branch
-	bare_url="${url%#*}"
+	local base_url branch
+	base_url="${url%#*}"
 	branch="${url#*#}"
-	if [[ "${branch}" == "${bare_url}" ]]; then
+	if [[ "${branch}" == "${base_url}" ]]; then
 		branch='master';
 	fi
 
 	local old_url
 	old_url=$( cd "${dir}" && git config --get 'remote.origin.url' ) || return 1
-	if [[ "${old_url}" != "${bare_url}" ]]; then
-		( cd "${dir}" && git remote set-url 'origin' "${bare_url}" ) || return 1
+	if [[ "${old_url}" != "${base_url}" ]]; then
+		( cd "${dir}" && git remote set-url 'origin' "${base_url}" ) || return 1
 	fi
 
 	(
