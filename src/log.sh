@@ -49,32 +49,32 @@ prefix_log_begin () {
 
 
 log () {
-	prefix_log '-----> ' "${*}" || true
+	prefix_log '-----> ' "$@" || true
 }
 
 
 log_begin () {
-	prefix_log_begin '-----> ' "${*}" || true
+	prefix_log_begin '-----> ' "$@" || true
 }
 
 
 log_end () {
-	echo "${*}" >&2
+	echo "$@" >&2
 }
 
 
 log_indent () {
-	prefix_log '       ' "${*}" || true
+	prefix_log '       ' "$@" || true
 }
 
 
 log_indent_begin () {
-	prefix_log_begin '       ' "${*}" || true
+	prefix_log_begin '       ' "$@" || true
 }
 
 
 log_indent_end () {
-	echo "${*}" >&2
+	echo "$@" >&2
 }
 
 
@@ -140,7 +140,7 @@ esac
 
 die () {
 	if [[ -n "${*:+_}" ]]; then
-		log_error "${*}" || true
+		log_error "$@" || true
 	fi
 
 	exit 1
