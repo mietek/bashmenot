@@ -21,7 +21,6 @@ bashmenot_self_update () {
 	if (( ${BASHMENOT_NO_SELF_UPDATE:-0} )); then
 		return 0
 	fi
-
 	if [[ ! -d "${BASHMENOT_DIR}/.git" ]]; then
 		return 1
 	fi
