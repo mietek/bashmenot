@@ -29,23 +29,15 @@ detect_os () {
 
 
 detect_arch () {
-	local arch
-	arch=''
-
 	local raw_arch
 	raw_arch=$( uname -m | tr '[:upper:]' '[:lower:]' ) || true
 	case "${raw_arch}" in
-	'amd64');&
-	'x64');&
-	'x86-64');&
-	'x86_64')
-		arch='x86_64'
-		;;
-	*)
-		true
+	'amd64')	echo 'x86_64';;
+	'x64')		echo 'x86_64';;
+	'x86-64')	echo 'x86_64';;
+	'x86_64')	echo 'x86_64';;
+	*)		echo 'unknown'
 	esac
-
-	echo "${arch}"
 }
 
 

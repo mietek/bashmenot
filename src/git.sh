@@ -20,16 +20,13 @@ validate_git_url () {
 	expect_args url -- "$@"
 
 	case "${url}" in
-	'https://'*);&
-	'ssh://'*);&
-	'git@'*);&
-	'file://'*);&
-	'http://'*);&
-	'git://'*)
-		return 0
-		;;
-	*)
-		return 1
+	'https://'*)	return 0;;
+	'ssh://'*)	return 0;;
+	'git@'*)	return 0;;
+	'file://'*)	return 0;;
+	'http://'*)	return 0;;
+	'git://'*)	return 0;;
+	*)		return 1
 	esac
 }
 
