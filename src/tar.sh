@@ -107,7 +107,7 @@ copy_file () {
 
 	mkdir -p "${dst_dir}" || return 1
 
-	cp -p "${src_file}" "${dst_file}" |& quote
+	cp -p "${src_file}" "${dst_file}" 2>&1 | quote
 }
 
 
@@ -121,7 +121,7 @@ copy_dir_into () {
 
 	COPYFILE_DISABLE=1 \
 		tar -c -f - -C "${src_dir}" "$@" '.' |
-		tar -x -f - -C "${dst_dir}" |& quote
+		tar -x -f - -C "${dst_dir}" 2>&1 | quote
 }
 
 
