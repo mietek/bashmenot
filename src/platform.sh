@@ -82,7 +82,7 @@ bashmenot_internal_detect_linux_version () {
 			true
 		esac
 	elif [[ -f '/etc/redhat-release' ]]; then
-		case $( <'/etc/centos-release' ) in
+		case $( <'/etc/redhat-release' ) in
 		'CentOS release 5'*)
 			version='5';;
 		*)
