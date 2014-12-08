@@ -1,15 +1,16 @@
 format_platform_description () {
-	local platform
-	expect_args platform -- "$@"
-
-	case "${platform}" in
+	case "$1" in
+	'linux-centos-7-x86_64')	echo 'CentOS 7 (x86_64)';;
+	'linux-centos-6-x86_64')	echo 'CentOS 6 (x86_64)';;
+	'linux-centos-5-x86_64')	echo 'CentOS 5 (x86_64)';;
+	'linux-debian-7-x86_64')	echo 'Debian 7 (x86_64)';;
+	'linux-debian-6-x86_64')	echo 'Debian 6 (x86_64)';;
+	'linux-fedora-20-x86_64')	echo 'Fedora 20 (x86_64)';;
+	'linux-fedora-19-x86_64')	echo 'Fedora 19 (x86_64)';;
 	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (x86_64)';;
 	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (x86_64)';;
 	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (x86_64)';;
 	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (x86_64)';;
-	'linux-centos-7-x86_64')	echo 'CentOS 7 (x86_64)';;
-	'linux-centos-6-x86_64')	echo 'CentOS 6 (x86_64)';;
-	'linux-centos-5-x86_64')	echo 'CentOS 5 (x86_64)';;
 	'osx-10.9-x86_64')		echo 'OS X 10.9 (x86_64)';;
 	'osx-10.10-x86_64')		echo 'OS X 10.10 (x86_64)';;
 	*)				echo 'unknown'
@@ -20,6 +21,7 @@ format_platform_description () {
 detect_os () {
 	local raw_os
 	raw_os=$( uname -s ) || true
+
 	case "${raw_os}" in
 	'Linux')	echo 'linux';;
 	'Darwin')	echo 'osx';;
@@ -31,6 +33,7 @@ detect_os () {
 detect_arch () {
 	local raw_arch
 	raw_arch=$( uname -m | tr '[:upper:]' '[:lower:]' ) || true
+
 	case "${raw_arch}" in
 	'amd64')	echo 'x86_64';;
 	'x64')		echo 'x86_64';;
@@ -42,17 +45,20 @@ detect_arch () {
 
 
 bashmenot_internal_detect_linux_label () {
-	local label
+	local label raw_label
 	label=''
 
 	if [[ -f '/etc/os-release' ]]; then
 		label=$( awk -F= '/^ID=/ { print $2 }' <'/etc/os-release' ) || true
+	elif [[ -f '/etc/debian_version' ]]; then
+		label='debian'
 	elif [[ -f '/etc/lsb-release' ]]; then
 		label=$( awk -F= '/^DISTRIB_ID=/ { print $2 }' <'/etc/lsb-release' ) || true
 	elif [[ -f '/etc/centos-release' ]]; then
 		label='centos'
 	elif [[ -f '/etc/redhat-release' ]]; then
-		case $( <'/etc/redhat-release' ) in
+		raw_label=$( <'/etc/redhat-release' ) || true
+		case "${raw_label}" in
 		'CentOS'*)
 			label='centos';;
 		*)
@@ -65,15 +71,18 @@ bashmenot_internal_detect_linux_label () {
 
 
 bashmenot_internal_detect_linux_version () {
-	local version
+	local version raw_version
 	version=''
 
 	if [[ -f '/etc/os-release' ]]; then
 		version=$( awk -F= '/^VERSION_ID=/ { print $2 }' <'/etc/os-release' ) || true
+	elif [[ -f '/etc/debian_version' ]]; then
+		version=$( sed 's/^\([0-9]*\).*$/\1/' <'/etc/debian_version' ) || true
 	elif [[ -f '/etc/lsb-release' ]]; then
 		version=$( awk -F= '/^DISTRIB_RELEASE=/ { print $2 }' <'/etc/lsb-release' ) || true
 	elif [[ -f '/etc/centos-release' ]]; then
-		case $( <'/etc/centos-release' ) in
+		raw_version=$( <'/etc/centos-release' ) || true
+		case "${raw_version}" in
 		'CentOS Linux release 7'*)
 			version='7';;
 		'CentOS release 6'*)
@@ -82,7 +91,8 @@ bashmenot_internal_detect_linux_version () {
 			true
 		esac
 	elif [[ -f '/etc/redhat-release' ]]; then
-		case $( <'/etc/redhat-release' ) in
+		raw_version=$( <'/etc/redhat-release' ) || true
+		case "${raw_version}" in
 		'CentOS release 5'*)
 			version='5';;
 		*)
