@@ -13,7 +13,7 @@ bashnot_internal_tar_create () {
 
 	case "${format}" in
 	'gz')
-		if which 'pigz' &>'/dev/null'; then
+		if which 'pigz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
 				pigz -7 >"${dst_file}" || return 1
@@ -23,7 +23,7 @@ bashnot_internal_tar_create () {
 		fi
 		;;
 	'bz2')
-		if which 'pbzip2' &>'/dev/null'; then
+		if which 'pbzip2' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
 				pbzip2 -7 >"${dst_file}" || return 1
@@ -33,7 +33,7 @@ bashnot_internal_tar_create () {
 		fi
 		;;
 	'xz')
-		if which 'pxz' &>'/dev/null'; then
+		if which 'pxz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
 				pxz -7 >"${dst_file}" || return 1
@@ -62,7 +62,7 @@ bashnot_internal_tar_extract () {
 
 	case "${format}" in
 	'gz')
-		if which 'pigz' &>'/dev/null'; then
+		if which 'pigz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pigz -d <"${src_file}" |
 				tar -x -C "${dst_dir}" "$@" || return 1
@@ -72,7 +72,7 @@ bashnot_internal_tar_extract () {
 		fi
 		;;
 	'bz2')
-		if which 'pbzip2' &>'/dev/null'; then
+		if which 'pbzip2' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pbzip2 -d <"${src_file}" |
 				tar -x -C "${dst_dir}" "$@" || return 1
@@ -82,7 +82,7 @@ bashnot_internal_tar_extract () {
 		fi
 		;;
 	'xz')
-		if which 'pxz' &>'/dev/null'; then
+		if which 'pxz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pxz -d <"${src_file}" |
 				tar -x -C "${dst_dir}" "$@" || return 1

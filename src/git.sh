@@ -36,7 +36,7 @@ quiet_git_do () {
 	expect_args cmd -- "$@"
 	shift
 
-	git "${cmd}" -q "$@" &>'/dev/null'
+	git "${cmd}" -q "$@" >'/dev/null' 2>&1
 }
 
 
