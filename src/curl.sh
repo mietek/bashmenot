@@ -61,7 +61,7 @@ curl_do () {
 		curl "${url}" \
 			--fail \
 			--location \
-			--retry "${BASHMENOT_CURL_RETRIES:-3}" \
+			--retry "${BASHMENOT_CURL_RETRIES:-10}" \
 			--silent \
 			--show-error \
 			--write-out '%{http_code}' \
