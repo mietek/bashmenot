@@ -5,27 +5,27 @@ fix_broken_links () {
 
 	local link status
 	status=0
-	find_tree "${dst_dir}" -type l |
-		sort_natural |
-		while read -r link; do
-			local link_dir link_name src_relative src_absolute src_name
-			link_dir=$( dirname "${dst_dir}/${link}" ) || return 1
-			link_name=$( basename "${link}" ) || return 1
-			src_relative=$( readlink "${dst_dir}/${link}" ) || return 1
-			src_absolute=$( get_link_path "${dst_dir}/${link}" ) || return 1
-			src_name=$( basename "${src_absolute}" ) || return 1
+	while read -r link; do
+		local link_dir link_name src_original src_canonical src_name
+		link_dir=$( dirname "${dst_dir}/${link}" ) || return 1
+		link_name=$( basename "${link}" ) || return 1
+		src_original=$( readlink "${dst_dir}/${link}" ) || return 1
+		src_canonical=$( get_link_path "${dst_dir}/${link}" ) || return 1
+		src_name=$( basename "${src_canonical}" ) || return 1
 
-			if [[ ! -e "${src_absolute}" ]]; then
-				local target
-				if target=$( find_tree "${link_dir}" -name "${src_name}" | match_exactly_one ); then
-					log "Fixing broken link: ${link_name} -> ${src_name} (${src_relative})"
-					rm -f "${dst_dir}/${link}" || return 1
-					ln -s "${target}" "${dst_dir}/${link}" || return 1
-				else
-					log_error "Cannot fix broken link: ${dst_dir}/${link} -> ${src_relative}"
-				fi
+		if [[ ! -e "${src_canonical}" ]]; then
+			rm -f "${dst_dir}/${link}" || return 1
+
+			local target
+			if target=$( find_tree "${link_dir}" -name "${src_name}" | match_exactly_one ); then
+				log "Fixing broken link: ${link_name} -> ${src_name} (${src_original})"
+				ln -s "${target}" "${dst_dir}/${link}" || return 1
+			else
+				log_error "Cannot fix broken link: ${dst_dir}/${link} -> ${src_original}"
+				status=1
 			fi
-		done
+		fi
+	done < <( find_tree "${dst_dir}" -type l | sort_natural )
 
 	return "${status}"
 }
