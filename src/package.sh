@@ -1,4 +1,68 @@
-apt_install_packages () {
+install_deb_package () {
+	local package_file dst_dir
+	expect_args package_file dst_dir -- "$@"
+	expect_existing "${package_file}"
+
+	local src_dir
+	src_dir=$( get_tmp_dir 'deb' )
+
+	dpkg --extract "${package_file}" "${src_dir}" 2>&1 | quote || return 1
+
+	if [[ -d "${src_dir}/usr/include/x86_64-linux-gnu" ]]; then
+		copy_dir_into "${src_dir}/usr/include/x86_64-linux-gnu" "${dst_dir}/usr/include" || return 1
+		rm -rf "${src_dir}/usr/include/x86_64-linux-gnu" || return 1
+	fi
+	if [[ -d "${src_dir}/lib" ]]; then
+		copy_dir_into "${src_dir}/lib" "${dst_dir}/usr/lib" || return 1
+		rm -rf "${src_dir}/lib" || return 1
+	fi
+	if [[ -d "${src_dir}/lib/x86_64-linux-gnu" ]]; then
+		copy_dir_into "${src_dir}/lib/x86_64-linux-gnu" "${dst_dir}/usr/lib" || return 1
+		rm -rf "${src_dir}/lib/x86_64-linux-gnu" || return 1
+	fi
+	if [[ -d "${src_dir}/usr/lib/x86_64-linux-gnu" ]]; then
+		copy_dir_into "${src_dir}/usr/lib/x86_64-linux-gnu" "${dst_dir}/usr/lib" || return 1
+		rm -rf "${src_dir}/usr/lib/x86_64-linux-gnu" || return 1
+	fi
+
+	copy_dir_into "${src_dir}" "${dst_dir}" || return 1
+	rm -rf "${src_dir}" || return 1
+}
+
+
+install_rpm_package () {
+	local package_file dst_dir
+	expect_args package_file dst_dir -- "$@"
+	expect_existing "${package_file}"
+
+	local src_dir
+	src_dir=$( get_tmp_dir 'rpm' )
+
+	mkdir -p "${src_dir}" || return 1
+	(
+		cd "${src_dir}" &&
+		rpm2cpio "${package_file}" | cpio --extract --make-directories 2>&1 | quote || return 1
+	) || return 1
+
+	if [[ -d "${src_dir}/lib" ]]; then
+		copy_dir_into "${src_dir}/lib" "${dst_dir}/usr/lib" || return 1
+		rm -rf "${src_dir}/lib" || return 1
+	fi
+	if [[ -d "${src_dir}/lib64" ]]; then
+		copy_dir_into "${src_dir}/lib64" "${dst_dir}/usr/lib" || return 1
+		rm -rf "${src_dir}/lib64" || return 1
+	fi
+	if [[ -d "${src_dir}/usr/lib64" ]]; then
+		copy_dir_into "${src_dir}/usr/lib64" "${dst_dir}/usr/lib" || return 1
+		rm -rf "${src_dir}/usr/lib64" || return 1
+	fi
+
+	copy_dir_into "${src_dir}" "${dst_dir}" || return 1
+	rm -rf "${src_dir}" || return 1
+}
+
+
+install_debian_packages () {
 	local package_names dst_dir
 	expect_args package_names dst_dir -- "$@"
 
@@ -8,9 +72,8 @@ apt_install_packages () {
 		return 0
 	fi
 
-	local apt_dir dpkg_dir
-	apt_dir=$( get_tmp_dir 'halcyon-apt' ) || return 1
-	dpkg_dir=$( get_tmp_dir 'halcyon-dpkg' ) || return 1
+	local apt_dir
+	apt_dir=$( get_tmp_dir 'apt' ) || return 1
 
 	local -a opts
 	opts+=( -o debug::nolocking='true' )
@@ -29,27 +92,17 @@ apt_install_packages () {
 		find_tree "${apt_dir}/cache/archives" -type f -name '*.deb' |
 			sort_natural |
 			while read -r file; do
-				dpkg --extract "${apt_dir}/cache/archives/${file}" "${dpkg_dir}" 2>&1 | quote || return 1
+				install_deb_package "${apt_dir}/cache/archives/${file}" "${dst_dir}" || return 1
 			done
 
-		if [[ -d "${dpkg_dir}/usr/include/x86_64-linux-gnu" ]] ; then
-			copy_dir_into "${dpkg_dir}/usr/include/x86_64-linux-gnu" "${dst_dir}/usr/include" || return 1
-		fi
-		if [[ -d "${dpkg_dir}/usr/lib/x86_64-linux-gnu" ]]; then
-			copy_dir_into "${dpkg_dir}/usr/lib/x86_64-linux-gnu" "${dst_dir}/usr/lib" || return 1
-		fi
-		rm -rf "${dpkg_dir}/usr/include/x86_64-linux-gnu" "${dpkg_dir}/usr/lib/x86_64-linux-gnu" || return 1
-
-		copy_dir_into "${dpkg_dir}" "${dst_dir}" || return 1
-
-		rm -rf "${apt_dir}/cache/archives" "${dpkg_dir}" || return 1
+		rm -rf "${apt_dir}/cache/archives" || return 1
 	done
 
 	rm -rf "${apt_dir}" || return 1
 }
 
 
-yum_install_packages () {
+install_redhat_packages () {
 	local package_names dst_dir
 	expect_args package_names dst_dir -- "$@"
 
@@ -59,9 +112,8 @@ yum_install_packages () {
 		return 0
 	fi
 
-	local yum_dir cpio_dir
-	yum_dir=$( get_tmp_dir 'halcyon-yum' ) || return 1
-	cpio_dir=$( get_tmp_dir 'halcyon-cpio' ) || return 1
+	local yum_dir
+	yum_dir=$( get_tmp_dir 'yum' ) || return 1
 
 	local -a opts
 	opts+=( --assumeyes )
@@ -84,7 +136,6 @@ yum_install_packages () {
 		local status
 		status=0
 
-		mkdir -p "${cpio_dir}" || return 1
 		if ! yum list installed "${name}" >'/dev/null' 2>&1; then
 			if ! yum install "${opts[@]}" "${name}" 2>&1 | quote; then
 				status=1
@@ -100,21 +151,10 @@ yum_install_packages () {
 		find_tree "${yum_dir}" -type f -name '*.rpm' |
 			sort_natural |
 			while read -r file; do
-				(
-					cd "${cpio_dir}"
-					rpm2cpio "${yum_dir}/${file}" |
-						cpio --extract --make-directories 2>&1 | quote || return 1
-				) || return 1
+				install_rpm_package "${yum_dir}/${file}" "${dst_dir}" || return 1
 			done
 
-		if [[ -d "${cpio_dir}/usr/lib64" ]]; then
-			copy_dir_into "${cpio_dir}/usr/lib64" "${dst_dir}/usr/lib" || return 1
-		fi
-		rm -rf "${cpio_dir}/usr/lib64" || return 1
-
-		copy_dir_into "${cpio_dir}" "${dst_dir}" | return 1
-
-		rm -rf "${yum_dir}" "${cpio_dir}" || return 1
+		rm -rf "${yum_dir}" || return 1
 	done
 }
 
@@ -146,12 +186,15 @@ install_platform_packages () {
 		return 0
 	fi
 
+	local package_names
+	package_names=$( IFS=$'\n' && echo "${names[*]:-}" )
+
 	case "${platform}" in
 	'linux-debian-'*|'linux-ubuntu-'*)
-		apt_install_packages "${names[@]}" "${dst_dir}" || return 1
+		install_debian_packages "${package_names}" "${dst_dir}" || return 1
 		;;
 	'linux-centos-'*|'linux-fedora-'*)
-		yum_install_packages "${names[@]}" "${dst_dir}" || return 1
+		install_redhat_packages "${package_names}" "${dst_dir}" || return 1
 		;;
 	*)
 		local description
