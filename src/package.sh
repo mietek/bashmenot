@@ -80,7 +80,7 @@ install_rpm_package () {
 	mkdir -p "${src_dir}" || return 1
 	(
 		cd "${src_dir}" &&
-		rpm2cpio "${package_file}" | cpio --extract --make-directories >'/dev/null' 2>&1 || return 1
+		rpm2cpio "${package_file}" | cpio --extract --make-directories >'/dev/null' 2>&1
 	) || return 1
 
 	if [[ -d "${src_dir}/lib" ]]; then
