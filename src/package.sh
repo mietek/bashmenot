@@ -1,3 +1,36 @@
+fix_broken_links () {
+	local dst_dir
+	expect_args dst_dir -- "$@"
+	expect_existing "${dst_dir}"
+
+	local link status
+	status=0
+	find_tree "${dst_dir}" -type l |
+		sort_natural |
+		while read -r link; do
+			local link_dir link_name src_relative src_absolute src_name
+			link_dir=$( dirname "${dst_dir}/${link}" ) || return 1
+			link_name=$( basename "${link}" ) || return 1
+			src_relative=$( readlink "${dst_dir}/${link}" ) || return 1
+			src_absolute=$( get_link_path "${dst_dir}/${link}" ) || return 1
+			src_name=$( basename "${src_absolute}" ) || return 1
+
+			if [[ ! -e "${src_absolute}" ]]; then
+				local target
+				if target=$( find_tree "${link_dir}" -name "${src_name}" | match_exactly_one ); then
+					log_indent "Fixing broken link: ${link_name} -> ${src_name} (${src_relative})"
+					rm -f "${dst_dir}/${link}" || return 1
+					ln -s "${target}" "${dst_dir}/${link}" || return 1
+				else
+					log_error "Cannot fix broken link: ${dst_dir}/${link} -> ${src_relative}"
+				fi
+			fi
+		done
+
+	return "${status}"
+}
+
+
 install_deb_package () {
 	local package_file dst_dir
 	expect_args package_file dst_dir -- "$@"
@@ -99,6 +132,8 @@ install_debian_packages () {
 	done
 
 	rm -rf "${apt_dir}" || return 1
+
+	fix_broken_links "${dst_dir}" || return 1
 }
 
 
@@ -156,6 +191,8 @@ install_redhat_packages () {
 
 		rm -rf "${yum_dir}" || return 1
 	done
+
+	fix_broken_links "${dst_dir}" || return 1
 }
 
 

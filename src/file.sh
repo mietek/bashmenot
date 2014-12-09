@@ -64,6 +64,25 @@ get_dir_name () {
 }
 
 
+case $( uname -s ) in
+'Linux')
+	get_link_path () {
+		local link
+		expect_args link -- "$@"
+
+		readlink -m "${link}" || false
+	}
+	;;
+*)
+	get_link_path () {
+		local link
+		expect_args link -- "$@"
+
+		greadlink -m "${link}" || false
+	}
+esac
+
+
 find_tree () {
 	local dir
 	expect_args dir -- "$@"
