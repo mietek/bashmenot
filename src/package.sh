@@ -18,7 +18,7 @@ fix_broken_links () {
 			if [[ ! -e "${src_absolute}" ]]; then
 				local target
 				if target=$( find_tree "${link_dir}" -name "${src_name}" | match_exactly_one ); then
-					log_indent "Fixing broken link: ${link_name} -> ${src_name} (${src_relative})"
+					log "Fixing broken link: ${link_name} -> ${src_name} (${src_relative})"
 					rm -f "${dst_dir}/${link}" || return 1
 					ln -s "${target}" "${dst_dir}/${link}" || return 1
 				else
@@ -36,8 +36,11 @@ install_deb_package () {
 	expect_args package_file dst_dir -- "$@"
 	expect_existing "${package_file}"
 
-	local src_dir
-	src_dir=$( get_tmp_dir 'deb' )
+	local package_name src_dir
+	package_name=$( basename "${package_file}" ) || return 1
+	src_dir=$( get_tmp_dir 'deb' ) || return 1
+
+	log "Installing package: ${package_name}"
 
 	dpkg --extract "${package_file}" "${src_dir}" 2>&1 | quote || return 1
 
@@ -68,13 +71,16 @@ install_rpm_package () {
 	expect_args package_file dst_dir -- "$@"
 	expect_existing "${package_file}"
 
-	local src_dir
-	src_dir=$( get_tmp_dir 'rpm' )
+	local package_name src_dir
+	package_name=$( basename "${package_file}" ) || return 1
+	src_dir=$( get_tmp_dir 'rpm' ) || return 1
+
+	log "Installing package: ${package_name}"
 
 	mkdir -p "${src_dir}" || return 1
 	(
 		cd "${src_dir}" &&
-		rpm2cpio "${package_file}" | cpio --extract --make-directories 2>&1 | quote || return 1
+		rpm2cpio "${package_file}" | cpio --extract --make-directories >'/dev/null' 2>&1 || return 1
 	) || return 1
 
 	if [[ -d "${src_dir}/lib" ]]; then
@@ -105,6 +111,8 @@ install_debian_packages () {
 		return 0
 	fi
 
+	log "Installing packages: ${names[*]}"
+
 	local apt_dir
 	apt_dir=$( get_tmp_dir 'apt' ) || return 1
 
@@ -133,6 +141,8 @@ install_debian_packages () {
 
 	rm -rf "${apt_dir}" || return 1
 
+	log "Packages installed: ${names[*]}"
+
 	fix_broken_links "${dst_dir}" || return 1
 }
 
@@ -146,6 +156,8 @@ install_redhat_packages () {
 	if [[ -z "${names[@]:+_}" ]]; then
 		return 0
 	fi
+
+	log "Installing packages: ${names[*]}"
 
 	local yum_dir
 	yum_dir=$( get_tmp_dir 'yum' ) || return 1
@@ -192,6 +204,8 @@ install_redhat_packages () {
 		rm -rf "${yum_dir}" || return 1
 	done
 
+	log "Packages installed: ${names[*]}"
+
 	fix_broken_links "${dst_dir}" || return 1
 }
 
@@ -224,7 +238,7 @@ install_platform_packages () {
 	fi
 
 	local package_names
-	package_names=$( IFS=$'\n' && echo "${names[*]:-}" )
+	package_names=$( IFS=$'\n' && echo "${names[*]}" )
 
 	case "${platform}" in
 	'linux-debian-'*|'linux-ubuntu-'*)
