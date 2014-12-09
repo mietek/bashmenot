@@ -50,12 +50,12 @@ bashmenot_internal_detect_linux_label () {
 
 	if [[ -f '/etc/os-release' ]]; then
 		label=$( awk -F= '/^ID=/ { print $2 }' <'/etc/os-release' ) || true
-	elif [[ -f '/etc/debian_version' ]]; then
-		label='debian'
 	elif [[ -f '/etc/lsb-release' ]]; then
 		label=$( awk -F= '/^DISTRIB_ID=/ { print $2 }' <'/etc/lsb-release' ) || true
 	elif [[ -f '/etc/centos-release' ]]; then
 		label='centos'
+	elif [[ -f '/etc/debian_version' ]]; then
+		label='debian'
 	elif [[ -f '/etc/redhat-release' ]]; then
 		raw_label=$( <'/etc/redhat-release' ) || true
 		case "${raw_label}" in
@@ -76,8 +76,6 @@ bashmenot_internal_detect_linux_version () {
 
 	if [[ -f '/etc/os-release' ]]; then
 		version=$( awk -F= '/^VERSION_ID=/ { print $2 }' <'/etc/os-release' ) || true
-	elif [[ -f '/etc/debian_version' ]]; then
-		version=$( sed 's/^\([0-9]*\).*$/\1/' <'/etc/debian_version' ) || true
 	elif [[ -f '/etc/lsb-release' ]]; then
 		version=$( awk -F= '/^DISTRIB_RELEASE=/ { print $2 }' <'/etc/lsb-release' ) || true
 	elif [[ -f '/etc/centos-release' ]]; then
@@ -90,6 +88,8 @@ bashmenot_internal_detect_linux_version () {
 		*)
 			true
 		esac
+	elif [[ -f '/etc/debian_version' ]]; then
+		version=$( sed 's/^\([0-9]*\).*$/\1/' <'/etc/debian_version' ) || true
 	elif [[ -f '/etc/redhat-release' ]]; then
 		raw_version=$( <'/etc/redhat-release' ) || true
 		case "${raw_version}" in
