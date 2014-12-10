@@ -98,3 +98,55 @@ git_update_into () {
 
 	hash_newest_git_commit "${dir}"
 }
+
+
+git_over_here () {
+	local thing dst_dir
+	expect_args thing dst_dir -- "$@"
+
+	local name
+	name=$( basename "${thing%.git}" ) || return 1
+
+	if validate_git_url "${thing}"; then
+		local commit_hash
+		if [[ ! -d "${dst_dir}/${name}" ]]; then
+			log_indent_begin "Cloning ${thing}..."
+
+			if ! commit_hash=$( git_clone_over "${thing}" "${dst_dir}/${name}" ); then
+				log_indent_end 'error'
+				return 1
+			fi
+		else
+			log_indent_begin "Updating ${thing}..."
+
+			if ! commit_hash=$( git_update_into "${thing}" "${dst_dir}/${name}" ); then
+				log_indent_end 'error'
+				return 1
+			fi
+		fi
+		log_indent_end "done, ${commit_hash:0:7}"
+	else
+		log_indent "Copying ${thing}"
+
+		copy_dir_over "${thing}" "${dst_dir}/${name}" || return 1
+	fi
+
+	echo "${name}"
+}
+
+
+git_all_over_here () {
+	local all_things dst_dir
+	expect_args all_things dst_dir -- "$@"
+
+	local -a things
+	things=( ${all_things} )
+	if [[ -z "${things[@]:+_}" ]]; then
+		return 0
+	fi
+
+	local thing
+	for thing in "${things[@]}"; do
+		git_over_here "${thing}" "${dst_dir}" || return 1
+	done
+}
