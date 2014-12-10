@@ -110,23 +110,23 @@ git_over_here () {
 	if validate_git_url "${thing}"; then
 		local commit_hash
 		if [[ ! -d "${dst_dir}/${name}" ]]; then
-			log_indent_begin "Cloning ${thing}..."
+			log_begin "Cloning ${thing}..."
 
 			if ! commit_hash=$( git_clone_over "${thing}" "${dst_dir}/${name}" ); then
-				log_indent_end 'error'
+				log_end 'error'
 				return 1
 			fi
 		else
-			log_indent_begin "Updating ${thing}..."
+			log_begin "Updating ${thing}..."
 
 			if ! commit_hash=$( git_update_into "${thing}" "${dst_dir}/${name}" ); then
-				log_indent_end 'error'
+				log_end 'error'
 				return 1
 			fi
 		fi
-		log_indent_end "done, ${commit_hash:0:7}"
+		log_end "done, ${commit_hash:0:7}"
 	else
-		log_indent "Copying ${thing}"
+		log "Copying ${thing}"
 
 		copy_dir_over "${thing}" "${dst_dir}/${name}" || return 1
 	fi

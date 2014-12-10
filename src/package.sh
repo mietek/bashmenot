@@ -111,8 +111,6 @@ install_debian_packages () {
 		return 0
 	fi
 
-	log "Installing OS packages: ${names[*]}"
-
 	local apt_dir
 	apt_dir=$( get_tmp_dir 'apt' ) || return 1
 
@@ -142,8 +140,6 @@ install_debian_packages () {
 	rm -rf "${apt_dir}" || return 1
 
 	fix_broken_links "${dst_dir}" || return 1
-
-	log "OS packages installed: ${names[*]}"
 }
 
 
@@ -156,8 +152,6 @@ install_redhat_packages () {
 	if [[ -z "${names[@]:+_}" ]]; then
 		return 0
 	fi
-
-	log "Installing OS packages: ${names[*]}"
 
 	local yum_dir
 	yum_dir=$( get_tmp_dir 'yum' ) || return 1
@@ -205,8 +199,6 @@ install_redhat_packages () {
 	done
 
 	fix_broken_links "${dst_dir}" || return 1
-
-	log "OS packages installed: ${names[*]}"
 }
 
 
