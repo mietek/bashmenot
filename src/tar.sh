@@ -145,7 +145,7 @@ create_archive () {
 
 	local name stderr
 	name=$( basename "${dst_file}" ) || return 1
-	stderr=$( get_tmp_file 'tar-create-stderr' ) || return 1
+	stderr=$( get_tmp_file 'tar' ) || return 1
 
 	log_indent_begin "Creating ${name}..."
 
@@ -171,7 +171,7 @@ extract_archive_into () {
 
 	local name stderr
 	name=$( basename "${src_file}" ) || return 1
-	stderr=$( get_tmp_file 'tar-extract-stderr' ) || return 1
+	stderr=$( get_tmp_file 'tar' ) || return 1
 
 	log_indent_begin "Extracting ${name}..."
 
