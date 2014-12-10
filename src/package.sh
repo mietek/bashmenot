@@ -21,7 +21,7 @@ fix_broken_links () {
 				log_indent "Fixing broken link: ${link_name} -> ${src_name} (${src_original})"
 				ln -s "${target}" "${dst_dir}/${link}" || return 1
 			else
-				log_error "Cannot fix broken link: ${dst_dir}/${link} -> ${src_original}"
+				log_error "Unfixable broken link: ${dst_dir}/${link} -> ${src_original}"
 				status=1
 			fi
 		fi
@@ -243,7 +243,7 @@ install_platform_packages () {
 		local description
 		description=$( format_platform_description "${platform}" )
 
-		log_error "Cannot install OS packages on ${description}"
+		log_error "Unexpected platform: ${description}"
 		return 1
 	esac
 }
