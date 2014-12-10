@@ -19,11 +19,10 @@ source "${BASHMENOT_DIR}/src/s3.sh"
 
 
 bashmenot_self_update () {
-	if (( ${BASHMENOT_NO_SELF_UPDATE:-0} )); then
+	if (( ${BASHMENOT_NO_SELF_UPDATE:-0} )) ||
+		[[ ! -d "${BASHMENOT_DIR}/.git" ]]
+	then
 		return 0
-	fi
-	if [[ ! -d "${BASHMENOT_DIR}/.git" ]]; then
-		return 1
 	fi
 
 	local url
@@ -34,7 +33,7 @@ bashmenot_self_update () {
 	local commit_hash
 	if ! commit_hash=$( git_update_into "${url}" "${BASHMENOT_DIR}" ); then
 		log_end 'error'
-		return 1
+		return 0
 	fi
 	log_end "done, ${commit_hash:0:7}"
 
@@ -43,6 +42,4 @@ bashmenot_self_update () {
 }
 
 
-if ! bashmenot_self_update; then
-	log_warning 'Cannot self-update bashmenot'
-fi
+bashmenot_self_update
