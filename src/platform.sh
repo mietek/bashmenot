@@ -1,5 +1,6 @@
 format_platform_description () {
 	case "$1" in
+	'freebsd-10.0-x86_64')		echo 'FreeBSD 10.0 (x86_64)';;
 	'linux-centos-7-x86_64')	echo 'CentOS 7 (x86_64)';;
 	'linux-centos-6-x86_64')	echo 'CentOS 6 (x86_64)';;
 	'linux-centos-5-x86_64')	echo 'CentOS 5 (x86_64)';;
@@ -23,6 +24,7 @@ detect_os () {
 	raw_os=$( uname -s ) || true
 
 	case "${raw_os}" in
+	'FreeBSD')	echo 'freebsd';;
 	'Linux')	echo 'linux';;
 	'Darwin')	echo 'osx';;
 	*)		echo 'unknown'
@@ -113,6 +115,9 @@ detect_platform () {
 	raw_label=''
 	raw_version=''
 	case "${os}" in
+	'freebsd')
+		raw_version=$( uname -r | awk -F- '{ print $1 }' ) || true
+		;;
 	'linux')
 		raw_label=$( bashmenot_internal_detect_linux_label ) || true
 		raw_version=$( bashmenot_internal_detect_linux_version ) || true
