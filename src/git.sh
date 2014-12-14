@@ -101,13 +101,13 @@ git_update_into () {
 
 
 git_over_here () {
-	local thing dst_dir
-	expect_args thing dst_dir -- "$@"
+	local src_dir thing dst_dir
+	expect_args src_dir thing dst_dir -- "$@"
 
 	local name
-	name=$( basename "${thing%.git}" ) || return 1
-
 	if validate_git_url "${thing}"; then
+		name=$( basename "${thing%.git}" ) || return 1
+
 		local commit_hash
 		if [[ ! -d "${dst_dir}/${name}" ]]; then
 			log_begin "Cloning ${thing}..."
@@ -126,9 +126,9 @@ git_over_here () {
 		fi
 		log_end "done, ${commit_hash:0:7}"
 	else
-		log "Copying ${thing}"
+		name=$( get_dir_name "${src_dir}/${thing}" ) || return 1
 
-		copy_dir_over "${thing}" "${dst_dir}/${name}" || return 1
+		copy_dir_over "${src_dir}/${thing}" "${dst_dir}/${name}" || return 1
 	fi
 
 	echo "${name}"
@@ -136,8 +136,8 @@ git_over_here () {
 
 
 git_all_over_here () {
-	local all_things dst_dir
-	expect_args all_things dst_dir -- "$@"
+	local src_dir all_things dst_dir
+	expect_args src_dir all_things dst_dir -- "$@"
 
 	local -a things
 	things=( ${all_things} )
@@ -147,6 +147,6 @@ git_all_over_here () {
 
 	local thing
 	for thing in "${things[@]}"; do
-		git_over_here "${thing}" "${dst_dir}" || return 1
+		git_over_here "${src_dir}" "${thing}" "${dst_dir}" || return 1
 	done
 }
