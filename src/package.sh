@@ -3,8 +3,7 @@ fix_broken_links () {
 	expect_args dst_dir -- "$@"
 	expect_existing "${dst_dir}"
 
-	local link status
-	status=0
+	local link
 	while read -r link; do
 		local link_dir link_name src_original src_canonical src_name
 		link_dir=$( dirname "${dst_dir}/${link}" ) || return 1
@@ -21,13 +20,10 @@ fix_broken_links () {
 				log_indent "Fixing broken link: ${link_name} -> ${src_name} (${src_original})"
 				ln -s "${target}" "${dst_dir}/${link}" || return 1
 			else
-				log_error "Unfixable broken link: ${dst_dir}/${link} -> ${src_original}"
-				status=1
+				log_warning "Broken link: ${dst_dir}/${link} -> ${src_original}"
 			fi
 		fi
 	done < <( find_tree "${dst_dir}" -type l | sort_natural )
-
-	return "${status}"
 }
 
 
