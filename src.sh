@@ -25,6 +25,14 @@ bashmenot_self_update () {
 		return 0
 	fi
 
+	local now candidate_time
+	now=$( get_current_time )
+	if candidate_time=$( get_modification_time "${BASHMENOT_DIR}" ) &&
+		(( candidate_time + 60 >= now ))
+	then
+		return 0
+	fi
+
 	local url
 	url="${BASHMENOT_URL:-https://github.com/mietek/bashmenot}"
 
@@ -36,6 +44,8 @@ bashmenot_self_update () {
 		return 0
 	fi
 	log_end "done, ${commit_hash:0:7}"
+
+	touch "${BASHMENOT_DIR}" || return 1
 
 	BASHMENOT_NO_SELF_UPDATE=1 \
 		source "${BASHMENOT_DIR}/src.sh"
