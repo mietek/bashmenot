@@ -119,10 +119,28 @@ install_debian_packages () {
 	opts+=( -o dir::cache="${apt_dir}/cache" )
 	opts+=( -o dir::state="${apt_dir}/state" )
 
+	local must_update
+	must_update=1
+	if [[ -d "${apt_dir}" ]]; then
+		local now candidate_time
+		now=$( get_current_time )
+		if candidate_time=$( get_modification_time "${apt_dir}" ) &&
+			(( candidate_time + 3600 >= now ))
+		then
+			must_update=0
+		fi
+	else
+		rm -rf "${apt_dir}" || return 1
+	fi
+
 	rm -rf "${apt_dir}/cache/archives" || return 1
 	mkdir -p "${apt_dir}/cache/archives/partial" "${apt_dir}/state/lists/partial" || return 1
 
-	apt-get "${opts[@]}" update 2>&1 | quote || return 1
+	if (( must_update )); then
+		apt-get "${opts[@]}" update 2>&1 | quote || return 1
+
+		touch "${apt_dir}" || return 1
+	fi
 
 	local name
 	for name in "${names[@]}"; do
