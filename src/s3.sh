@@ -28,7 +28,7 @@ s3_do () {
 
 	local endpoint date
 	endpoint="${BASHMENOT_S3_ENDPOINT:-s3.amazonaws.com}"
-	date=$( get_http_date ) || return 1
+	date=$( get_http_date )
 
 	if (( ${BASHMENOT_NO_S3_AUTH:-0} )); then
 		curl_do "${url}" \

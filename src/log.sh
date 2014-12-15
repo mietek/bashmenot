@@ -2,12 +2,12 @@ bashmenot_internal_get_timestamp () {
 	if (( ${BASHMENOT_LOG_TIMESTAMP:-0} )); then
 		if [[ -z "${BASHMENOT_TIMESTAMP_EPOCH:-}" ]]; then
 			local now
-			now=$( get_date '+%H:%M:%S' ) || true
+			now=$( get_date '+%H:%M:%S' )
 
 			echo -e "\033[2m${now}\033[0m "
 		else
 			local now diff pad
-			now=$( get_date '+%s' ) || true
+			now=$( get_current_time )
 			diff=$(( now - BASHMENOT_TIMESTAMP_EPOCH ))
 			pad='          '
 
