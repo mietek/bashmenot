@@ -108,19 +108,26 @@ install_debian_packages () {
 	fi
 
 	local apt_dir
-	apt_dir=$( get_tmp_dir 'apt' ) || return 1
+	if [[ -z "${BASHMENOT_APT_DIR:-}" ]]; then
+		apt_dir=$( get_tmp_dir 'apt' ) || return 1
+	else
+		apt_dir="${BASHMENOT_APT_DIR}"
+	fi
 
 	local -a opts
 	opts+=( -o debug::nolocking='true' )
 	opts+=( -o dir::cache="${apt_dir}/cache" )
 	opts+=( -o dir::state="${apt_dir}/state" )
 
-	mkdir -p "${apt_dir}/state/lists/partial" "${apt_dir}/cache/archives/partial" || return 1
+	rm -rf "${apt_dir}/cache/archives" || return 1
+	mkdir -p "${apt_dir}/cache/archives/partial" "${apt_dir}/state/lists/partial" || return 1
+
 	apt-get "${opts[@]}" update 2>&1 | quote || return 1
 
 	local name
 	for name in "${names[@]}"; do
 		mkdir -p "${apt_dir}/cache/archives/partial" || return 1
+
 		apt-get "${opts[@]}" install --download-only --reinstall --yes "${name}" 2>&1 | quote || return 1
 
 		local file
@@ -133,7 +140,9 @@ install_debian_packages () {
 		rm -rf "${apt_dir}/cache/archives" || return 1
 	done
 
-	rm -rf "${apt_dir}" || return 1
+	if [[ -z "${BASHMENOT_APT_DIR:-}" ]]; then
+		rm -rf "${apt_dir}" || return 1
+	fi
 
 	fix_broken_links "${dst_dir}" || return 1
 }
