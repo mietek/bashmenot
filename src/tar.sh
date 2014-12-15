@@ -12,6 +12,10 @@ bashnot_internal_tar_create () {
 	mkdir -p "${dst_dir}" || return 1
 
 	case "${format}" in
+	'tar')
+		COPYFILE_DISABLE=1 \
+			tar -c -f "${dst_file}" -C "${src_dir}" "$@" '.' || return 1
+		;;
 	'gz')
 		if which 'pigz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
@@ -61,6 +65,10 @@ bashnot_internal_tar_extract () {
 	mkdir -p "${dst_dir}" || return 1
 
 	case "${format}" in
+	'tar')
+		COPYFILE_DISABLE=1 \
+			tar -x -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+		;;
 	'gz')
 		if which 'pigz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
