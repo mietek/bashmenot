@@ -40,23 +40,6 @@ install_deb_package () {
 
 	dpkg --extract "${package_file}" "${src_dir}" 2>&1 | quote || return 1
 
-	if [[ -d "${src_dir}/usr/include/x86_64-linux-gnu" ]]; then
-		copy_dir_into "${src_dir}/usr/include/x86_64-linux-gnu" "${dst_dir}/usr/include" || return 1
-		rm -rf "${src_dir}/usr/include/x86_64-linux-gnu" || return 1
-	fi
-	if [[ -d "${src_dir}/lib" ]]; then
-		copy_dir_into "${src_dir}/lib" "${dst_dir}/usr/lib" || return 1
-		rm -rf "${src_dir}/lib" || return 1
-	fi
-	if [[ -d "${src_dir}/lib/x86_64-linux-gnu" ]]; then
-		copy_dir_into "${src_dir}/lib/x86_64-linux-gnu" "${dst_dir}/usr/lib" || return 1
-		rm -rf "${src_dir}/lib/x86_64-linux-gnu" || return 1
-	fi
-	if [[ -d "${src_dir}/usr/lib/x86_64-linux-gnu" ]]; then
-		copy_dir_into "${src_dir}/usr/lib/x86_64-linux-gnu" "${dst_dir}/usr/lib" || return 1
-		rm -rf "${src_dir}/usr/lib/x86_64-linux-gnu" || return 1
-	fi
-
 	copy_dir_into "${src_dir}" "${dst_dir}" || return 1
 	rm -rf "${src_dir}" || return 1
 }
@@ -78,19 +61,6 @@ install_rpm_package () {
 		cd "${src_dir}" &&
 		rpm2cpio "${package_file}" | cpio --extract --make-directories >'/dev/null' 2>&1
 	) || return 1
-
-	if [[ -d "${src_dir}/lib" ]]; then
-		copy_dir_into "${src_dir}/lib" "${dst_dir}/usr/lib" || return 1
-		rm -rf "${src_dir}/lib" || return 1
-	fi
-	if [[ -d "${src_dir}/lib64" ]]; then
-		copy_dir_into "${src_dir}/lib64" "${dst_dir}/usr/lib" || return 1
-		rm -rf "${src_dir}/lib64" || return 1
-	fi
-	if [[ -d "${src_dir}/usr/lib64" ]]; then
-		copy_dir_into "${src_dir}/usr/lib64" "${dst_dir}/usr/lib" || return 1
-		rm -rf "${src_dir}/usr/lib64" || return 1
-	fi
 
 	copy_dir_into "${src_dir}" "${dst_dir}" || return 1
 	rm -rf "${src_dir}" || return 1
