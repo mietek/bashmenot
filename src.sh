@@ -52,4 +52,7 @@ bashmenot_self_update () {
 }
 
 
-bashmenot_self_update
+if ! bashmenot_self_update; then
+	log_error 'Failed to self-update bashmenot'
+	exit 1
+fi
