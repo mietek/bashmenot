@@ -1,5 +1,5 @@
 expect_args () {
-	local -a specs
+	local -a specs_a
 	local status
 	status=1
 	while (( $# )); do
@@ -8,7 +8,7 @@ expect_args () {
 			shift
 			break
 		fi
-		specs+=( "$1" )
+		specs_a+=( "$1" )
 		shift
 	done
 	if (( status )); then
@@ -16,9 +16,9 @@ expect_args () {
 	fi
 
 	local spec
-	for spec in "${specs[@]}"; do
+	for spec in "${specs_a[@]}"; do
 		if ! (( $# )); then
-			die "${FUNCNAME[1]:--}: Expected args: ${specs[*]:-}"
+			die "${FUNCNAME[1]:--}: Expected args: ${specs_a[*]:-}"
 		fi
 		eval "${spec}=\$1"
 		shift

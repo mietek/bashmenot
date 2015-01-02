@@ -68,12 +68,12 @@ install_rpm_package () {
 
 
 install_debian_packages () {
-	local package_names dst_dir
-	expect_args package_names dst_dir -- "$@"
+	local names dst_dir
+	expect_args names dst_dir -- "$@"
 
-	local -a names
-	names=( ${package_names} )
-	if [[ -z "${names[@]:+_}" ]]; then
+	local -a names_a
+	names_a=( ${names} )
+	if [[ -z "${names_a[@]:+_}" ]]; then
 		return 0
 	fi
 
@@ -84,10 +84,10 @@ install_debian_packages () {
 		apt_dir="${BASHMENOT_APT_DIR}"
 	fi
 
-	local -a opts
-	opts+=( -o debug::nolocking='true' )
-	opts+=( -o dir::cache="${apt_dir}/cache" )
-	opts+=( -o dir::state="${apt_dir}/state" )
+	local -a opts_a
+	opts_a+=( -o debug::nolocking='true' )
+	opts_a+=( -o dir::cache="${apt_dir}/cache" )
+	opts_a+=( -o dir::state="${apt_dir}/state" )
 
 	local must_update
 	must_update=1
@@ -107,16 +107,16 @@ install_debian_packages () {
 	mkdir -p "${apt_dir}/cache/archives/partial" "${apt_dir}/state/lists/partial" || return 1
 
 	if (( must_update )); then
-		apt-get "${opts[@]}" update 2>&1 | quote || return 1
+		apt-get "${opts_a[@]}" update 2>&1 | quote || return 1
 
 		touch "${apt_dir}" || return 1
 	fi
 
 	local name
-	for name in "${names[@]}"; do
+	for name in "${names_a[@]}"; do
 		mkdir -p "${apt_dir}/cache/archives/partial" || return 1
 
-		apt-get "${opts[@]}" install --download-only --reinstall --yes "${name}" 2>&1 | quote || return 1
+		apt-get "${opts_a[@]}" install --download-only --reinstall --yes "${name}" 2>&1 | quote || return 1
 
 		local file
 		find_tree "${apt_dir}/cache/archives" -type f -name '*.deb' |
@@ -137,22 +137,22 @@ install_debian_packages () {
 
 
 install_redhat_packages () {
-	local package_names dst_dir
-	expect_args package_names dst_dir -- "$@"
+	local names dst_dir
+	expect_args names dst_dir -- "$@"
 
-	local -a names
-	names=( ${package_names} )
-	if [[ -z "${names[@]:+_}" ]]; then
+	local -a names_a
+	names_a=( ${names} )
+	if [[ -z "${names_a[@]:+_}" ]]; then
 		return 0
 	fi
 
 	local yum_dir
 	yum_dir=$( get_tmp_dir 'yum' ) || return 1
 
-	local -a opts
-	opts+=( --assumeyes )
-	opts+=( --downloadonly )
-	opts+=( --downloaddir="${yum_dir}" )
+	local -a opts_a
+	opts_a+=( --assumeyes )
+	opts_a+=( --downloadonly )
+	opts_a+=( --downloaddir="${yum_dir}" )
 
 	# NOTE: In old versions of yum, the --downloadonly option is
 	# provided by yum-plugin-downloadonly, which must be installed
@@ -166,15 +166,15 @@ install_redhat_packages () {
 	fi
 
 	local name
-	for name in "${names[@]}"; do
+	for name in "${names_a[@]}"; do
 		local status
 		status=0
 
 		if ! yum list installed "${name}" >'/dev/null' 2>&1; then
-			if ! yum install "${opts[@]}" "${name}" 2>&1 | quote; then
+			if ! yum install "${opts_a[@]}" "${name}" 2>&1 | quote; then
 				status=1
 			fi
-		elif ! yum reinstall "${opts[@]}" "${name}" 2>&1 | quote; then
+		elif ! yum reinstall "${opts_a[@]}" "${name}" 2>&1 | quote; then
 			status=1
 		fi
 		if ! (( no_status )) && (( status )); then
@@ -196,41 +196,41 @@ install_redhat_packages () {
 
 
 install_platform_packages () {
-	local package_specs dst_dir
-	expect_args package_specs dst_dir -- "$@"
+	local specs dst_dir
+	expect_args specs dst_dir -- "$@"
 
 	local platform
 	platform=$( detect_platform )
 
-	local -a specs
-	specs=( ${package_specs} )
-	if [[ -z "${specs[@]:+_}" ]]; then
+	local -a specs_a
+	specs_a=( ${specs} )
+	if [[ -z "${specs_a[@]:+_}" ]]; then
 		return 0
 	fi
 
-	local -a names
+	local -a names_a
 	local spec
-	for spec in "${specs[@]}"; do
+	for spec in "${specs_a[@]}"; do
 		local pattern name
 		pattern="${spec%:*}"
 		name="${spec#*:}"
 		if [[ "${pattern}" == "${name}" || "${platform}" =~ ${pattern} ]]; then
-			names+=( "${name}" )
+			names_a+=( "${name}" )
 		fi
 	done
-	if [[ -z "${names[@]:+_}" ]]; then
+	if [[ -z "${names_a[@]:+_}" ]]; then
 		return 0
 	fi
 
-	local package_names
-	package_names=$( IFS=$'\n' && echo "${names[*]}" )
+	local names
+	names=$( IFS=$'\n' && echo "${names_a[*]}" )
 
 	case "${platform}" in
 	'linux-debian-'*|'linux-ubuntu-'*)
-		install_debian_packages "${package_names}" "${dst_dir}" || return 1
+		install_debian_packages "${names}" "${dst_dir}" || return 1
 		;;
 	'linux-centos-'*|'linux-fedora-'*)
-		install_redhat_packages "${package_names}" "${dst_dir}" || return 1
+		install_redhat_packages "${names}" "${dst_dir}" || return 1
 		;;
 	*)
 		local description

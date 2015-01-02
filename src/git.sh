@@ -141,23 +141,26 @@ git_acquire () {
 
 
 git_acquire_all () {
-	local src_dir all_things dst_dir
-	expect_args src_dir all_things dst_dir -- "$@"
+	local src_dir things dst_dir
+	expect_args src_dir things dst_dir -- "$@"
 
-	local -a things
-	things=( ${all_things} )
-	if [[ -z "${things[@]:+_}" ]]; then
+	local -a things_a
+	things_a=( ${things} )
+	if [[ -z "${things_a[@]:+_}" ]]; then
 		return 0
 	fi
 
-	local -a names
+	local -a names_a
 	local thing
-	names=()
-	for thing in "${things[@]}"; do
+	names_a=()
+	for thing in "${things_a[@]}"; do
 		local name
 		name=$( git_acquire "${src_dir}" "${thing}" "${dst_dir}" ) || return 1
-		names+=( "${name}" )
+		names_a+=( "${name}" )
 	done
 
-	( IFS=$'\n' && echo "${names[*]}" )
+	local names
+	names=$( IFS=$'\n' && echo "${names_a[*]}" )
+
+	echo "${names}"
 }
