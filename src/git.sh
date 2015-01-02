@@ -105,7 +105,7 @@ git_update_into () {
 }
 
 
-git_over_here () {
+git_acquire () {
 	local src_dir thing dst_dir
 	expect_args src_dir thing dst_dir -- "$@"
 
@@ -140,7 +140,7 @@ git_over_here () {
 }
 
 
-git_all_over_here () {
+git_acquire_all () {
 	local src_dir all_things dst_dir
 	expect_args src_dir all_things dst_dir -- "$@"
 
@@ -150,8 +150,14 @@ git_all_over_here () {
 		return 0
 	fi
 
+	local -a names
 	local thing
+	names=()
 	for thing in "${things[@]}"; do
-		git_over_here "${src_dir}" "${thing}" "${dst_dir}" || return 1
+		local name
+		name=$( git_acquire "${src_dir}" "${thing}" "${dst_dir}" ) || return 1
+		names+=( "${name}" )
 	done
+
+	( IFS=$'\n' && echo "${names[*]}" )
 }
