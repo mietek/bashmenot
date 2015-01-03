@@ -119,6 +119,24 @@ copy_file () {
 }
 
 
+copy_file_into () {
+	local src_file dst_dir
+	expect_args src_file dst_dir -- "$@"
+	shift 2
+	expect_existing "${src_file}"
+
+	local src_dir src_name
+	src_dir=$( dirname "${src_file}" ) || return 1
+	src_name=$( basename "${src_file}" ) || return 1
+
+	mkdir -p "${dst_dir}" || return 1
+
+	COPYFILE_DISABLE=1 \
+		tar -c -f - -C "${src_dir}" "$@" "${src_name}" |
+		tar -xp -f - -C "${dst_dir}" 2>&1 | quote
+}
+
+
 copy_dir_into () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
