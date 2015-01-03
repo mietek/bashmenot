@@ -238,7 +238,7 @@ case $( uname -s ) in
 			sort0_natural |
 			while read -rd $'\0' file; do
 				strip --strip-unneeded "${file}" 2>'/dev/null' | quote
-			done
+			done || true
 	}
 	;;
 'Darwin')
@@ -251,7 +251,7 @@ case $( uname -s ) in
 			sort0_natural |
 			while read -rd $'\0' file; do
 				strip -u -r "${file}" 2>'/dev/null' | quote
-			done
+			done || true
 	}
 	;;
 *)

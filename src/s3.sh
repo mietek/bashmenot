@@ -17,7 +17,7 @@ read_s3_listing_xml () {
 		if [[ "${element}" == 'Key' ]]; then
 			echo "${contents}"
 		fi
-	done
+	done || true
 }
 
 
