@@ -112,7 +112,7 @@ find_added () {
 			if [[ ! -f "${old_file}" ]]; then
 				echo "${path}"
 			fi
-		done || true
+		done
 }
 
 
@@ -131,7 +131,7 @@ find_changed () {
 			if [[ -f "${old_file}" ]] && ! cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done || true
+		done
 }
 
 
@@ -150,7 +150,7 @@ find_not_changed () {
 			if [[ -f "${old_file}" ]] && cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done || true
+		done
 }
 
 
@@ -169,7 +169,7 @@ find_removed () {
 			if [[ ! -f "${new_file}" ]]; then
 				echo "${path}"
 			fi
-		done || true
+		done
 }
 
 
