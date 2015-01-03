@@ -119,7 +119,7 @@ copy_file () {
 }
 
 
-copy_file_into () {
+copy_dir_entry_into () {
 	local src_dir src_file dst_dir
 	expect_args src_dir src_file dst_dir -- "$@"
 	shift 3
