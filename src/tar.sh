@@ -115,7 +115,7 @@ copy_file () {
 
 	mkdir -p "${dst_dir}" || return 1
 
-	cp -p "${src_file}" "${dst_file}" 2>&1 | quote
+	cp "${src_file}" "${dst_file}" 2>&1 | quote
 }
 
 
