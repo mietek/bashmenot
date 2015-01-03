@@ -67,36 +67,36 @@ bashnot_internal_tar_extract () {
 	case "${format}" in
 	'tar')
 		COPYFILE_DISABLE=1 \
-			tar -x -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+			tar -xp -f "${src_file}" -C "${dst_dir}" "$@" || return 1
 		;;
 	'gz')
 		if which 'pigz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pigz -d <"${src_file}" |
-				tar -x -C "${dst_dir}" "$@" || return 1
+				tar -xp -C "${dst_dir}" "$@" || return 1
 		else
 			COPYFILE_DISABLE=1 \
-				tar -x -z -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+				tar -xp -z -f "${src_file}" -C "${dst_dir}" "$@" || return 1
 		fi
 		;;
 	'bz2')
 		if which 'pbzip2' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pbzip2 -d <"${src_file}" |
-				tar -x -C "${dst_dir}" "$@" || return 1
+				tar -xp -C "${dst_dir}" "$@" || return 1
 		else
 			COPYFILE_DISABLE=1 \
-				tar -x -j -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+				tar -xp -j -f "${src_file}" -C "${dst_dir}" "$@" || return 1
 		fi
 		;;
 	'xz')
 		if which 'pxz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pxz -d <"${src_file}" |
-				tar -x -C "${dst_dir}" "$@" || return 1
+				tar -xp -C "${dst_dir}" "$@" || return 1
 		else
 			COPYFILE_DISABLE=1 \
-				tar -x -J -f "${src_file}" -C "${dst_dir}" "$@" || return 1
+				tar -xp -J -f "${src_file}" -C "${dst_dir}" "$@" || return 1
 		fi
 		;;
 	*)
@@ -129,7 +129,7 @@ copy_dir_into () {
 
 	COPYFILE_DISABLE=1 \
 		tar -c -f - -C "${src_dir}" "$@" '.' |
-		tar -x -f - -C "${dst_dir}" 2>&1 | quote
+		tar -xp -f - -C "${dst_dir}" 2>&1 | quote
 }
 
 
