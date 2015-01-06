@@ -49,12 +49,12 @@ prefix_log_begin () {
 
 
 log () {
-	prefix_log '-----> ' "$@" || true
+	prefix_log '-----> ' "$@"
 }
 
 
 log_begin () {
-	prefix_log_begin '-----> ' "$@" || true
+	prefix_log_begin '-----> ' "$@"
 }
 
 
@@ -64,12 +64,12 @@ log_end () {
 
 
 log_indent () {
-	prefix_log '       ' "$@" || true
+	prefix_log '       ' "$@"
 }
 
 
 log_indent_begin () {
-	prefix_log_begin '       ' "$@" || true
+	prefix_log_begin '       ' "$@"
 }
 
 
@@ -80,34 +80,34 @@ log_indent_end () {
 
 log_label () {
 	local label
-	label="$1$( printf ' %.0s' {0..41} )" || true
+	label="$1$( printf ' %.0s' {0..41} )"
 	shift
 
-	log "${label:0:41}" "$( echo -en '\033[1m' )${*}$( echo -en '\033[0m' )" || true
+	log "${label:0:41}" "$( echo -en '\033[1m' )${*}$( echo -en '\033[0m' )"
 }
 
 
 log_indent_label () {
 	local label
-	label="$1$( printf ' %.0s' {0..41} )" || true
+	label="$1$( printf ' %.0s' {0..41} )"
 	shift
 
-	log_indent "${label:0:41}" "$( echo -en '\033[1m' )${*}$( echo -en '\033[0m' )" || true
+	log_indent "${label:0:41}" "$( echo -en '\033[1m' )${*}$( echo -en '\033[0m' )"
 }
 
 
 log_debug () {
-	prefix_log "$( echo -en '\033[1m' )   *** DEBUG: " "${*}$( echo -en '\033[0m' )" || true
+	prefix_log "$( echo -en '\033[1m' )   *** DEBUG: " "${*}$( echo -en '\033[0m' )"
 }
 
 
 log_warning () {
-	prefix_log "$( echo -en '\033[1m' )   *** WARNING: " "${*}$( echo -en '\033[0m' )" || true
+	prefix_log "$( echo -en '\033[1m' )   *** WARNING: " "${*}$( echo -en '\033[0m' )"
 }
 
 
 log_error () {
-	prefix_log "$( echo -en '\033[1m' )   *** ERROR: " "${*}$( echo -en '\033[0m' )" || true
+	prefix_log "$( echo -en '\033[1m' )   *** ERROR: " "${*}$( echo -en '\033[0m' )"
 }
 
 
@@ -117,7 +117,7 @@ case $( uname -s ) in
 		local prefix
 		prefix="$( bashmenot_internal_get_empty_timestamp )       "
 
-		sed -u "s/^/${prefix}/" >&2 || true
+		sed -u "s/^/${prefix}/" >&2 || return 0
 	}
 	;;
 'Darwin')
@@ -125,7 +125,7 @@ case $( uname -s ) in
 		local prefix
 		prefix="$( bashmenot_internal_get_empty_timestamp )       "
 
-		sed -l "s/^/${prefix}/" >&2 || true
+		sed -l "s/^/${prefix}/" >&2 || return 0
 	}
 	;;
 *)
@@ -133,14 +133,14 @@ case $( uname -s ) in
 		local prefix
 		prefix="$( bashmenot_internal_get_empty_timestamp )       "
 
-		sed "s/^/${prefix}/" >&2 || true
+		sed "s/^/${prefix}/" >&2 || return 0
 	}
 esac
 
 
 die () {
 	if [[ -n "${*:+_}" ]]; then
-		log_error "$@" || true
+		log_error "$@"
 	fi
 
 	exit 1

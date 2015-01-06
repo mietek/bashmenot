@@ -1,21 +1,21 @@
 case $( uname -s ) in
 'Linux')
 	get_date () {
-		date --utc "$@" || true
+		date --utc "$@" || return 0
 	}
 	;;
 *)
 	get_date () {
-		gdate --utc "$@" || true
+		gdate --utc "$@" || return 0
 	}
 esac
 
 
 get_current_time () {
-	get_date '+%s' "$@" || true
+	get_date '+%s' "$@" || return 0
 }
 
 
 get_http_date () {
-	get_date --rfc-2822 "$@" || true
+	get_date --rfc-2822 "$@" || return 0
 }

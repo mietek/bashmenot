@@ -47,7 +47,8 @@ bashnot_internal_tar_create () {
 		fi
 		;;
 	*)
-		die "Unexpected archive format: ${name}"
+		log_error "Unexpected archive format: ${name}"
+		return 1
 	esac
 }
 
@@ -100,7 +101,8 @@ bashnot_internal_tar_extract () {
 		fi
 		;;
 	*)
-		die "Unexpected archive format: ${name}"
+		log_error "Unexpected archive format: ${name}"
+		return 1
 	esac
 }
 
@@ -233,8 +235,8 @@ case $( uname -s ) in
 		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
 			sort0_natural |
 			while read -rd $'\0' file; do
-				strip --strip-unneeded "${file}" 2>'/dev/null' | quote
-			done || true
+				strip --strip-unneeded "${file}" 2>'/dev/null' | quote || true
+			done || return 0
 	}
 	;;
 'Darwin')
@@ -246,8 +248,8 @@ case $( uname -s ) in
 		find "${dir}" "$@" -type f -print0 2>'/dev/null' |
 			sort0_natural |
 			while read -rd $'\0' file; do
-				strip -u -r "${file}" 2>'/dev/null' | quote
-			done || true
+				strip -u -r "${file}" 2>'/dev/null' | quote || true
+			done || return 0
 	}
 	;;
 *)

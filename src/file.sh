@@ -2,7 +2,13 @@ get_tmp_file () {
 	local base
 	expect_args base -- "$@"
 
-	mktemp -u "/tmp/${base}.XXXXXXXXXX" || false
+	local tmp_file
+	if ! tmp_file=$( mktemp -u "/tmp/${base}.XXXXXXXXXX" ); then
+		log_error "Failed to create temporary file"
+		return 1
+	fi
+
+	echo "${tmp_file}"
 }
 
 
@@ -10,7 +16,13 @@ get_tmp_dir () {
 	local base
 	expect_args base -- "$@"
 
-	mktemp -du "/tmp/${base}.XXXXXXXXXX" || false
+	local tmp_dir
+	if ! tmp_dir=$( mktemp -du "/tmp/${base}.XXXXXXXXXX" ); then
+		log_error "Failed to create temporary directory"
+		return 1
+	fi
+
+	echo "${tmp_dir}"
 }
 
 
@@ -20,7 +32,7 @@ get_size () {
 
 	du -sh "${thing}" |
 		awk '{ print $1 }' |
-		sed 's/K$/KB/;s/M$/MB/;s/G$/GB/' || false
+		sed 's/K$/KB/;s/M$/MB/;s/G$/GB/' || return 1
 }
 
 
@@ -30,7 +42,7 @@ case $( uname -s ) in
 		local thing
 		expect_args thing -- "$@"
 
-		stat -c "%Y" "${thing}" || false
+		stat -c "%Y" "${thing}" || return 1
 	}
 	;;
 *)
@@ -38,7 +50,7 @@ case $( uname -s ) in
 		local thing
 		expect_args thing -- "$@"
 
-		stat -f "%m" "${thing}" || false
+		stat -f "%m" "${thing}" || return 1
 	}
 esac
 
@@ -48,7 +60,7 @@ get_dir_path () {
 	expect_args dir -- "$@"
 	expect_existing "${dir}"
 
-	( cd "${dir}" && pwd -P ) || false
+	( cd "${dir}" && pwd -P ) || return 1
 }
 
 
@@ -58,9 +70,9 @@ get_dir_name () {
 	expect_existing "${dir}"
 
 	local path
-	path=$( get_dir_path "${dir}" ) || false
+	path=$( get_dir_path "${dir}" ) || return 1
 
-	basename "${path}" || false
+	basename "${path}" || return 1
 }
 
 
@@ -70,7 +82,7 @@ case $( uname -s ) in
 		local link
 		expect_args link -- "$@"
 
-		readlink -m "${link}" || false
+		readlink -m "${link}" || return 1
 	}
 	;;
 *)
@@ -78,7 +90,7 @@ case $( uname -s ) in
 		local link
 		expect_args link -- "$@"
 
-		greadlink -m "${link}" || false
+		greadlink -m "${link}" || return 1
 	}
 esac
 
@@ -93,7 +105,7 @@ find_tree () {
 	fi
 
 	( cd "${dir}" && find '.' "$@" 2>'/dev/null' ) |
-		sed 's:^\./::' || true
+		sed 's:^\./::' || return 0
 }
 
 
@@ -112,7 +124,7 @@ find_added () {
 			if [[ ! -f "${old_file}" ]]; then
 				echo "${path}"
 			fi
-		done || true
+		done || return 0
 }
 
 
@@ -131,7 +143,7 @@ find_changed () {
 			if [[ -f "${old_file}" ]] && ! cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done || true
+		done || return 0
 }
 
 
@@ -150,7 +162,7 @@ find_not_changed () {
 			if [[ -f "${old_file}" ]] && cmp -s "${old_file}" "${new_file}"; then
 				echo "${path}"
 			fi
-		done || true
+		done || return 0
 }
 
 
@@ -169,7 +181,7 @@ find_removed () {
 			if [[ ! -f "${new_file}" ]]; then
 				echo "${path}"
 			fi
-		done || true
+		done || return 0
 }
 
 
@@ -184,5 +196,5 @@ compare_tree () {
 		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
 	) |
 		sort_natural |
-		awk '{ print $2 " " $1 }' || true
+		awk '{ print $2 " " $1 }' || return 0
 }
