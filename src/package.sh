@@ -71,9 +71,7 @@ install_debian_packages () {
 	local names dst_dir
 	expect_args names dst_dir -- "$@"
 
-	local -a names_a
-	names_a=( ${names} )
-	if [[ -z "${names_a[@]:+_}" ]]; then
+	if [[ -z "${names}" ]]; then
 		return 0
 	fi
 
@@ -113,7 +111,7 @@ install_debian_packages () {
 	fi
 
 	local name
-	for name in "${names_a[@]}"; do
+	while read -r name; do
 		mkdir -p "${apt_dir}/cache/archives/partial" || return 1
 
 		apt-get "${opts_a[@]}" install --download-only --reinstall --yes "${name}" 2>&1 | quote || return 1
@@ -126,7 +124,7 @@ install_debian_packages () {
 			done
 
 		rm -rf "${apt_dir}/cache/archives" || return 1
-	done
+	done <<<"${names}"
 
 	if [[ -z "${BASHMENOT_APT_DIR:-}" ]]; then
 		rm -rf "${apt_dir}" || return 1
@@ -140,9 +138,7 @@ install_redhat_packages () {
 	local names dst_dir
 	expect_args names dst_dir -- "$@"
 
-	local -a names_a
-	names_a=( ${names} )
-	if [[ -z "${names_a[@]:+_}" ]]; then
+	if [[ -z "${names}" ]]; then
 		return 0
 	fi
 
@@ -166,7 +162,7 @@ install_redhat_packages () {
 	fi
 
 	local name
-	for name in "${names_a[@]}"; do
+	while read -r name; do
 		local status
 		status=0
 
@@ -189,7 +185,7 @@ install_redhat_packages () {
 			done
 
 		rm -rf "${yum_dir}" || return 1
-	done
+	done <<<"${names}"
 
 	fix_broken_links "${dst_dir}" || return 1
 }
@@ -199,25 +195,23 @@ install_platform_packages () {
 	local specs dst_dir
 	expect_args specs dst_dir -- "$@"
 
-	local platform
-	platform=$( detect_platform )
-
-	local -a specs_a
-	specs_a=( ${specs} )
-	if [[ -z "${specs_a[@]:+_}" ]]; then
+	if [[ -z "${specs}" ]]; then
 		return 0
 	fi
 
+	local platform
+	platform=$( detect_platform )
+
 	local -a names_a
 	local spec
-	for spec in "${specs_a[@]}"; do
+	while read -r spec; do
 		local pattern name
 		pattern="${spec%:*}"
 		name="${spec#*:}"
 		if [[ "${pattern}" == "${name}" || "${platform}" =~ ${pattern} ]]; then
 			names_a+=( "${name}" )
 		fi
-	done
+	done <<<"${specs}"
 	if [[ -z "${names_a[@]:+_}" ]]; then
 		return 0
 	fi
