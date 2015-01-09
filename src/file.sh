@@ -200,3 +200,20 @@ compare_tree () {
 		sort_natural |
 		awk '{ print $2 " " $1 }' || return 0
 }
+
+
+expand_glob () {
+	local dir glob
+	expect_args dir glob -- "$@"
+
+	expect_existing "${dir}" || return 1
+
+	# TODO: Use $'\0' as delimiter.
+
+	(
+		local -a files_a
+		cd "${dir}" &&
+			IFS=$'\n' && files_a=( ${glob} ) &&
+			echo "${files_a[*]}"
+	) || return 1
+}

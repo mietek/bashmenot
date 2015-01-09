@@ -139,6 +139,23 @@ copy_dir_entry_into () {
 }
 
 
+copy_dir_glob_into () {
+	local src_dir src_glob dst_dir
+	expect_args src_dir src_glob dst_dir -- "$@"
+	shift 3
+
+	expect_existing "${src_dir}" || return 1
+
+	# TODO: Use read -rd $'\0'.
+
+	local glob_file
+	expand_glob "${src_dir}" "${src_glob}" "${dst_dir}" |
+		while read -r glob_file; do
+			copy_dir_entry_into "${src_dir}" "${glob_file}" "${dst_dir}" "$@" || return 1
+		done || return 1
+}
+
+
 copy_dir_into () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
