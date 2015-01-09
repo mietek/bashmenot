@@ -171,6 +171,21 @@ copy_dir_into () {
 }
 
 
+no_preserve_copy_dir_into () {
+	local src_dir dst_dir
+	expect_args src_dir dst_dir -- "$@"
+	shift 2
+
+	expect_existing "${src_dir}" || return 1
+
+	mkdir -p "${dst_dir}" || return 1
+
+	COPYFILE_DISABLE=1 \
+		tar -c -f - -C "${src_dir}" "$@" '.' |
+		tar -x -f - -C "${dst_dir}" 2>&1 | quote || return 1
+}
+
+
 copy_dir_over () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
