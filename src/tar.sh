@@ -264,5 +264,7 @@ case $( uname -s ) in
 	}
 	;;
 *)
-	true
+	strip_tree () {
+		log_warning 'Cannot strip'
+	}
 esac
