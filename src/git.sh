@@ -17,8 +17,9 @@ validate_git_url () {
 git_do () {
 	local work_dir cmd
 	expect_args work_dir cmd -- "$@"
-	expect_existing "${work_dir}"
 	shift 2
+
+	expect_existing "${work_dir}" || return 1
 
 	(
 		cd "${work_dir}" &&
@@ -30,8 +31,9 @@ git_do () {
 quiet_git_do () {
 	local work_dir cmd
 	expect_args work_dir cmd -- "$@"
-	expect_existing "${work_dir}"
 	shift 2
+
+	expect_existing "${work_dir}" || return 1
 
 	git_do "${work_dir}" "${cmd}" "$@" >'/dev/null' 2>&1 || return 1
 }
@@ -40,7 +42,8 @@ quiet_git_do () {
 hash_newest_git_commit () {
 	local dir
 	expect_args dir -- "$@"
-	expect_existing "${dir}"
+
+	expect_existing "${dir}" || return 1
 
 	local commit_hash
 	if ! commit_hash=$( git_do "${dir}" log -n 1 --pretty='format:%H' 2>'/dev/null' ); then
@@ -81,7 +84,8 @@ git_clone_over () {
 git_update_into () {
 	local url dir
 	expect_args url dir -- "$@"
-	expect_existing "${dir}"
+
+	expect_existing "${dir}" || return 1
 
 	local base_url branch
 	base_url="${url%#*}"

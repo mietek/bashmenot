@@ -1,7 +1,8 @@
 fix_broken_links () {
 	local dst_dir
 	expect_args dst_dir -- "$@"
-	expect_existing "${dst_dir}"
+
+	expect_existing "${dst_dir}" || return 1
 
 	local link
 	while read -r link; do
@@ -30,7 +31,8 @@ fix_broken_links () {
 install_deb_package () {
 	local package_file dst_dir
 	expect_args package_file dst_dir -- "$@"
-	expect_existing "${package_file}"
+
+	expect_existing "${package_file}" || return 1
 
 	local package_name src_dir
 	package_name=$( basename "${package_file}" ) || return 1
@@ -48,7 +50,8 @@ install_deb_package () {
 install_rpm_package () {
 	local package_file dst_dir
 	expect_args package_file dst_dir -- "$@"
-	expect_existing "${package_file}"
+
+	expect_existing "${package_file}" || return 1
 
 	local package_name src_dir
 	package_name=$( basename "${package_file}" ) || return 1

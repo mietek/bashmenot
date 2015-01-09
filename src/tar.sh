@@ -2,7 +2,8 @@ bashnot_internal_tar_create () {
 	local src_dir dst_file
 	expect_args src_dir dst_file -- "$@"
 	shift 2
-	expect_existing "${src_dir}"
+
+	expect_existing "${src_dir}" || return 1
 
 	local name format dst_dir
 	name=$( basename "${dst_file}" ) || return 1
@@ -57,7 +58,8 @@ bashnot_internal_tar_extract () {
 	local src_file dst_dir
 	expect_args src_file dst_dir -- "$@"
 	shift 2
-	expect_existing "${src_file}"
+
+	expect_existing "${src_file}" || return 1
 
 	local name format
 	name=$( basename "${src_file}" ) || return 1
@@ -110,7 +112,8 @@ bashnot_internal_tar_extract () {
 copy_file () {
 	local src_file dst_file
 	expect_args src_file dst_file -- "$@"
-	expect_existing "${src_file}"
+
+	expect_existing "${src_file}" || return 1
 
 	local dst_dir
 	dst_dir=$( dirname "${dst_file}" ) || return 1
@@ -125,7 +128,8 @@ copy_dir_entry_into () {
 	local src_dir src_file dst_dir
 	expect_args src_dir src_file dst_dir -- "$@"
 	shift 3
-	expect_existing "${src_dir}" "${src_dir}/${src_file}"
+
+	expect_existing "${src_dir}/${src_file}" || return 1
 
 	mkdir -p "${dst_dir}" || return 1
 
@@ -139,7 +143,8 @@ copy_dir_into () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
 	shift 2
-	expect_existing "${src_dir}"
+
+	expect_existing "${src_dir}" || return 1
 
 	mkdir -p "${dst_dir}" || return 1
 
@@ -153,7 +158,8 @@ copy_dir_over () {
 	local src_dir dst_dir
 	expect_args src_dir dst_dir -- "$@"
 	shift 2
-	expect_existing "${src_dir}"
+
+	expect_existing "${src_dir}" || return 1
 
 	rm -rf "${dst_dir}" || return 1
 
@@ -165,7 +171,8 @@ create_archive () {
 	local src_dir dst_file
 	expect_args src_dir dst_file -- "$@"
 	shift 2
-	expect_existing "${src_dir}"
+
+	expect_existing "${src_dir}" || return 1
 
 	local name stderr
 	name=$( basename "${dst_file}" ) || return 1
@@ -191,7 +198,8 @@ extract_archive_into () {
 	local src_file dst_dir
 	expect_args src_file dst_dir -- "$@"
 	shift 2
-	expect_existing "${src_file}"
+
+	expect_existing "${src_file}" || return 1
 
 	local name stderr
 	name=$( basename "${src_file}" ) || return 1
@@ -217,7 +225,8 @@ extract_archive_over () {
 	local src_file dst_dir
 	expect_args src_file dst_dir -- "$@"
 	shift 2
-	expect_existing "${src_file}"
+
+	expect_existing "${src_file}" || return 1
 
 	rm -rf "${dst_dir}" || return 1
 

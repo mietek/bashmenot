@@ -110,7 +110,8 @@ curl_check () {
 curl_upload () {
 	local src_file dst_file_url
 	expect_args src_file dst_file_url -- "$@"
-	expect_existing "${src_file}"
+
+	expect_existing "${src_file}" || return 1
 
 	log_indent_begin "Uploading ${dst_file_url}..."
 

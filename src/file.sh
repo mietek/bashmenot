@@ -58,7 +58,8 @@ esac
 get_dir_path () {
 	local dir
 	expect_args dir -- "$@"
-	expect_existing "${dir}"
+
+	expect_existing "${dir}" || return 1
 
 	( cd "${dir}" && pwd -P ) || return 1
 }
@@ -67,7 +68,8 @@ get_dir_path () {
 get_dir_name () {
 	local dir
 	expect_args dir -- "$@"
-	expect_existing "${dir}"
+
+	expect_existing "${dir}" || return 1
 
 	local path
 	path=$( get_dir_path "${dir}" ) || return 1

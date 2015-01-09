@@ -113,7 +113,8 @@ EOF
 s3_upload () {
 	local src_file dst_bucket dst_object dst_acl
 	expect_args src_file dst_bucket dst_object dst_acl -- "$@"
-	expect_existing "${src_file}"
+
+	expect_existing "${src_file}" || return 1
 
 	local dst_resource
 	dst_resource="/${dst_bucket}/${dst_object}"
