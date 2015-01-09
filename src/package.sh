@@ -5,26 +5,28 @@ fix_broken_links () {
 	expect_existing "${dst_dir}" || return 1
 
 	local link
-	while read -r link; do
-		local link_dir link_name src_original src_canonical src_name
-		link_dir=$( dirname "${dst_dir}/${link}" ) || return 1
-		link_name=$( basename "${link}" ) || return 1
-		src_original=$( readlink "${dst_dir}/${link}" ) || return 1
-		src_canonical=$( get_link_path "${dst_dir}/${link}" ) || return 1
-		src_name=$( basename "${src_canonical}" ) || return 1
+	find_tree "${dst_dir}" -type l -print0 |
+		sort0_natural |
+		while read -rd $'\0' link; do
+			local link_dir link_name src_original src_canonical src_name
+			link_dir=$( dirname "${dst_dir}/${link}" ) || return 1
+			link_name=$( basename "${link}" ) || return 1
+			src_original=$( readlink "${dst_dir}/${link}" ) || return 1
+			src_canonical=$( get_link_path "${dst_dir}/${link}" ) || return 1
+			src_name=$( basename "${src_canonical}" ) || return 1
 
-		if [[ ! -e "${src_canonical}" ]]; then
-			rm -f "${dst_dir}/${link}" || return 1
+			if [[ ! -e "${src_canonical}" ]]; then
+				rm -f "${dst_dir}/${link}" || return 1
 
-			local target
-			if target=$( find_tree "${link_dir}" -name "${src_name}" | match_exactly_one ); then
-				log_indent "Fixing broken link: ${link_name} -> ${src_name} (${src_original})"
-				ln -s "${target}" "${dst_dir}/${link}" || return 1
-			else
-				log_warning "Broken link: ${dst_dir}/${link} -> ${src_original}"
+				local target
+				if target=$( find_tree "${link_dir}" -name "${src_name}" | match_exactly_one ); then
+					log_indent "Fixing broken link: ${link_name} -> ${src_name} (${src_original})"
+					ln -s "${target}" "${dst_dir}/${link}" || return 1
+				else
+					log_warning "Broken link: ${dst_dir}/${link} -> ${src_original}"
+				fi
 			fi
-		fi
-	done < <( find_tree "${dst_dir}" -type l | sort_natural ) || return 0
+		done || return 0
 }
 
 
@@ -120,9 +122,9 @@ install_debian_packages () {
 		apt-get "${opts_a[@]}" install --download-only --reinstall --yes "${name}" 2>&1 | quote || return 1
 
 		local file
-		find_tree "${apt_dir}/cache/archives" -type f -name '*.deb' |
-			sort_natural |
-			while read -r file; do
+		find_tree "${apt_dir}/cache/archives" -type f -name '*.deb' -print0 |
+			sort0_natural |
+			while read -rd $'\0' file; do
 				install_deb_package "${apt_dir}/cache/archives/${file}" "${dst_dir}" || return 1
 			done
 
@@ -181,9 +183,9 @@ install_redhat_packages () {
 		fi
 
 		local file
-		find_tree "${yum_dir}" -type f -name '*.rpm' |
-			sort_natural |
-			while read -r file; do
+		find_tree "${yum_dir}" -type f -name '*.rpm' -print0 |
+			sort0_natural |
+			while read -rd $'\0' file; do
 				install_rpm_package "${yum_dir}/${file}" "${dst_dir}" || return 1
 			done
 
