@@ -181,16 +181,17 @@ create_archive () {
 	log_indent_begin "Creating ${name}..."
 
 	if ! bashnot_internal_tar_create "${src_dir}" "${dst_file}" "$@" 2>"${stderr}"; then
-		log_indent_end 'error'
 		quote <"${stderr}"
-		rm -f "${stderr}" || return 1
+
+		log_indent_end 'error'
 		return 1
 	fi
 
 	local size
 	size=$( get_size "${dst_file}" ) || return 1
 	log_indent_end "done, ${size}"
-	rm -f "${stderr}" || return 1
+
+	rm -f "${stderr}" || true
 }
 
 
@@ -208,16 +209,17 @@ extract_archive_into () {
 	log_indent_begin "Extracting ${name}..."
 
 	if ! bashnot_internal_tar_extract "${src_file}" "${dst_dir}" "$@" 2>"${stderr}"; then
-		log_indent_end 'error'
 		quote <"${stderr}"
-		rm -f "${stderr}" || return 1
+
+		log_indent_end 'error'
 		return 1
 	fi
 
 	local size
 	size=$( get_size "${dst_dir}" ) || return 1
 	log_indent_end "done, ${size}"
-	rm -f "${stderr}" || return 1
+
+	rm -f "${stderr}" || true
 }
 
 
