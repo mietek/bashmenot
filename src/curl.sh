@@ -91,7 +91,7 @@ curl_download () {
 	mkdir -p "${dst_dir}" || return 1
 
 	curl_do "${src_file_url}" \
-		--output "${dst_file}"
+		--output "${dst_file}" || return 1
 }
 
 
@@ -103,7 +103,7 @@ curl_check () {
 
 	curl_do "${src_url}" \
 		--output '/dev/null' \
-		--head
+		--head || return 1
 }
 
 
@@ -117,7 +117,7 @@ curl_upload () {
 
 	curl_do "${dst_file_url}" \
 		--output '/dev/null' \
-		--upload-file "${src_file}"
+		--upload-file "${src_file}" || return 1
 }
 
 
@@ -129,5 +129,5 @@ curl_delete () {
 
 	curl_do "${dst_url}" \
 		--output '/dev/null' \
-		--request DELETE
+		--request DELETE || return 1
 }

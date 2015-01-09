@@ -120,7 +120,7 @@ copy_file () {
 
 	mkdir -p "${dst_dir}" || return 1
 
-	cp "${src_file}" "${dst_file}" 2>&1 | quote
+	cp "${src_file}" "${dst_file}" 2>&1 | quote || return 1
 }
 
 
@@ -135,7 +135,7 @@ copy_dir_entry_into () {
 
 	COPYFILE_DISABLE=1 \
 		tar -c -f - -C "${src_dir}" "$@" "${src_file}" |
-		tar -xp -f - -C "${dst_dir}" 2>&1 | quote
+		tar -xp -f - -C "${dst_dir}" 2>&1 | quote || return 1
 }
 
 
@@ -150,7 +150,7 @@ copy_dir_into () {
 
 	COPYFILE_DISABLE=1 \
 		tar -c -f - -C "${src_dir}" "$@" '.' |
-		tar -xp -f - -C "${dst_dir}" 2>&1 | quote
+		tar -xp -f - -C "${dst_dir}" 2>&1 | quote || return 1
 }
 
 
@@ -163,7 +163,7 @@ copy_dir_over () {
 
 	rm -rf "${dst_dir}" || return 1
 
-	copy_dir_into "${src_dir}" "${dst_dir}" "$@"
+	copy_dir_into "${src_dir}" "${dst_dir}" "$@" || return 1
 }
 
 
@@ -230,7 +230,7 @@ extract_archive_over () {
 
 	rm -rf "${dst_dir}" || return 1
 
-	extract_archive_into "${src_file}" "${dst_dir}"
+	extract_archive_into "${src_file}" "${dst_dir}" || return 1
 }
 
 

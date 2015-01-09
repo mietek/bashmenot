@@ -7,7 +7,7 @@ get_hash () {
 	fi
 
 	openssl sha1 <<<"${input}" |
-		sed 's/^.* //'
+		sed 's/^.* //' || return 1
 }
 
 
@@ -20,7 +20,10 @@ hash_tree () {
 		return 0
 	fi
 
-	( cd "${dir}" && find '.' "$@" -type f -exec openssl sha1 '{}' ';' 2>'/dev/null' ) |
+	(
+		cd "${dir}" &&
+		find '.' "$@" -type f -exec openssl sha1 '{}' ';' 2>'/dev/null'
+	) |
 		sort_natural |
-		get_hash
+		get_hash || return 1
 }

@@ -24,7 +24,7 @@ fix_broken_links () {
 				log_warning "Broken link: ${dst_dir}/${link} -> ${src_original}"
 			fi
 		fi
-	done < <( find_tree "${dst_dir}" -type l | sort_natural )
+	done < <( find_tree "${dst_dir}" -type l | sort_natural ) || return 0
 }
 
 

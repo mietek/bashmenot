@@ -77,7 +77,7 @@ git_clone_over () {
 		quiet_git_do "${dir}" submodule update --init --recursive || return 1
 	fi
 
-	hash_newest_git_commit "${dir}"
+	hash_newest_git_commit "${dir}" || return 1
 }
 
 
@@ -105,7 +105,7 @@ git_update_into () {
 	quiet_git_do "${dir}" reset --hard "origin/${branch}" || return 1
 	quiet_git_do "${dir}" submodule update --init --recursive || return 1
 
-	hash_newest_git_commit "${dir}"
+	hash_newest_git_commit "${dir}" || return 1
 }
 
 

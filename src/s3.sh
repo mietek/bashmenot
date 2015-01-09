@@ -54,7 +54,7 @@ s3_do () {
 		--header "Host: ${endpoint}" \
 		--header "Date: ${date}" \
 		--header "Authorization: ${auth}" \
-		"$@"
+		"$@" || return 1
 }
 
 
@@ -75,7 +75,7 @@ s3_download () {
 
 	s3_do "${src_url}" \
 		--output "${dst_file}" \
-		<<-EOF
+		<<-EOF || return 1
 			GET
 
 
@@ -100,7 +100,7 @@ s3_check () {
 	s3_do "${src_url}" \
 		--output '/dev/null' \
 		--head \
-		<<-EOF
+		<<-EOF || return 1
 			HEAD
 
 
@@ -135,7 +135,7 @@ s3_upload () {
 		--header "Content-MD5: ${src_digest}" \
 		--header "x-amz-acl: ${dst_acl}" \
 		--upload-file "${src_file}" \
-		<<-EOF
+		<<-EOF || return 1
 			PUT
 			${src_digest}
 
@@ -162,7 +162,7 @@ s3_create () {
 		--output '/dev/null' \
 		--header "x-amz-acl: ${dst_acl}" \
 		--request PUT \
-		<<-EOF
+		<<-EOF || return 1
 			PUT
 
 
@@ -186,22 +186,20 @@ s3_copy () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" )
 
-	(
-		s3_do "${dst_url}" \
-			--output '/dev/null' \
-			--header "x-amz-acl: ${dst_acl}" \
-			--header "x-amz-copy-source: ${src_resource}" \
-			--request PUT \
-			<<-EOF
-				PUT
+	s3_do "${dst_url}" \
+		--output '/dev/null' \
+		--header "x-amz-acl: ${dst_acl}" \
+		--header "x-amz-copy-source: ${src_resource}" \
+		--request PUT \
+		<<-EOF || return 1
+			PUT
 
 
-				S3_DATE
-				x-amz-acl:${dst_acl}
-				x-amz-copy-source:${src_resource}
-				${dst_resource}
+			S3_DATE
+			x-amz-acl:${dst_acl}
+			x-amz-copy-source:${src_resource}
+			${dst_resource}
 EOF
-	) || fale
 }
 
 
@@ -220,7 +218,7 @@ s3_delete () {
 	s3_do "${dst_url}" \
 		--output '/dev/null' \
 		--request DELETE \
-		<<-EOF
+		<<-EOF || return 1
 			DELETE
 
 
@@ -236,13 +234,8 @@ curl_list_s3 () {
 
 	log_indent_begin "Listing ${url}..."
 
-	local listing
-	listing=$(
-		curl_do "${url}" \
-			--output >( read_s3_listing_xml )
-	) || return 1
-
-	echo "${listing}"
+	curl_do "${url}" \
+		--output >( read_s3_listing_xml ) || return 1
 }
 
 
@@ -259,18 +252,13 @@ s3_list () {
 	local src_url
 	src_url=$( format_s3_url "${src_resource}" )
 
-	local listing
-	listing=$(
-		s3_do "${src_url}" \
-			--output >( read_s3_listing_xml ) \
-			<<-EOF
-				GET
+	s3_do "${src_url}" \
+		--output >( read_s3_listing_xml ) \
+		<<-EOF || return 1
+			GET
 
 
-				S3_DATE
-				${bucket_resource}
+			S3_DATE
+			${bucket_resource}
 EOF
-	) || return 1
-
-	echo "${listing}"
 }
