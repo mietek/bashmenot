@@ -130,19 +130,33 @@ s3_upload () {
 	local dst_url
 	dst_url=$( format_s3_url "${dst_resource}" )
 
-	s3_do "${dst_url}" \
-		--output '/dev/null' \
-		--header "Content-MD5: ${src_digest}" \
-		--header "x-amz-acl: ${dst_acl}" \
-		--upload-file "${src_file}" \
-		<<-EOF || return
-			PUT
-			${src_digest}
+	# NOTE: In some circumstances, S3 uploads fail transiently with 400.
+	local retries status
+	retries="${BASHMENOT_S3_UPLOAD_RETRIES:-4}"
+	status=0
+	while (( retries )); do
+		status=0
+		s3_do "${dst_url}" \
+			--output '/dev/null' \
+			--header "Content-MD5: ${src_digest}" \
+			--header "x-amz-acl: ${dst_acl}" \
+			--upload-file "${src_file}" \
+			<<-EOF || status="$?"
+				PUT
+				${src_digest}
 
-			S3_DATE
-			x-amz-acl:${dst_acl}
-			${dst_resource}
+				S3_DATE
+				x-amz-acl:${dst_acl}
+				${dst_resource}
 EOF
+		if (( status != 4 )); then
+			break
+		fi
+
+		retries=$(( retries - 1 ))
+	done
+
+	return "${status}"
 }
 
 
