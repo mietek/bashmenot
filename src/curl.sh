@@ -79,18 +79,30 @@ curl_do () {
 	expect_args url -- "$@"
 	shift
 
-	local code
-	code=$(
-		curl "${url}" \
-			--fail \
-			--location \
-			--retry "${BASHMENOT_CURL_RETRIES:-8}" \
-			--silent \
-			--show-error \
-			--write-out '%{http_code}' \
-			"$@" \
-			2>'/dev/null'
-	) || true
+	# NOTE: In some circumstances, curl writes out 100 and fails instead
+	# of automatically continuing.
+	# http://curl.haxx.se/mail/lib-2011-03/0161.html
+	local retries code
+	retries="${BASHMENOT_CURL_CONTINUE_RETRIES:-4}"
+	code=
+	while (( retries )); do
+		code=$(
+			curl "${url}" \
+				--fail \
+				--location \
+				--retry "${BASHMENOT_CURL_RETRIES:-8}" \
+				--silent \
+				--show-error \
+				--write-out '%{http_code}' \
+				"$@" \
+				2>'/dev/null'
+		) || true
+		if [[ "${code}" != '100' ]]; then
+			break
+		fi
+
+		retries=$(( retries - 1 ))
+	done
 
 	local code_description
 	code_description=$( format_http_code_description "${code}" )
