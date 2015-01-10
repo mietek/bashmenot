@@ -21,7 +21,7 @@ fix_broken_links () {
 				local target
 				if target=$( find_tree "${link_dir}" -name "${src_name}" | match_exactly_one ); then
 					log_indent "Fixing broken link: ${link_name} -> ${src_name} (${src_original})"
-					ln -s "${target}" "${dst_dir}/${link}" || return 1
+					ln -fs "${target}" "${dst_dir}/${link}" || return 1
 				else
 					log_warning "Broken link: ${dst_dir}/${link} -> ${src_original}"
 				fi
