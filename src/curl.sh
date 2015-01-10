@@ -60,14 +60,27 @@ format_http_code_description () {
 }
 
 
+return_http_code_status () {
+	local code
+	expect_args code -- "$@"
+
+	case "${code}" in
+	'2'*)	return 0;;
+	'3'*)	return 3;;
+	'4'*)	return 4;;
+	'5'*)	return 5;;
+	*)	return 1
+	esac
+}
+
+
 curl_do () {
 	local url
 	expect_args url -- "$@"
 	shift
 
-	local status code
-	status=0
-	if ! code=$(
+	local code
+	code=$(
 		curl "${url}" \
 			--fail \
 			--location \
@@ -77,15 +90,13 @@ curl_do () {
 			--write-out '%{http_code}' \
 			"$@" \
 			2>'/dev/null'
-	); then
-		status=1
-	fi
+	) || true
 
 	local code_description
 	code_description=$( format_http_code_description "${code}" )
 	log_indent_end "${code_description}"
 
-	return "${status}"
+	return_http_code_status "${code}" || return
 }
 
 
@@ -101,7 +112,7 @@ curl_download () {
 	mkdir -p "${dst_dir}" || return 1
 
 	curl_do "${src_file_url}" \
-		--output "${dst_file}" || return 1
+		--output "${dst_file}" || return
 }
 
 
@@ -113,7 +124,7 @@ curl_check () {
 
 	curl_do "${src_url}" \
 		--output '/dev/null' \
-		--head || return 1
+		--head || return
 }
 
 
@@ -127,7 +138,7 @@ curl_upload () {
 
 	curl_do "${dst_file_url}" \
 		--output '/dev/null' \
-		--upload-file "${src_file}" || return 1
+		--upload-file "${src_file}" || return
 }
 
 
@@ -139,5 +150,5 @@ curl_delete () {
 
 	curl_do "${dst_url}" \
 		--output '/dev/null' \
-		--request DELETE || return 1
+		--request DELETE || return
 }

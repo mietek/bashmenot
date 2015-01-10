@@ -34,7 +34,7 @@ s3_do () {
 		curl_do "${url}" \
 			--header "Host: ${endpoint}" \
 			--header "Date: ${date}" \
-			"$@" || return 1
+			"$@" || return
 		return 0
 	fi
 	expect_vars BASHMENOT_AWS_ACCESS_KEY_ID BASHMENOT_AWS_SECRET_ACCESS_KEY
@@ -54,7 +54,7 @@ s3_do () {
 		--header "Host: ${endpoint}" \
 		--header "Date: ${date}" \
 		--header "Authorization: ${auth}" \
-		"$@" || return 1
+		"$@" || return
 }
 
 
@@ -75,7 +75,7 @@ s3_download () {
 
 	s3_do "${src_url}" \
 		--output "${dst_file}" \
-		<<-EOF || return 1
+		<<-EOF || return
 			GET
 
 
@@ -100,7 +100,7 @@ s3_check () {
 	s3_do "${src_url}" \
 		--output '/dev/null' \
 		--head \
-		<<-EOF || return 1
+		<<-EOF || return
 			HEAD
 
 
@@ -135,7 +135,7 @@ s3_upload () {
 		--header "Content-MD5: ${src_digest}" \
 		--header "x-amz-acl: ${dst_acl}" \
 		--upload-file "${src_file}" \
-		<<-EOF || return 1
+		<<-EOF || return
 			PUT
 			${src_digest}
 
@@ -162,7 +162,7 @@ s3_create () {
 		--output '/dev/null' \
 		--header "x-amz-acl: ${dst_acl}" \
 		--request PUT \
-		<<-EOF || return 1
+		<<-EOF || return
 			PUT
 
 
@@ -191,7 +191,7 @@ s3_copy () {
 		--header "x-amz-acl: ${dst_acl}" \
 		--header "x-amz-copy-source: ${src_resource}" \
 		--request PUT \
-		<<-EOF || return 1
+		<<-EOF || return
 			PUT
 
 
@@ -218,7 +218,7 @@ s3_delete () {
 	s3_do "${dst_url}" \
 		--output '/dev/null' \
 		--request DELETE \
-		<<-EOF || return 1
+		<<-EOF || return
 			DELETE
 
 
@@ -235,7 +235,7 @@ curl_list_s3 () {
 	log_indent_begin "Listing ${url}..."
 
 	curl_do "${url}" \
-		--output >( read_s3_listing_xml ) || return 1
+		--output >( read_s3_listing_xml ) || return
 }
 
 
@@ -254,7 +254,7 @@ s3_list () {
 
 	s3_do "${src_url}" \
 		--output >( read_s3_listing_xml ) \
-		<<-EOF || return 1
+		<<-EOF || return
 			GET
 
 
