@@ -3,6 +3,8 @@ format_http_code_description () {
 	expect_args code -- "$@"
 
 	case "${code}" in
+	'100')	echo '100 (continue)';;
+	'101')	echo '101 (switching protocols)';;
 	'200')	echo 'done';;
 	'201')	echo '201 (created)';;
 	'202')	echo '202 (accepted)';;
@@ -10,6 +12,14 @@ format_http_code_description () {
 	'204')	echo '204 (no content)';;
 	'205')	echo '205 (reset content)';;
 	'206')	echo '206 (partial content)';;
+	'300')	echo '300 (multiple choices)';;
+	'301')	echo '301 (moved permanently)';;
+	'302')	echo '302 (found)';;
+	'303')	echo '303 (see other)';;
+	'304')	echo '304 (not modified)';;
+	'305')	echo '305 (use proxy)';;
+	'306')	echo '306 (switch proxy)';;
+	'307')	echo '307 (temporary redirect)';;
 	'400')	echo '400 (bad request)';;
 	'401')	echo '401 (unauthorized)';;
 	'402')	echo '402 (payment required)';;
