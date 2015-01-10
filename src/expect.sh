@@ -1,26 +1,26 @@
 expect_args () {
-	local -a specs_a
-	local status
-	status=1
+	local -a expect_internal_specs_a
+	local expect_internal_status
+	expect_internal_status=1
 	while (( $# )); do
 		if [[ "$1" == -- ]]; then
-			status=0
+			expect_internal_status=0
 			shift
 			break
 		fi
-		specs_a+=( "$1" )
+		expect_internal_specs_a+=( "$1" )
 		shift
 	done
-	if (( status )); then
+	if (( expect_internal_status )); then
 		die "${FUNCNAME[1]:--}: Expected specs, guard, and args:" 'arg1 .. argN -- "$@"'
 	fi
 
-	local spec
-	for spec in "${specs_a[@]}"; do
+	local expect_internal_spec
+	for expect_internal_spec in "${expect_internal_specs_a[@]}"; do
 		if ! (( $# )); then
-			die "${FUNCNAME[1]:--}: Expected args: ${specs_a[*]:-}"
+			die "${FUNCNAME[1]:--}: Expected args: ${expect_internal_specs_a[*]:-}"
 		fi
-		eval "${spec}=\$1"
+		eval "${expect_internal_spec}=\$1"
 		shift
 	done
 }
