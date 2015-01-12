@@ -1,4 +1,4 @@
-bashnot_internal_tar_create () {
+bashmenot_internal_tar_create () {
 	local src_dir dst_file
 	expect_args src_dir dst_file -- "$@"
 	shift 2
@@ -54,7 +54,7 @@ bashnot_internal_tar_create () {
 }
 
 
-bashnot_internal_tar_extract () {
+bashmenot_internal_tar_extract () {
 	local src_file dst_dir
 	expect_args src_file dst_dir -- "$@"
 	shift 2
@@ -197,7 +197,7 @@ create_archive () {
 
 	log_indent_begin "Creating ${name}..."
 
-	if ! bashnot_internal_tar_create "${src_dir}" "${dst_file}" "$@" 2>"${stderr}"; then
+	if ! bashmenot_internal_tar_create "${src_dir}" "${dst_file}" "$@" 2>"${stderr}"; then
 		quote <"${stderr}"
 
 		log_indent_end 'error'
@@ -225,7 +225,7 @@ extract_archive_into () {
 
 	log_indent_begin "Extracting ${name}..."
 
-	if ! bashnot_internal_tar_extract "${src_file}" "${dst_dir}" "$@" 2>"${stderr}"; then
+	if ! bashmenot_internal_tar_extract "${src_file}" "${dst_dir}" "$@" 2>"${stderr}"; then
 		quote <"${stderr}"
 
 		log_indent_end 'error'
