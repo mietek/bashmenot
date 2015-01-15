@@ -78,6 +78,7 @@ get_dir_name () {
 }
 
 
+# TODO: Use realpath instead of readlink.
 case $( uname -s ) in
 'Linux')
 	get_link_path () {
