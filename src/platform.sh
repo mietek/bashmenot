@@ -1,6 +1,7 @@
 format_platform_description () {
 	case "$1" in
 	'freebsd-10.0-x86_64')		echo 'FreeBSD 10.0 (x86_64)';;
+	'freebsd-10.1-x86_64')		echo 'FreeBSD 10.1 (x86_64)';;
 	'linux-arch-x86_64')		echo 'Arch Linux (x86_64)';;
 	'linux-centos-7-x86_64')	echo 'CentOS 7 (x86_64)';;
 	'linux-centos-6-x86_64')	echo 'CentOS 6 (x86_64)';;

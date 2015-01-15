@@ -1,5 +1,5 @@
 case $( uname -s ) in
-'Linux')
+'Linux'|'FreeBSD')
 	sort_natural () {
 		sort -V "$@" || return 0
 	}

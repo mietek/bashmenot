@@ -254,7 +254,7 @@ extract_archive_over () {
 
 
 case $( uname -s ) in
-'Linux')
+'Linux'|'FreeBSD')
 	strip_tree () {
 		local dir
 		expect_args dir -- "$@"
