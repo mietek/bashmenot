@@ -39,7 +39,8 @@ expect_vars () {
 expect_existing () {
 	while (( $# )); do
 		if [[ ! -e "$1" ]]; then
-			die "${FUNCNAME[1]:--}: Expected existing $1"
+			log_error "${FUNCNAME[1]:--}: Expected existing $1"
+			return 1
 		fi
 		shift
 	done
@@ -49,7 +50,8 @@ expect_existing () {
 expect_no_existing () {
 	while (( $# )); do
 		if [[ -e "$1" ]]; then
-			die "${FUNCNAME[1]:--}: Unexpected existing $1"
+			log_error "${FUNCNAME[1]:--}: Unexpected existing $1"
+			return 1
 		fi
 		shift
 	done
