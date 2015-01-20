@@ -11,11 +11,11 @@ case $( uname -s ) in
 esac
 
 
-get_current_time () {
-	get_date '+%s' "$@" || return 0
+get_http_date () {
+	get_date -R "$@" || return 0
 }
 
 
-get_http_date () {
-	get_date -R "$@" || return 0
+get_current_time () {
+	get_date '+%s' "$@" || return 0
 }
