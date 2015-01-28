@@ -198,9 +198,9 @@ create_archive () {
 	log_indent_begin "Creating ${name}..."
 
 	if ! bashmenot_internal_tar_create "${src_dir}" "${dst_file}" "$@" 2>"${stderr}"; then
-		quote <"${stderr}"
-
 		log_indent_end 'error'
+
+		quote <"${stderr}"
 		return 1
 	fi
 
@@ -226,9 +226,9 @@ extract_archive_into () {
 	log_indent_begin "Extracting ${name}..."
 
 	if ! bashmenot_internal_tar_extract "${src_file}" "${dst_dir}" "$@" 2>"${stderr}"; then
-		quote <"${stderr}"
-
 		log_indent_end 'error'
+
+		quote <"${stderr}"
 		return 1
 	fi
 
