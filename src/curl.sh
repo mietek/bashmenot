@@ -79,34 +79,48 @@ curl_do () {
 	expect_args url -- "$@"
 	shift
 
-	# NOTE: In some circumstances, curl writes out 100 and fails instead
+	# NOTE: On Debian 6, curl considers HTTP 40* errors to be transient,
+	# which makes using the --retry option impractical.  Additionally,
+	# in some circumstances, curl writes out 100 and fails instead
 	# of automatically continuing.
 	# http://curl.haxx.se/mail/lib-2011-03/0161.html
-	local retries code
-	retries="${BASHMENOT_CURL_CONTINUE_RETRIES:-4}"
+	local max_retries retries code
+	max_retries="${BASHMENOT_CURL_RETRIES:-5}"
+	retries="${max_retries}"
 	code=
 	while (( retries )); do
 		code=$(
 			curl "${url}" \
 				--fail \
 				--location \
-				--retry "${BASHMENOT_CURL_RETRIES:-8}" \
 				--silent \
 				--show-error \
 				--write-out '%{http_code}' \
 				"$@" \
 				2>'/dev/null'
 		) || true
-		if [[ "${code}" != '100' ]]; then
+
+		local code_description
+		code_description=$( format_http_code_description "${code}" )
+		log_indent_end "${code_description}"
+
+		if [[ "${code}" =~ '2'.* ]]; then
+			break
+		fi
+		if [[ "${code}" =~ '4'.* ]] && ! (( ${BASHMENOT_INTERNAL_CURL_RETRY_ALL:-0} )); then
 			break
 		fi
 
 		retries=$(( retries - 1 ))
-	done
+		if (( retries )); then
+			local retry delay
+			retry=$(( max_retries - retries ))
+			delay=$(( 2**retry ))
 
-	local code_description
-	code_description=$( format_http_code_description "${code}" )
-	log_indent_end "${code_description}"
+			log_indent_begin "Retrying in ${delay} seconds (${retry}/${max_retries})..."
+			sleep "${delay}" || true
+		fi
+	done
 
 	return_http_code_status "${code}" || return
 }
