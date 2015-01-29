@@ -149,7 +149,7 @@ copy_dir_glob_into () {
 	# TODO: Use read -rd $'\0'.
 
 	local glob_file
-	expand_glob "${src_dir}" "${src_glob}" "${dst_dir}" |
+	expand_glob "${src_dir}" "${src_glob}" |
 		while read -r glob_file; do
 			copy_dir_entry_into "${src_dir}" "${glob_file}" "${dst_dir}" "$@" || return 1
 		done || return 1
