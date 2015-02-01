@@ -115,9 +115,10 @@ find_tree () {
 find_added () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
+	shift 2
 
 	local new_file
-	find "${new_dir}" -type f -print0 2>'/dev/null' |
+	find "${new_dir}" "$@" -type f -print0 2>'/dev/null' |
 		sort0_natural |
 		while read -rd $'\0' new_file; do
 			local path old_file
@@ -134,9 +135,10 @@ find_added () {
 find_changed () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
+	shift 2
 
 	local new_file
-	find "${new_dir}" -type f -print0 2>'/dev/null' |
+	find "${new_dir}" "$@" -type f -print0 2>'/dev/null' |
 		sort0_natural |
 		while read -rd $'\0' new_file; do
 			local path old_file
@@ -153,9 +155,10 @@ find_changed () {
 find_not_changed () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
+	shift 2
 
 	local new_file
-	find "${new_dir}" -type f -print0 2>'/dev/null' |
+	find "${new_dir}" "$@" -type f -print0 2>'/dev/null' |
 		sort0_natural |
 		while read -rd $'\0' new_file; do
 			local path old_file
@@ -172,9 +175,10 @@ find_not_changed () {
 find_removed () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
+	shift 2
 
 	local old_file
-	find "${old_dir}" -type f -print0 2>'/dev/null' |
+	find "${old_dir}" "$@" -type f -print0 2>'/dev/null' |
 		sort0_natural |
 		while read -rd $'\0' old_file; do
 			local path new_file
@@ -191,12 +195,13 @@ find_removed () {
 compare_tree () {
 	local old_dir new_dir
 	expect_args old_dir new_dir -- "$@"
+	shift 2
 
 	(
-		find_added "${old_dir}" "${new_dir}" | sed 's/$/ +/'
-		find_changed "${old_dir}" "${new_dir}" | sed 's/$/ */'
-		find_not_changed "${old_dir}" "${new_dir}" | sed 's/$/ =/'
-		find_removed "${old_dir}" "${new_dir}" | sed 's/$/ -/'
+		find_added "${old_dir}" "${new_dir}" "$@" | sed 's/$/ +/'
+		find_changed "${old_dir}" "${new_dir}" "$@" | sed 's/$/ */'
+		find_not_changed "${old_dir}" "${new_dir}" "$@" | sed 's/$/ =/'
+		find_removed "${old_dir}" "${new_dir}" "$@" | sed 's/$/ -/'
 	) |
 		sort_natural |
 		awk '{ print $2 " " $1 }' || return 0
