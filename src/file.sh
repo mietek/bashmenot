@@ -198,13 +198,12 @@ compare_tree () {
 	shift 2
 
 	(
-		find_added "${old_dir}" "${new_dir}" "$@" | sed 's/$/ +/'
-		find_changed "${old_dir}" "${new_dir}" "$@" | sed 's/$/ */'
-		find_not_changed "${old_dir}" "${new_dir}" "$@" | sed 's/$/ =/'
-		find_removed "${old_dir}" "${new_dir}" "$@" | sed 's/$/ -/'
+		find_added "${old_dir}" "${new_dir}" "$@" | sed 's/^/+ /'
+		find_changed "${old_dir}" "${new_dir}" "$@" | sed 's/^/* /'
+		find_not_changed "${old_dir}" "${new_dir}" "$@" | sed 's/^/= /'
+		find_removed "${old_dir}" "${new_dir}" "$@" | sed 's/^/- /'
 	) |
-		sort_natural |
-		awk '{ print $2 " " $1 }' || return 0
+		sort_do -k 2 || return 0
 }
 
 
