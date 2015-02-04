@@ -246,9 +246,19 @@ s3_list () {
 	local src_bucket src_prefix
 	expect_args src_bucket src_prefix -- "$@"
 
+	local actual_bucket bucket_prefix actual_prefix
+	actual_bucket="${src_bucket%%/*}"
+	bucket_prefix="${src_bucket#*/}"
+	if [[ "${bucket_prefix}" == "${src_bucket}" ]]; then
+		bucket_prefix=''
+		actual_prefix="${src_prefix}"
+	else
+		actual_prefix="${bucket_prefix}${src_prefix:+/${src_prefix}}"
+	fi
+
 	local bucket_resource src_resource
-	bucket_resource="/${src_bucket}/"
-	src_resource="${bucket_resource}${src_prefix:+?prefix=${src_prefix}}"
+	bucket_resource="/${actual_bucket}/"
+	src_resource="${bucket_resource}${actual_prefix:+?prefix=${actual_prefix}}"
 
 	log_indent_begin "Listing s3:/${src_resource}..."
 
@@ -256,7 +266,7 @@ s3_list () {
 	src_url=$( format_s3_url "${src_resource}" )
 
 	s3_do "${src_url}" \
-		--output >( read_s3_listing_xml ) \
+		--output >( read_s3_listing_xml | sed "s:^${bucket_prefix}/::" ) \
 		<<-EOF || return
 			GET
 
