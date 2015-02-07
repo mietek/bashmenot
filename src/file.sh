@@ -2,9 +2,16 @@ get_tmp_file () {
 	local base
 	expect_args base -- "$@"
 
+	local template
+	if [[ -z "${BASHMENOT_INTERNAL_TMP:-}" ]]; then
+		template="/tmp/${base}.XXXXXXXXXX"
+	else
+		template="${BASHMENOT_INTERNAL_TMP}/${base}.XXXXXXXXXX"
+	fi
+
 	local tmp_file
-	if ! tmp_file=$( mktemp -u "/tmp/${base}.XXXXXXXXXX" ); then
-		log_error "Failed to create temporary file"
+	if ! tmp_file=$( mktemp -u "${template}" ); then
+		log_error 'Failed to create temporary file'
 		return 1
 	fi
 
@@ -16,9 +23,16 @@ get_tmp_dir () {
 	local base
 	expect_args base -- "$@"
 
+	local template
+	if [[ -z "${BASHMENOT_INTERNAL_TMP:-}" ]]; then
+		template="/tmp/${base}.XXXXXXXXXX"
+	else
+		template="${BASHMENOT_INTERNAL_TMP}/${base}.XXXXXXXXXX"
+	fi
+
 	local tmp_dir
-	if ! tmp_dir=$( mktemp -du "/tmp/${base}.XXXXXXXXXX" ); then
-		log_error "Failed to create temporary directory"
+	if ! tmp_dir=$( mktemp -du "${template}" ); then
+		log_error 'Failed to create temporary directory'
 		return 1
 	fi
 
