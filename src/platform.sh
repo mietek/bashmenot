@@ -2,18 +2,22 @@ format_platform_description () {
 	case "$1" in
 	'freebsd-10.0-x86_64')		echo 'FreeBSD 10.0 (x86_64)';;
 	'freebsd-10.1-x86_64')		echo 'FreeBSD 10.1 (x86_64)';;
+	'linux-amzn-2014.09-x86_64')	echo 'Amazon Linux 2014.09 (x86_64)';;
 	'linux-arch-x86_64')		echo 'Arch Linux (x86_64)';;
-	'linux-centos-7-x86_64')	echo 'CentOS 7 (x86_64)';;
-	'linux-centos-6-x86_64')	echo 'CentOS 6 (x86_64)';;
 	'linux-centos-5-x86_64')	echo 'CentOS 5 (x86_64)';;
-	'linux-debian-7-x86_64')	echo 'Debian 7 (x86_64)';;
+	'linux-centos-6-x86_64')	echo 'CentOS 6 (x86_64)';;
+	'linux-centos-7-x86_64')	echo 'CentOS 7 (x86_64)';;
 	'linux-debian-6-x86_64')	echo 'Debian 6 (x86_64)';;
-	'linux-fedora-20-x86_64')	echo 'Fedora 20 (x86_64)';;
+	'linux-debian-7-x86_64')	echo 'Debian 7 (x86_64)';;
 	'linux-fedora-19-x86_64')	echo 'Fedora 19 (x86_64)';;
+	'linux-fedora-20-x86_64')	echo 'Fedora 20 (x86_64)';;
+	'linux-fedora-21-x86_64')	echo 'Fedora 21 (x86_64)';;
+	'linux-rhel-6-x86_64')		echo 'Red Hat Enterprise Linux 6 (x86_64)';;
+	'linux-rhel-7-x86_64')		echo 'Red Hat Enterprise Linux 7 (x86_64)';;
 	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (x86_64)';;
-	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (x86_64)';;
-	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (x86_64)';;
 	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (x86_64)';;
+	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (x86_64)';;
+	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (x86_64)';;
 	'osx-10.9-x86_64')		echo 'OS X 10.9 (x86_64)';;
 	'osx-10.10-x86_64')		echo 'OS X 10.10 (x86_64)';;
 	*)				echo 'unknown'
