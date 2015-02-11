@@ -54,17 +54,23 @@ bashmenot_internal_detect_linux_label () {
 
 	if [[ -f '/etc/os-release' ]]; then
 		label=$( awk -F= '/^ID=/ { print $2 }' <'/etc/os-release' ) || true
-	elif [[ -f '/etc/lsb-release' ]]; then
+	fi
+	if [[ -z "${label}" && -f '/etc/lsb-release' ]]; then
 		label=$( awk -F= '/^DISTRIB_ID=/ { print $2 }' <'/etc/lsb-release' ) || true
-	elif [[ -f '/etc/centos-release' ]]; then
+	fi
+	if [[ -z "${label}" && -f '/etc/centos-release' ]]; then
 		label='centos'
-	elif [[ -f '/etc/debian_version' ]]; then
+	fi
+	if [[ -z "${label}" && -f '/etc/debian_version' ]]; then
 		label='debian'
-	elif [[ -f '/etc/redhat-release' ]]; then
+	fi
+	if [[ -z "${label}" && -f '/etc/redhat-release' ]]; then
 		raw_label=$( <'/etc/redhat-release' ) || true
 		case "${raw_label}" in
 		'CentOS'*)
 			label='centos';;
+		'Red Hat Enterprise Linux Server'*)
+			label='rhel';;
 		*)
 			true
 		esac
@@ -80,9 +86,11 @@ bashmenot_internal_detect_linux_version () {
 
 	if [[ -f '/etc/os-release' ]]; then
 		version=$( awk -F= '/^VERSION_ID=/ { print $2 }' <'/etc/os-release' ) || true
-	elif [[ -f '/etc/lsb-release' ]]; then
+	fi
+	if [[ -z "${version}" && -f '/etc/lsb-release' ]]; then
 		version=$( awk -F= '/^DISTRIB_RELEASE=/ { print $2 }' <'/etc/lsb-release' ) || true
-	elif [[ -f '/etc/centos-release' ]]; then
+	fi
+	if [[ -z "${version}" && -f '/etc/centos-release' ]]; then
 		raw_version=$( <'/etc/centos-release' ) || true
 		case "${raw_version}" in
 		'CentOS Linux release 7'*)
@@ -92,13 +100,19 @@ bashmenot_internal_detect_linux_version () {
 		*)
 			true
 		esac
-	elif [[ -f '/etc/debian_version' ]]; then
+	fi
+	if [[ -z "${version}" && -f '/etc/debian_version' ]]; then
 		version=$( sed 's/^\([0-9]*\).*$/\1/' <'/etc/debian_version' ) || true
-	elif [[ -f '/etc/redhat-release' ]]; then
+	fi
+	if [[ -z "${version}" && -f '/etc/redhat-release' ]]; then
 		raw_version=$( <'/etc/redhat-release' ) || true
 		case "${raw_version}" in
 		'CentOS release 5'*)
 			version='5';;
+		'Red Hat Enterprise Linux Server release 5'*)
+			version='5';;
+		'Red Hat Enterprise Linux Server release 6'*)
+			version='6';;
 		*)
 			true
 		esac
@@ -134,6 +148,9 @@ detect_platform () {
 	local label version
 	label=$( tr -dc '[:alpha:]' <<<"${raw_label}" | tr '[:upper:]' '[:lower:]' ) || true
 	version=$( tr -dc '[:digit:]\.' <<<"${raw_version}" | sed 's/^\([0-9]*\.[0-9]*\).*$/\1/' ) || true
+	if [[ "${label}" == 'rhel' ]]; then
+		version="${version%%.*}"
+	fi
 
 	echo "${os}${label:+-${label}}${version:+-${version}}${arch:+-${arch}}"
 }
