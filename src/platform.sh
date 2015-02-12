@@ -25,6 +25,26 @@ format_platform_description () {
 }
 
 
+is_debian_like () {
+	case "$1" in
+	'linux-debian-'*)	return 0;;
+	'linux-ubuntu-'*)	return 0;;
+	*)			return 1
+	esac
+}
+
+
+is_redhat_like () {
+	case "$1" in
+	'linux-amzn-'*)		return 0;;
+	'linux-centos-'*)	return 0;;
+	'linux-fedora-'*)	return 0;;
+	'linux-rhel-'*)		return 0;;
+	*)			return 1
+	esac
+}
+
+
 detect_os () {
 	local raw_os
 	raw_os=$( uname -s ) || true

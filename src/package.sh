@@ -224,18 +224,15 @@ install_platform_packages () {
 	local names
 	names=$( IFS=$'\n' && echo "${names_a[*]}" )
 
-	case "${platform}" in
-	'linux-debian-'*|'linux-ubuntu-'*)
+	if is_debian_like "${platform}"; then
 		install_debian_packages "${names}" "${dst_dir}" || return 1
-		;;
-	'linux-centos-'*|'linux-fedora-'*)
+	elif is_redhat_like "${platform}"; then
 		install_redhat_packages "${names}" "${dst_dir}" || return 1
-		;;
-	*)
+	else
 		local description
 		description=$( format_platform_description "${platform}" )
 
 		log_error "Unexpected platform: ${description}"
 		return 1
-	esac
+	fi
 }
