@@ -162,7 +162,7 @@ install_redhat_packages () {
 	local platform no_status
 	platform=$( detect_platform )
 	no_status=0
-	if [[ "${platform}" == 'linux-centos-6-x86_64' ]]; then
+	if [[ "${platform}" =~ 'linux-centos-6'* ]]; then
 		no_status=1
 	fi
 
