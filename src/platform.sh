@@ -14,10 +14,10 @@ format_platform_description () {
 	'linux-fedora-21-x86_64')	echo 'Fedora 21 (x86_64)';;
 	'linux-rhel-6-x86_64')		echo 'Red Hat Enterprise Linux 6 (x86_64)';;
 	'linux-rhel-7-x86_64')		echo 'Red Hat Enterprise Linux 7 (x86_64)';;
-	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (x86_64)';;
 	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (x86_64)';;
 	'linux-ubuntu-12.04-x86_64')	echo 'Ubuntu 12.04 LTS (x86_64)';;
 	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (x86_64)';;
+	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (x86_64)';;
 	'osx-10.9-x86_64')		echo 'OS X 10.9 (x86_64)';;
 	'osx-10.10-x86_64')		echo 'OS X 10.10 (x86_64)';;
 	*)				echo 'unknown'
