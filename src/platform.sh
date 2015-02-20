@@ -20,6 +20,9 @@ format_platform_description () {
 	'linux-rhel-6-i386')		echo 'Red Hat Enterprise Linux 6 (i386)';;
 	'linux-rhel-6-x86_64')		echo 'Red Hat Enterprise Linux 6 (x86_64)';;
 	'linux-rhel-7-x86_64')		echo 'Red Hat Enterprise Linux 7 (x86_64)';;
+	'linux-sles-11-i386')		echo 'SUSE Linux Enterprise Server 11 (i386)';;
+	'linux-sles-11-x86_64')		echo 'SUSE Linux Enterprise Server 11 (x86_64)';;
+	'linux-sles-12-x86_64')		echo 'SUSE Linux Enterprise Server 12 (x86_64)';;
 	'linux-ubuntu-10.04-i386')	echo 'Ubuntu 10.04 LTS (i386)';;
 	'linux-ubuntu-10.04-x86_64')	echo 'Ubuntu 10.04 LTS (x86_64)';;
 	'linux-ubuntu-12.04-i386')	echo 'Ubuntu 12.04 LTS (i386)';;
@@ -110,6 +113,15 @@ bashmenot_internal_detect_linux_label () {
 			true
 		esac
 	fi
+	if [[ -z "${label}" && -f '/etc/SuSE-release' ]]; then
+		raw_label=$( <'/etc/SuSE-release' ) || true
+		case "${raw_label}" in
+		'SUSE Linux Enterprise Server'*)
+			label='sles';;
+		*)
+			true
+		esac
+	fi
 
 	echo "${label}"
 }
@@ -148,6 +160,15 @@ bashmenot_internal_detect_linux_version () {
 			version='5';;
 		'Red Hat Enterprise Linux Server release 6'*)
 			version='6';;
+		*)
+			true
+		esac
+	fi
+	if [[ -z "${version}" && -f '/etc/SuSE-release' ]]; then
+		raw_version=$( <'/etc/SuSE-release' ) || true
+		case "${raw_version}" in
+		'SUSE Linux Enterprise Server 11'*)
+			version='11';;
 		*)
 			true
 		esac
