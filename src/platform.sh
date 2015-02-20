@@ -140,10 +140,10 @@ bashmenot_internal_detect_linux_version () {
 	if [[ -z "${version}" && -f '/etc/centos-release' ]]; then
 		raw_version=$( <'/etc/centos-release' ) || true
 		case "${raw_version}" in
-		'CentOS Linux release 7'*)
-			version='7';;
 		'CentOS release 6'*)
 			version='6';;
+		'CentOS Linux release 7'*)
+			version='7';;
 		*)
 			true
 		esac
@@ -154,8 +154,6 @@ bashmenot_internal_detect_linux_version () {
 	if [[ -z "${version}" && -f '/etc/redhat-release' ]]; then
 		raw_version=$( <'/etc/redhat-release' ) || true
 		case "${raw_version}" in
-		'CentOS release 5'*)
-			version='5';;
 		'Red Hat Enterprise Linux Server release 5'*)
 			version='5';;
 		'Red Hat Enterprise Linux Server release 6'*)
