@@ -44,7 +44,7 @@ prefix_log_begin () {
 	prefix="$1"
 	shift
 
-	echo -n "${now}${*:+${prefix}$* }" >&2
+	printf -- "${now}${*:+${prefix}$* }" >&2
 }
 
 
