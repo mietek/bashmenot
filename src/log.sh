@@ -34,7 +34,7 @@ prefix_log () {
 	prefix="$1"
 	shift
 
-	echo "${now}${*:+${prefix}${*}}" >&2
+	echo "${now}${*:+${prefix}$*}" >&2
 }
 
 
@@ -44,7 +44,7 @@ prefix_log_begin () {
 	prefix="$1"
 	shift
 
-	echo -n "${now}${*:+${prefix}${*} }" >&2
+	echo -n "${now}${*:+${prefix}$* }" >&2
 }
 
 
@@ -83,7 +83,7 @@ log_label () {
 	label="$1$( printf ' %.0s' {0..41} )"
 	shift
 
-	log "${label:0:41}" "$( echo -en '\033[1m' )${*}$( echo -en '\033[0m' )"
+	log "${label:0:41}" "$( echo -en '\033[1m' )$*$( echo -en '\033[0m' )"
 }
 
 
@@ -92,22 +92,22 @@ log_indent_label () {
 	label="$1$( printf ' %.0s' {0..41} )"
 	shift
 
-	log_indent "${label:0:41}" "$( echo -en '\033[1m' )${*}$( echo -en '\033[0m' )"
+	log_indent "${label:0:41}" "$( echo -en '\033[1m' )$*$( echo -en '\033[0m' )"
 }
 
 
 log_debug () {
-	prefix_log "$( echo -en '\033[1m' )   *** DEBUG: " "${*}$( echo -en '\033[0m' )"
+	prefix_log "$( echo -en '\033[1m' )   *** DEBUG: " "$*$( echo -en '\033[0m' )"
 }
 
 
 log_warning () {
-	prefix_log "$( echo -en '\033[1m' )   *** WARNING: " "${*}$( echo -en '\033[0m' )"
+	prefix_log "$( echo -en '\033[1m' )   *** WARNING: " "$*$( echo -en '\033[0m' )"
 }
 
 
 log_error () {
-	prefix_log "$( echo -en '\033[1m' )   *** ERROR: " "${*}$( echo -en '\033[0m' )"
+	prefix_log "$( echo -en '\033[1m' )   *** ERROR: " "$*$( echo -en '\033[0m' )"
 }
 
 
