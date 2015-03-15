@@ -43,7 +43,7 @@ bashmenot_self_update () {
 		log_end 'error'
 		return 0
 	fi
-	log_end "done, ${commit_hash:0:7}"
+	log_end "done, ${commit_hash}"
 
 	touch "${BASHMENOT_DIR}" || return 1
 

@@ -133,7 +133,7 @@ git_acquire () {
 				return 1
 			fi
 		fi
-		log_end "done, ${commit_hash:0:7}"
+		log_end "done, ${commit_hash}"
 	else
 		name=$( get_dir_name "${src_dir}/${thing}" ) || return 1
 
