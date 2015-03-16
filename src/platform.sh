@@ -12,6 +12,7 @@ format_platform_description () {
 	'linux-debian-6-x86_64')	echo 'Debian 6 (x86_64)';;
 	'linux-debian-7-i386')		echo 'Debian 7 (i386)';;
 	'linux-debian-7-x86_64')	echo 'Debian 7 (x86_64)';;
+	'linux-exherbo-x86_64')		echo 'Exherbo Linux (x86_64)';;
 	'linux-fedora-19-i386')		echo 'Fedora 19 (i386)';;
 	'linux-fedora-19-x86_64')	echo 'Fedora 19 (x86_64)';;
 	'linux-fedora-20-i386')		echo 'Fedora 20 (i386)';;
