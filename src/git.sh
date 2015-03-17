@@ -46,7 +46,7 @@ hash_newest_git_commit () {
 	expect_existing "${dir}" || return 1
 
 	local commit_hash
-	if ! commit_hash=$( git_do "${dir}" log -n 1 --pretty='format:%H' 2>'/dev/null' ); then
+	if ! commit_hash=$( git_do "${dir}" log -n 1 --pretty='format:%h' 2>'/dev/null' ); then
 		return 0
 	fi
 
