@@ -20,7 +20,7 @@ bashmenot_internal_tar_create () {
 			tar -c -f "${dst_file}" -C "${src_dir}" "$@" '.' || return 1
 		;;
 	'gz')
-		pigz >'/dev/null' 2>&1 || status="$?"
+		pigz 2>'/dev/null' || status="$?"
 		if (( status != 127 )); then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
@@ -31,7 +31,7 @@ bashmenot_internal_tar_create () {
 		fi
 		;;
 	'bz2')
-		pbzip2 >'/dev/null' 2>&1 || status="$?"
+		pbzip2 2>'/dev/null' || status="$?"
 		if (( status != 127 )); then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
@@ -42,7 +42,7 @@ bashmenot_internal_tar_create () {
 		fi
 		;;
 	'xz')
-		pxz >'/dev/null' 2>&1 || status="$?"
+		pxz 2>'/dev/null' || status="$?"
 		if (( status != 127 )); then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
@@ -80,7 +80,7 @@ bashmenot_internal_tar_extract () {
 			tar -xp -f "${src_file}" -C "${dst_dir}" "$@" || return 1
 		;;
 	'gz')
-		pigz >'/dev/null' 2>&1 || status="$?"
+		pigz 2>'/dev/null' || status="$?"
 		if (( status != 127 )); then
 			COPYFILE_DISABLE=1 \
 				pigz -d <"${src_file}" |
@@ -91,7 +91,7 @@ bashmenot_internal_tar_extract () {
 		fi
 		;;
 	'bz2')
-		pbzip2 >'/dev/null' 2>&1 || status="$?"
+		pbzip2 2>'/dev/null' || status="$?"
 		if (( status != 127 )); then
 			COPYFILE_DISABLE=1 \
 				pbzip2 -d <"${src_file}" |
@@ -102,7 +102,7 @@ bashmenot_internal_tar_extract () {
 		fi
 		;;
 	'xz')
-		pxz >'/dev/null' 2>&1 || status="$?"
+		pxz 2>'/dev/null' || status="$?"
 		if (( status != 127 )); then
 			COPYFILE_DISABLE=1 \
 				pxz -d <"${src_file}" |
