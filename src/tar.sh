@@ -12,6 +12,8 @@ bashmenot_internal_tar_create () {
 
 	mkdir -p "${dst_dir}" || return 1
 
+	local status
+	status=0
 	case "${format}" in
 	'tar')
 		COPYFILE_DISABLE=1 \
