@@ -18,6 +18,7 @@ format_platform_description () {
 	'linux-fedora-20-i386')		echo 'Fedora 20 (i386)';;
 	'linux-fedora-20-x86_64')	echo 'Fedora 20 (x86_64)';;
 	'linux-fedora-21-x86_64')	echo 'Fedora 21 (x86_64)';;
+	'linux-gentoo-x86_64')		echo 'Gentoo Linux (x86_64)';;
 	'linux-opensuse-13.2-x86_64')	echo 'openSUSE 13.2 (x86_64)';;
 	'linux-rhel-6-i386')		echo 'Red Hat Enterprise Linux 6 (i386)';;
 	'linux-rhel-6-x86_64')		echo 'Red Hat Enterprise Linux 6 (x86_64)';;
