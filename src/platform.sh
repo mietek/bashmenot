@@ -23,6 +23,7 @@ format_platform_description () {
 	'linux-rhel-6-i386')		echo 'Red Hat Enterprise Linux 6 (i386)';;
 	'linux-rhel-6-x86_64')		echo 'Red Hat Enterprise Linux 6 (x86_64)';;
 	'linux-rhel-7-x86_64')		echo 'Red Hat Enterprise Linux 7 (x86_64)';;
+	'linux-slackware-14.1-x86_64')	echo 'Slackware 14.1 (x86_64)';;
 	'linux-sles-11-i386')		echo 'SUSE Linux Enterprise Server 11 (i386)';;
 	'linux-sles-11-x86_64')		echo 'SUSE Linux Enterprise Server 11 (x86_64)';;
 	'linux-sles-12-x86_64')		echo 'SUSE Linux Enterprise Server 12 (x86_64)';;
