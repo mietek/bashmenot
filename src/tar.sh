@@ -12,16 +12,13 @@ bashmenot_internal_tar_create () {
 
 	mkdir -p "${dst_dir}" || return 1
 
-	local status
-	status=0
 	case "${format}" in
 	'tar')
 		COPYFILE_DISABLE=1 \
 			tar -c -f "${dst_file}" -C "${src_dir}" "$@" '.' || return 1
 		;;
 	'gz')
-		pigz 2>'/dev/null' || status="$?"
-		if (( status != 127 )); then
+		if which 'pigz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
 				pigz -7 >"${dst_file}" || return 1
@@ -31,8 +28,7 @@ bashmenot_internal_tar_create () {
 		fi
 		;;
 	'bz2')
-		pbzip2 2>'/dev/null' || status="$?"
-		if (( status != 127 )); then
+		if which 'pbzip2' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
 				pbzip2 -7 >"${dst_file}" || return 1
@@ -42,8 +38,7 @@ bashmenot_internal_tar_create () {
 		fi
 		;;
 	'xz')
-		pxz 2>'/dev/null' || status="$?"
-		if (( status != 127 )); then
+		if which 'pxz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				tar -c -C "${src_dir}" "$@" '.' |
 				pxz -7 >"${dst_file}" || return 1
@@ -72,16 +67,13 @@ bashmenot_internal_tar_extract () {
 
 	mkdir -p "${dst_dir}" || return 1
 
-	local status
-	status=0
 	case "${format}" in
 	'tar')
 		COPYFILE_DISABLE=1 \
 			tar -xp -f "${src_file}" -C "${dst_dir}" "$@" || return 1
 		;;
 	'gz')
-		pigz 2>'/dev/null' || status="$?"
-		if (( status != 127 )); then
+		if which 'pigz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pigz -d <"${src_file}" |
 				tar -xp -C "${dst_dir}" "$@" || return 1
@@ -91,8 +83,7 @@ bashmenot_internal_tar_extract () {
 		fi
 		;;
 	'bz2')
-		pbzip2 2>'/dev/null' || status="$?"
-		if (( status != 127 )); then
+		if which 'pbzip2' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pbzip2 -d <"${src_file}" |
 				tar -xp -C "${dst_dir}" "$@" || return 1
@@ -102,8 +93,7 @@ bashmenot_internal_tar_extract () {
 		fi
 		;;
 	'xz')
-		pxz 2>'/dev/null' || status="$?"
-		if (( status != 127 )); then
+		if which 'pxz' >'/dev/null' 2>&1; then
 			COPYFILE_DISABLE=1 \
 				pxz -d <"${src_file}" |
 				tar -xp -C "${dst_dir}" "$@" || return 1
