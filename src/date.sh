@@ -1,5 +1,5 @@
 case $( uname -s ) in
-'Linux'|'FreeBSD')
+'Linux'|'FreeBSD'|'DragonFly')
 	get_date () {
 		date -u "$@" || return 0
 	}
