@@ -35,6 +35,7 @@ format_platform_description () {
 	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (x86_64)';;
 	'linux-ubuntu-14.10-i386')	echo 'Ubuntu 14.10 (i386)';;
 	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (x86_64)';;
+	'osx-10.6-x86_64')		echo 'OS X 10.6 (x86_64)';;
 	'osx-10.7-x86_64')		echo 'OS X 10.7 (x86_64)';;
 	'osx-10.8-x86_64')		echo 'OS X 10.8 (x86_64)';;
 	'osx-10.9-x86_64')		echo 'OS X 10.9 (x86_64)';;
