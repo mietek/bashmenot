@@ -12,6 +12,8 @@ format_platform_description () {
 	'linux-debian-6-x86_64')	echo 'Debian 6 (x86_64)';;
 	'linux-debian-7-i386')		echo 'Debian 7 (i386)';;
 	'linux-debian-7-x86_64')	echo 'Debian 7 (x86_64)';;
+	'linux-debian-8-i386')		echo 'Debian 8 (i386)';;
+	'linux-debian-8-x86_64')	echo 'Debian 8 (x86_64)';;
 	'linux-exherbo-x86_64')		echo 'Exherbo Linux (x86_64)';;
 	'linux-fedora-19-i386')		echo 'Fedora 19 (i386)';;
 	'linux-fedora-19-x86_64')	echo 'Fedora 19 (x86_64)';;
@@ -35,6 +37,8 @@ format_platform_description () {
 	'linux-ubuntu-14.04-x86_64')	echo 'Ubuntu 14.04 LTS (x86_64)';;
 	'linux-ubuntu-14.10-i386')	echo 'Ubuntu 14.10 (i386)';;
 	'linux-ubuntu-14.10-x86_64')	echo 'Ubuntu 14.10 (x86_64)';;
+	'linux-ubuntu-15.04-i386')	echo 'Ubuntu 15.04 (i386)';;
+	'linux-ubuntu-15.04-x86_64')	echo 'Ubuntu 15.04 (x86_64)';;
 	'osx-10.6-x86_64')		echo 'OS X 10.6 (x86_64)';;
 	'osx-10.7-x86_64')		echo 'OS X 10.7 (x86_64)';;
 	'osx-10.8-x86_64')		echo 'OS X 10.8 (x86_64)';;
