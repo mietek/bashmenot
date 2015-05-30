@@ -135,9 +135,9 @@ git_acquire () {
 		fi
 		log_end "done, ${commit_hash}"
 	else
-		name=$( get_dir_name "${src_dir}/${thing}" ) || return 1
+		name=$( get_dir_name "${thing}" ) || return 1
 
-		copy_dir_over "${src_dir}/${thing}" "${dst_dir}/${name}" || return 1
+		copy_dir_over "${thing}" "${dst_dir}/${name}" || return 1
 	fi
 
 	echo "${name}"
