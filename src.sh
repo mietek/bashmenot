@@ -1,3 +1,5 @@
+unset POSIXLY_CORRECT
+
 set -o pipefail
 
 export BASHMENOT_DIR
