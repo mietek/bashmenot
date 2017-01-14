@@ -92,6 +92,7 @@ detect_arch () {
 	'x64')		echo 'x86_64';;
 	'x86-64')	echo 'x86_64';;
 	'x86_64')	echo 'x86_64';;
+	'i686')		echo 'i386';;
 	*)		echo 'unknown'
 	esac
 }
