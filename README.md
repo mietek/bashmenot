@@ -1,3 +1,10 @@
+-------------------------------------------------------------------------------
+
+This project is no longer maintained.
+
+-------------------------------------------------------------------------------
+
+
 [_bashmenot_](https://bashmenot.mietek.io/)
 ===========================================
 
@@ -33,4 +40,4 @@ $ git clone https://github.com/mietek/bashmenot
 About
 -----
 
-Made by [Miëtek Bak](https://mietek.io/).  Published under the [MIT X11 license](https://bashmenot.mietek.io/license/).
+Made by [Miëtek Bak](https://mietek.io/).  Published under the BSD license.
